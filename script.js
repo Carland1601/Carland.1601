@@ -5,20 +5,47 @@
 
 // ---------- CONFIGURACIÓN ----------
 // Cambia este número por el WhatsApp real del negocio (código de país + número, sin + ni espacios)
-const WHATSAPP_NUMBER = "50489534880";
+const WHATSAPP_NUMBER = "504XXXXXXXX";
 
 // Orden en que deben aparecer los botones de categoría
 const CATEGORY_ORDER = [
   "Todos",
   "Autos",
   "Motocicletas",
-  "Otros",
+  "Camiones",
   "Rastras",
   "Maquinaria",
   "Control Remoto",
   "Novedades",
-  "Ofertas"
+  "Ofertas",
+  "Otros"
 ];
+
+/**
+ * Alias de categorías: mapea variantes en minúscula que puedan colarse
+ * al editar productos a mano, hacia el nombre "oficial" que se usa
+ * para agrupar y filtrar. Así "autos", "Autos" o "AUTOS" se tratan igual.
+ */
+const CATEGORY_ALIASES = {
+  "autos": "Autos",
+  "motocicletas": "Motocicletas",
+  "camiones": "Camiones",
+  "rastras": "Rastras",
+  "maquinaria": "Maquinaria",
+  "control remoto": "Control Remoto",
+  "novedades": "Novedades",
+  "ofertas": "Ofertas",
+  "otros": "Otros"
+};
+
+/**
+ * Devuelve el nombre de categoría "oficial" (con el que se filtra),
+ * aceptando variantes de mayúsculas/minúsculas.
+ */
+function getCanonicalCategory(rawCategory) {
+  const key = (rawCategory || "").trim().toLowerCase();
+  return CATEGORY_ALIASES[key] || (rawCategory || "").trim();
+}
 
 // ---------- ESTADO ----------
 let allProducts = [];
@@ -60,11 +87,14 @@ function buildWhatsappLink(product) {
  */
 function getBadgeClass(etiqueta) {
   const map = {
-    "Nuevo": "card__badge--nuevo",
-    "Oferta": "card__badge--oferta",
-    "Novedad": "card__badge--novedad"
+    "nuevo": "card__badge--nuevo",
+    "oferta": "card__badge--oferta",
+    "ofertas": "card__badge--oferta",
+    "novedad": "card__badge--novedad",
+    "novedades": "card__badge--novedad"
   };
-  return map[etiqueta] || null;
+  const key = (etiqueta || "").trim().toLowerCase();
+  return map[key] || null;
 }
 
 /**
@@ -335,7 +365,10 @@ function loadProducts() {
     return;
   }
 
-  allProducts = window.PRODUCTOS;
+  allProducts = window.PRODUCTOS.map((p) => ({
+    ...p,
+    categoria: getCanonicalCategory(p.categoria)
+  }));
   renderCategoryFilters();
   applyFiltersAndRender();
 }
