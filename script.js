@@ -5,7 +5,7 @@
 
 // ---------- CONFIGURACIÓN ----------
 // Cambia este número por el WhatsApp real del negocio (código de país + número, sin + ni espacios)
-const WHATSAPP_NUMBER = "504XXXXXXXX";
+const WHATSAPP_NUMBER = "50489534880";
 
 // Orden en que deben aparecer los botones de categoría
 const CATEGORY_ORDER = [
