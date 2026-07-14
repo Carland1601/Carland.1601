@@ -65,15 +65,20 @@
 
   <a id="top"></a>
 
-  <!-- ============ BANNER ============ -->
-  <section class="hero">
-    <img src="assets/banner.jpg" alt="Carland 1601 - miniaturas y vehículos de colección" class="hero__img">
-    <div class="hero__content">
-      <span class="hero__eyebrow">Catálogo digital · Actualizado constantemente</span>
-      <h1 class="hero__title">Colecciona a escala.<br>Vive la pasión por los autos.</h1>
-      <p class="hero__text">Autos, motos, camiones, rastras y maquinaria de colección. Mira el catálogo completo y aparta el tuyo directo por WhatsApp.</p>
-      <a href="#catalogo" class="hero__cta">Ver catálogo ↓</a>
+  <!-- ============ CARRUSEL PRINCIPAL ============ -->
+  <section class="hero" id="heroCarousel" aria-roledescription="carrusel" aria-label="Destacados Carland 1601">
+    <div class="hero__track" id="heroTrack">
+      <!-- Los slides se generan dinámicamente en script.js (ver HERO_SLIDES) -->
     </div>
+
+    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+
+    <div class="hero__dots" id="heroDots"></div>
   </section>
 
   <!-- ============ BUSCADOR + FILTROS ============ -->
@@ -155,73 +160,682 @@
        ========================================================= -->
   <script>
     window.PRODUCTOS = [
-      { "nombre": "Rolls-Royce Spectre", "marca": "Rolls-Royce", "categoria": "Autos", "escala": "1:24", "precio": 1550, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/roll.jpg" },
-      { "nombre": "Antorcha Minecraft decoracion de habitacion", "marca": "Minecraft", "categoria": "Otros", "escala": "24cm alto", "precio": 295, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/antorcha.png" },
-      { "nombre": "Rolls-Royce Spectre", "marca": "Rolls-Royce", "categoria": "Autos", "escala": "1:24", "precio": 1550, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/rolld.jpg" },
-      { "nombre": "Toyota Tacoma 2025", "marca": "Toyota", "categoria": "Autos", "escala": "1:24", "precio": 1150, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/tacoma.jpg" },
-      { "nombre": "Toyota Tacoma 2025", "marca": "Toyota", "categoria": "Autos", "escala": "1:24", "precio": 1150, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/tacoma-negra.jpg" },
-      { "nombre": "Toyota Tacoma 2025", "marca": "Toyota", "categoria": "Autos", "escala": "1:24", "precio": 1150, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/dorada.jpg" },
-      { "nombre": "Toyota Tundra 2025", "marca": "Toyota", "categoria": "Autos", "escala": "1:24", "precio": 1150, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/troja.jpg" },
-      { "nombre": "Toyota Tundra 2025", "marca": "Toyota", "categoria": "Autos", "escala": "1:24", "precio": 1150, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/tblanca.jpg" },
-      { "nombre": "Toyota Tundra 2025", "marca": "Toyota", "categoria": "Autos", "escala": "1:24", "precio": 1150, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/tverde.jpg" },
-      { "nombre": "Alfa Romero Giulia GTAm 2021", "marca": "Alfa Romero", "categoria": "Autos", "escala": "1:18", "precio": 995, "estado": "Disponible", "etiqueta": "", "imagen": "assets/productos/alfa.jpg" },
-      { "nombre": "Cybertruck Gris 1/32", "marca": "generic", "categoria": "autos", "escala": "1:32", "precio": 495, "estado": "Disponible", "etiqueta": "Novedad", "imagen": "assets/productos/cgris.jpg" },
-      { "nombre": "Cybertruck negra 1/32", "marca": "generic", "categoria": "autos", "escala": "1:32", "precio": 495, "estado": "Disponible", "etiqueta": "Novedad", "imagen": "assets/productos/cnegra.jpg" },
-      { "nombre": "Cybertruck dorada 1/32", "marca": "generic", "categoria": "autos", "escala": "1:32", "precio": 495, "estado": "Disponible", "etiqueta": "Novedad", "imagen": "assets/productos/cdorada.jpg" },
-      { "nombre": "Lamborghini STO", "marca": "CCA", "categoria": "autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/sto.jpg" },
-      { "nombre": "Toyota Prado 1/24 blanca", "marca": "CCA", "categoria": "autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/pradob.jpg" },
-      { "nombre": "Toyota Prado 1/24 Gris", "marca": "CCA", "categoria": "autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/pradog.jpg" },
-      { "nombre": "Plymouth taxi escala", "marca": "Polstergit", "categoria": "autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/taxi.jpg" },
-      { "nombre": "LC300 Blanca", "marca": "generic", "categoria": "autos", "escala": "1:24", "precio": 1250, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/lcb.jpg" },
-      { "nombre": "LC300 Negra", "marca": "generic", "categoria": "autos", "escala": "1:24", "precio": 1250, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/lcn.jpg" },
-      { "nombre": "Suzuki Jimny verde 1/24", "marca": "CCA", "categoria": "autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/zv.jpg" },
-      { "nombre": "Cabesal Clasico 1/32 blanco con luz y sonido", "marca": "generic", "categoria": "Rastras", "escala": "1:32", "precio": 1250, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/cb.jpg" },
-      { "nombre": "Cabesal Clasico 1/32 negro con luz y sonido", "marca": "generic", "categoria": "Rastras", "escala": "1:32", "precio": 1250, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/cn.jpg" },
-      { "nombre": "Land Cruiser Series 200", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 595, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/lb.jpg" },
-      { "nombre": "Land Cruiser Series 200", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 595, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/ln.jpg" },
-      { "nombre": "Dodge charger srt escala 1969 azul", "marca": "Maisto", "categoria": "Autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/srt.jpg" },
-      { "nombre": "Tundra 1/28 blanca 2da generacion", "marca": "generic", "categoria": "Autos", "escala": "1:28", "precio": 595, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/tb.jpg" },
-      { "nombre": "Tundra 1/28 negra 2da generacion", "marca": "generic", "categoria": "Autos", "escala": "1:28", "precio": 595, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/tn.jpg" },
-      { "nombre": "Toyota Hilux 1/32 con luz", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/hiluxb.jpg" },
-      { "nombre": "Toyota Hilux 1/32 con luz", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/hiluxn.jpg" },
-      { "nombre": "Toyota Hilux 1/32 con luz", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/hiluxa.jpg" },
-      { "nombre": "Toyota Hilux 1/32 con luz", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/hiluxr.jpg" },
-      { "nombre": "Toyota land cruiser 70 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 295, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/landb.png" },
-      { "nombre": "Toyota land cruiser 70 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 295, "estado": "Disponible", "etiqueta": "Nuevo", "imagen": "assets/productos/landbe.png" },
-      { "nombre": "Toyota 22r 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/22rr.png" },
-      { "nombre": "Toyota 22r 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/22rb.png" },
-      { "nombre": "Toyota 22r 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/22ra.png" },
-      { "nombre": "Toyota 22r 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 325, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/22rg.png" },
-      { "nombre": "Lexus Lx570 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 195, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/lexus.png" },
-      { "nombre": "Chevy clasico 1/32", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 225, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/chevy.png" },
-      { "nombre": "Lamborghini Rapidos y Furiosos", "marca": "Maisto", "categoria": "Autos", "escala": "1:24", "precio": 1350, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/lambo.jpg" },
-      { "nombre": "Mototaxi Roja", "marca": "generic", "categoria": "Autos", "escala": "1:32", "precio": 395, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/mototaxi.jpg" },
-      { "nombre": "Porsche Dakar", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 995, "estado": "Disponible", "etiqueta": "Oferta", "imagen": "assets/productos/por.jpg" },
-      { "nombre": "Cabezal Freightliner escala", "marca": "generic", "categoria": "Rastras", "escala": "1:64", "precio": 750, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/fa.jpg" },
-      { "nombre": "Cabezal Freightliner escala", "marca": "generic", "categoria": "Rastras", "escala": "1:64", "precio": 395, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/cr.jpg" },
-      { "nombre": "Cabezal Freightliner escala", "marca": "generic", "categoria": "Rastras", "escala": "1:64", "precio": 395, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/ca.jpg" },
-      { "nombre": "Cabezal Freightliner escala", "marca": "generic", "categoria": "Rastras", "escala": "1:64", "precio": 395, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/cab.jpg" },
-      { "nombre": "Cabezal con pipa escala", "marca": "generic", "categoria": "Rastras", "escala": "1:64", "precio": 995, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/pipa.jpg" },
-      { "nombre": "Mack Y Mcqueen set de dos", "marca": "Matel", "categoria": "Rastras", "escala": "1:64", "precio": 1500, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/mack.jpg" },
-      { "nombre": "Mcqueen Control remoto Cars", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 295, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/mcqueenrc.png" },
-      { "nombre": "Camioncito control remoto", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 795, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/rc1.png" },
-      { "nombre": "Buldoser RC", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 1595, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/bulrc.png" },
-      { "nombre": "4x4 RC", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 1595, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/4x4.png" },
-      { "nombre": "Land Cruiser RC 4x2", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 395, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/landrc.png" },
-      { "nombre": "Mario RC 4x2", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 895, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/mariorc.png" },
-      { "nombre": "Bus escolar 4x2 RC", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 795, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/busrc.png" },
-      { "nombre": "Escabadora 4x4 RC", "marca": "generic", "categoria": "Autos", "escala": "1:24", "precio": 795, "estado": "Disponible", "etiqueta": "Novedades", "imagen": "assets/productos/escavador.jpg" },
-      { "nombre": "KTM Duke 1290", "marca": "CCA", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/duke1290.jpg" },
-      { "nombre": "Yamaha R1", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/r1.jpg" },
-      { "nombre": "Yamaha R1", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/r1a.jpg" },
-      { "nombre": "Mini Biker", "marca": "generic", "categoria": "Otros", "escala": "1:12", "precio": 295, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/minibiker.jpg" },
-      { "nombre": "Hayabusa escala 1/12", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/haya.jpg" },
-      { "nombre": "Kawasaki Croos 450 escala 1/12", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/kawa.jpg" },
-      { "nombre": "H2R escala 1/12", "marca": "CCA", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/h2r.jpg" },
-      { "nombre": "H2R mini escala 1/18", "marca": "CCA", "categoria": "Motocicletas", "escala": "1:12", "precio": 395, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/h2rmini.jpg" },
-      { "nombre": "KTM croos 690 1/12", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/ktmcroos.jpg" },
-      { "nombre": "Vstrom escala 1/12", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/vstrom.jpg" },
-      { "nombre": "Honda CB400X escala 1/12", "marca": "Maisto", "categoria": "Motocicletas", "escala": "1:12", "precio": 995, "estado": "Disponible", "etiqueta": "Ofertas", "imagen": "assets/productos/hondacb400x.jpg" }
+      {
+        "nombre": "Rolls-Royce Spectre",
+        "marca": "Rolls-Royce",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1550,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/roll.jpg"
+      },
+      {
+        "nombre": "Antorcha Minecraft decoracion de habitacion",
+        "marca": "Minecraft",
+        "categoria": "Otros",
+        "escala": "24cm alto",
+        "precio": 295,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/antorcha.png"
+      },
+      {
+        "nombre": "Rolls-Royce Spectre",
+        "marca": "Rolls-Royce",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1550,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/rolld.jpg"
+      },
+      {
+        "nombre": "Toyota Tacoma 2025",
+        "marca": "Toyota",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1150,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/tacoma.jpg"
+      },
+      {
+        "nombre": "Toyota Tacoma 2025",
+        "marca": "Toyota",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1150,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/tacoma-negra.jpg"
+      },
+      {
+         "nombre": "Toyota Tacoma 2025",
+        "marca": "Toyota",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1150,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/dorada.jpg"
+      },
+      {
+        "nombre": "Toyota Tundra 2025",
+        "marca": "Toyota",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1150,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/troja.jpg"
+      },
+      {
+        "nombre": "Toyota Tundra 2025",
+        "marca": "Toyota",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1150,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/tblanca.jpg"
+      },
+      {
+        "nombre": "Toyota Tundra 2025",
+        "marca": "Toyota",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1150,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/tverde.jpg"
+      },
+      {
+        "nombre": "Alfa Romero Giulia GTAm 2021 ",
+        "marca": "Alfa Romero",
+        "categoria": "Autos",
+        "escala": "1:18",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "",
+        "imagen": "assets/productos/alfa.jpg"
+      },
+      {
+        "nombre": "Cybertruck Gris 1/32",
+        "marca": "generic",
+        "categoria": "autos",
+        "escala": "1:32",
+        "precio": 495,
+        "estado": "Disponible",
+        "etiqueta": "Novedad",
+        "imagen": "assets/productos/cgris.jpg"
+      },
+      {
+        "nombre": "Cybertruck negra 1/32",
+        "marca": "generic",
+        "categoria": "autos",
+        "escala": "1:32",
+        "precio": 495,
+        "estado": "Disponible",
+        "etiqueta": "Novedad",
+        "imagen": "assets/productos/cnegra.jpg"
+      },
+      {
+        "nombre": "Cybertruck dorada 1/32",
+        "marca": "generic",
+        "categoria": "autos",
+        "escala": "1:32",
+        "precio": 495,
+        "estado": "Disponible",
+        "etiqueta": "Novedad",
+        "imagen": "assets/productos/cdorada.jpg"
+      },
+       {
+        "nombre": "Lamborghini STO",
+        "marca": "CCA",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/sto.jpg"
+      },
+      {
+        "nombre": "Toyota Prado 1/24 blanca",
+        "marca": "CCA",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/pradob.jpg"
+      },
+      {
+        "nombre": "Toyota Prado 1/24 Gris",
+        "marca": "CCA",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/pradog.jpg"
+      },
+      {
+        "nombre": "Plymouth taxi escala",
+        "marca": "Polstergit",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/taxi.jpg"
+      },
+      {
+        "nombre": "LC300 Blanca",
+        "marca": "generic",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 1250,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/lcb.jpg"
+      },
+      {
+        "nombre": "LC300 Negra",
+        "marca": "generic",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 1250,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/lcn.jpg"
+      },
+      {
+        "nombre": "Suzuki Jimny verde 1/24",
+        "marca": "CCA",
+        "categoria": "autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/zv.jpg"
+      },
+      {
+        "nombre": "Cabesal Clasico 1/32 blanco con luz y sonido",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:32",
+        "precio": 1250,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/cb.jpg"
+      },
+      {
+        "nombre": "Cabesal Clasico 1/32 negro con luz y sonido",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:32",
+        "precio": 1250,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/cn.jpg"
+      },
+      {
+        "nombre": "Land Cruiser Series 200",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 595,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/lb.jpg"
+      },
+      {
+        "nombre": "Land Cruiser Series 200",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 595,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/ln.jpg"
+      },
+      {
+        "nombre": "Dodge charger srt escala 1969 azul",
+        "marca": "Maisto",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/srt.jpg"
+      },
+      {
+        "nombre": "Tundra 1/28 blanca 2da generacion",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:28",
+        "precio": 595,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/tb.jpg"
+      },
+       {
+        "nombre": "Tundra 1/28 negra 2da generacion",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:28",
+        "precio": 595,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/tn.jpg"
+      },
+      {
+        "nombre": "Toyota Hilux 1/32 con luz",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/hiluxb.jpg"
+      },
+      {
+        "nombre": "Toyota Hilux 1/32 con luz",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/hiluxn.jpg"
+      },
+      {
+        "nombre": "Toyota Hilux 1/32 con luz",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/hiluxa.jpg"
+      },
+      {
+        "nombre": "Toyota Hilux 1/32 con luz",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/hiluxr.jpg"
+      },
+      {
+        "nombre": "Toyota land cruiser 70 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 295,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/landb.png"
+      },
+      {
+        "nombre": "Toyota land cruiser 70 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 295,
+        "estado": "Disponible",
+        "etiqueta": "Nuevo",
+        "imagen": "assets/productos/landbe.png"
+      },
+       {
+        "nombre": "Toyota 22r 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/22rr.png"
+      },
+      {
+        "nombre": "Toyota 22r 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/22rb.png"
+      },
+      {
+        "nombre": "Toyota 22r 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/22ra.png"
+      },
+      {
+        "nombre": "Toyota 22r 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 325,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/22rg.png"
+      },
+      {
+        "nombre": "Lexus Lx570 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 195,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/lexus.png"
+      },
+       {
+        "nombre": "Chevy clasico 1/32",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 225,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/chevy.png"
+      },
+       {
+        "nombre": "Lamborghini Rapidos y Furiosos",
+        "marca": "Maisto",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1350,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/lambo.jpg"
+      },
+      {
+        "nombre": "Mototaxi Roja",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:32",
+        "precio": 395,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/mototaxi.jpg"
+      },
+       {
+        "nombre": "Porsche Dakar",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Oferta",
+        "imagen": "assets/productos/por.jpg"
+      },
+      {
+        "nombre": "Cabezal Freightliner escala",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:64",
+        "precio": 750,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/fa.jpg"
+      },
+      {
+        "nombre": "Cabezal Freightliner escala",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:64",
+        "precio": 395,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/cr.jpg"
+      },
+      {
+        "nombre": "Cabezal Freightliner escala",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:64",
+        "precio": 395,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/ca.jpg"
+      },
+      {
+        "nombre": "Cabezal Freightliner escala",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:64",
+        "precio": 395,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/cab.jpg"
+      },
+      {
+        "nombre": "Cabezal con pipa escala",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:64",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/pipa.jpg"
+      },
+      {
+        "nombre": "Mack Y Mcqueen set de dos",
+        "marca": "Matel",
+        "categoria": "Rastras",
+        "escala": "1:64",
+        "precio": 1500,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/mack.jpg"
+      },
+      {
+        "nombre": "Mcqueen Control remoto Cars",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 295,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/mcqueenrc.png"
+      },
+      {
+        "nombre": "Camioncito control remoto",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/rc1.png"
+      },
+      {
+        "nombre": "Buldoser RC",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1595,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/bulrc.png"
+      },
+      {
+        "nombre": "4x4 RC",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1595,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/4x4.png"
+      },
+      {
+        "nombre": "Land Cruiser RC 4x2",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 395,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/landrc.png"
+      },
+      {
+        "nombre": "Mario RC 4x2",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/mariorc.png"
+      },
+      {
+        "nombre": "Bus escolar 4x2 RC",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/busrc.png"
+      },
+      {
+        "nombre": "Escabadora 4x4 RC",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/escavador.jpg"
+      },
+      {
+        "nombre": "KTM Duke 1290",
+        "marca": "CCA",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/duke1290.jpg"
+      },
+      {
+        "nombre": "Yamaha R1",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/r1.jpg"
+      },
+      {
+        "nombre": "Yamaha R1",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/r1a.jpg"
+      },
+      {
+        "nombre": "Mini Biker",
+        "marca": "generic",
+        "categoria": "Otros",
+        "escala": "1:12",
+        "precio": 295,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/minibiker.jpg"
+      },
+      {
+        "nombre": "Hayabusa escala 1/12",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/haya.jpg"
+      },
+      {
+        "nombre": "Kawasaki Croos 450 escala 1/12",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/kawa.jpg"
+      },
+      {
+        "nombre": "H2R escala 1/12",
+        "marca": "CCA",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/h2r.jpg"
+      },
+      {
+        "nombre": "H2R mini escala 1/18",
+        "marca": "CCA",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 395,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/h2rmini.jpg"
+      },
+      {
+        "nombre": "KTM croos 690 1/12",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/ktmcroos.jpg"
+      },
+      {
+        "nombre": "Vstrom escala 1/12",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/vstrom.jpg"
+      },
+      {
+        "nombre": "Honda CB400X escala 1/12",
+        "marca": "Maisto",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/hondacb400x.jpg"
+      },
+      
+
+
+
+
+
     ];
   </script>
 
