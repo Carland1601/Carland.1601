@@ -7,45 +7,85 @@
 // Cambia este número por el WhatsApp real del negocio (código de país + número, sin + ni espacios)
 const WHATSAPP_NUMBER = "50489534880";
 
+// Slides del carrusel principal (rota automáticamente cada 4.5s)
+const HERO_SLIDES = [
+  {
+    variant: "a", icon: "🔥",
+    eyebrow: "Lo más pedido",
+    title: "Más vendidos",
+    text: "Las piezas que más se llevan nuestros clientes esta semana.",
+    filterCategory: "Todos",
+    image: "assets/productos/roll.jpg",
+    imageAlt: "Rolls-Royce Spectre a escala"
+  },
+  {
+    variant: "b", icon: "💥",
+    eyebrow: "Por tiempo limitado",
+    title: "Ofertas de la semana",
+    text: "Precios especiales en modelos seleccionados. No duran mucho.",
+    filterCategory: "Ofertas",
+    image: "assets/productos/sto.jpg",
+    imageAlt: "Modelo en oferta"
+  },
+  {
+    variant: "c", icon: "🚚",
+    eyebrow: "Cobertura nacional",
+    title: "Envíos a todo Honduras",
+    text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.",
+    filterCategory: "Todos",
+    image: "assets/productos/mack.jpg",
+    imageAlt: "Camión Mack a escala"
+  },
+  {
+    variant: "d", icon: "⭐",
+    eyebrow: "Recién llegados",
+    title: "Nuevos ingresos",
+    text: "Las últimas piezas que se sumaron al catálogo.",
+    filterCategory: "Novedades",
+    image: "assets/productos/h2r.jpg",
+    imageAlt: "Kawasaki H2R a escala"
+  },
+  {
+    variant: "e", icon: "🚗",
+    eyebrow: "Colección",
+    title: "Tacoma Collection",
+    text: "Toda la línea Toyota Tacoma a escala, lista para coleccionar.",
+    filterCategory: "Autos",
+    image: "assets/productos/dorada.jpg",
+    imageAlt: "Toyota Tacoma dorada a escala"
+  },
+  {
+    variant: "f", icon: "🚙",
+    eyebrow: "Colección",
+    title: "Toyota Collection",
+    text: "Prado, Land Cruiser, Hilux y más, en un solo lugar.",
+    filterCategory: "Autos",
+    image: "assets/productos/landb.png",
+    imageAlt: "Toyota Land Cruiser 70 a escala"
+  },
+  {
+    variant: "g", icon: "🎁",
+    eyebrow: "Sorpresa",
+    title: "Mystery Box",
+    text: "No sabes cuál te toca, pero seguro te va a encantar.",
+    filterCategory: "Todos",
+    image: "assets/productos/mcqueenrc.png",
+    imageAlt: "Auto de control remoto sorpresa"
+  }
+];
+
 // Orden en que deben aparecer los botones de categoría
 const CATEGORY_ORDER = [
   "Todos",
   "Autos",
   "Motocicletas",
-  "Camiones",
+  "Otros",
   "Rastras",
   "Maquinaria",
   "Control Remoto",
   "Novedades",
-  "Ofertas",
-  "Otros"
+  "Ofertas"
 ];
-
-/**
- * Alias de categorías: mapea variantes en minúscula que puedan colarse
- * al editar productos a mano, hacia el nombre "oficial" que se usa
- * para agrupar y filtrar. Así "autos", "Autos" o "AUTOS" se tratan igual.
- */
-const CATEGORY_ALIASES = {
-  "autos": "Autos",
-  "motocicletas": "Motocicletas",
-  "camiones": "Camiones",
-  "rastras": "Rastras",
-  "maquinaria": "Maquinaria",
-  "control remoto": "Control Remoto",
-  "novedades": "Novedades",
-  "ofertas": "Ofertas",
-  "otros": "Otros"
-};
-
-/**
- * Devuelve el nombre de categoría "oficial" (con el que se filtra),
- * aceptando variantes de mayúsculas/minúsculas.
- */
-function getCanonicalCategory(rawCategory) {
-  const key = (rawCategory || "").trim().toLowerCase();
-  return CATEGORY_ALIASES[key] || (rawCategory || "").trim();
-}
 
 // ---------- ESTADO ----------
 let allProducts = [];
@@ -65,6 +105,10 @@ const navInfoMobile = document.getElementById("navInfoMobile");
 const backToTop = document.getElementById("backToTop");
 const modalOverlay = document.getElementById("modalOverlay");
 const modalContent = document.getElementById("modalContent");
+const heroTrack = document.getElementById("heroTrack");
+const heroDots = document.getElementById("heroDots");
+const heroPrevBtn = document.getElementById("heroPrev");
+const heroNextBtn = document.getElementById("heroNext");
 
 /**
  * Formatea un número como moneda en Lempiras (L.)
@@ -83,18 +127,47 @@ function buildWhatsappLink(product) {
 }
 
 /**
- * Determina qué "chip" de estado / etiqueta especial mostrar sobre la tarjeta
+ * Determina qué "chip" de estado / etiqueta especial mostrar sobre la tarjeta,
+ * a partir del campo "etiqueta" del producto (acepta singular y plural)
  */
 function getBadgeClass(etiqueta) {
   const map = {
-    "nuevo": "card__badge--nuevo",
-    "oferta": "card__badge--oferta",
-    "ofertas": "card__badge--oferta",
-    "novedad": "card__badge--novedad",
-    "novedades": "card__badge--novedad"
+    "Nuevo": "card__badge--nuevo",
+    "Nuevos": "card__badge--nuevo",
+    "Oferta": "card__badge--oferta",
+    "Ofertas": "card__badge--oferta",
+    "Novedad": "card__badge--novedad",
+    "Novedades": "card__badge--novedad"
   };
-  const key = (etiqueta || "").trim().toLowerCase();
-  return map[key] || null;
+  return map[etiqueta] || null;
+}
+
+/**
+ * Etiquetas automáticas: para productos que no tienen ya una etiqueta fuerte
+ * (Nuevo/Oferta/Novedad), se les asigna al azar, en cada carga de página,
+ * una de estas para que el catálogo se sienta siempre activo.
+ */
+const AUTO_BADGE_POOL = [
+  { label: "🔥 HOT", cls: "card__badge--hot" },
+  { label: "⭐ Popular", cls: "card__badge--popular" },
+  { label: "🚚 Envío rápido", cls: "card__badge--envio" },
+  { label: "💥 Oferta", cls: "card__badge--oferta" }
+];
+const AUTO_BADGE_CHANCE = 0.3; // ~30% de los productos sin etiqueta reciben una automática
+
+/**
+ * Asigna una etiqueta automática (o ninguna) a cada producto sin etiqueta fuerte.
+ * Se llama una sola vez al cargar el catálogo para que el badge de cada
+ * producto se mantenga estable mientras el usuario filtra/busca.
+ */
+function assignAutoBadges(products) {
+  products.forEach((p) => {
+    if (getBadgeClass(p.etiqueta)) return; // ya tiene una etiqueta real, no se toca
+    if (Math.random() < AUTO_BADGE_CHANCE) {
+      const pick = AUTO_BADGE_POOL[Math.floor(Math.random() * AUTO_BADGE_POOL.length)];
+      p._autoBadge = pick;
+    }
+  });
 }
 
 /**
@@ -104,9 +177,12 @@ function renderCard(product, index) {
   const isAvailable = product.estado === "Disponible";
   const badgeClass = getBadgeClass(product.etiqueta);
 
-  const badgeHtml = badgeClass
-    ? `<span class="card__badge ${badgeClass}">${product.etiqueta}</span>`
-    : "";
+  let badgeHtml = "";
+  if (badgeClass) {
+    badgeHtml = `<span class="card__badge ${badgeClass}">${product.etiqueta}</span>`;
+  } else if (product._autoBadge) {
+    badgeHtml = `<span class="card__badge ${product._autoBadge.cls}">${product._autoBadge.label}</span>`;
+  }
 
   const statusClass = isAvailable ? "card__status--disponible" : "card__status--agotado";
   const statusLabel = isAvailable ? "Disponible" : "Agotado";
@@ -114,7 +190,7 @@ function renderCard(product, index) {
   const buyBtn = isAvailable
     ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="card__buy">
          <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-         Comprar por WhatsApp
+         Comprar
        </a>`
     : `<span class="card__buy card__buy--disabled">Agotado</span>`;
 
@@ -365,10 +441,8 @@ function loadProducts() {
     return;
   }
 
-  allProducts = window.PRODUCTOS.map((p) => ({
-    ...p,
-    categoria: getCanonicalCategory(p.categoria)
-  }));
+  allProducts = window.PRODUCTOS;
+  assignAutoBadges(allProducts);
   renderCategoryFilters();
   applyFiltersAndRender();
 }
@@ -407,6 +481,107 @@ backToTop.addEventListener("click", () => {
 // ---------- AÑO DINÁMICO EN EL FOOTER ----------
 document.getElementById("year").textContent = new Date().getFullYear();
 
+/* =========================================================
+   CARRUSEL PRINCIPAL
+   Cambia de slide automáticamente cada 4.5s. También se puede
+   navegar con flechas, puntos, swipe (móvil) o teclado.
+   ========================================================= */
+let heroIndex = 0;
+let heroTimer = null;
+const HERO_INTERVAL = 4500;
+
+function goToCategory(categoryName) {
+  currentCategory = categoryName;
+  renderCategoryFilters();
+  applyFiltersAndRender();
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+}
+
+function buildHeroSlides() {
+  heroTrack.innerHTML = HERO_SLIDES.map((slide) => `
+    <div class="hero__slide hero__slide--${slide.variant}" role="group" aria-roledescription="slide">
+      <div class="hero__slideMedia">
+        <img src="${slide.image}" alt="${slide.imageAlt}" class="hero__slideImg">
+      </div>
+      <div class="hero__content">
+        <span class="hero__eyebrow">${slide.icon} ${slide.eyebrow}</span>
+        <h1 class="hero__title">${slide.title}</h1>
+        <p class="hero__text">${slide.text}</p>
+        <div class="hero__actions">
+          <a href="#catalogo" class="hero__cta" data-hero-category="${slide.filterCategory}">Comprar ahora</a>
+          <a href="#catalogo" class="hero__cta hero__cta--ghost">Ver catálogo</a>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  heroDots.innerHTML = HERO_SLIDES.map((_, i) =>
+    `<button class="hero__dot" data-slide="${i}" aria-label="Ir al slide ${i + 1}"></button>`
+  ).join("");
+
+  heroTrack.querySelectorAll("[data-hero-category]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      goToCategory(btn.dataset.heroCategory);
+    });
+  });
+
+  heroDots.querySelectorAll(".hero__dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      setHeroSlide(Number(dot.dataset.slide));
+      restartHeroAutoplay();
+    });
+  });
+}
+
+function setHeroSlide(index) {
+  heroIndex = (index + HERO_SLIDES.length) % HERO_SLIDES.length;
+  heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
+  heroDots.querySelectorAll(".hero__dot").forEach((dot, i) => {
+    dot.classList.toggle("is-active", i === heroIndex);
+  });
+}
+
+function restartHeroAutoplay() {
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => setHeroSlide(heroIndex + 1), HERO_INTERVAL);
+}
+
+function initHeroCarousel() {
+  buildHeroSlides();
+  setHeroSlide(0);
+  restartHeroAutoplay();
+
+  heroPrevBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex - 1);
+    restartHeroAutoplay();
+  });
+  heroNextBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+
+  // Pausar mientras el cursor está encima (desktop)
+  const heroSection = document.getElementById("heroCarousel");
+  heroSection.addEventListener("mouseenter", () => clearInterval(heroTimer));
+  heroSection.addEventListener("mouseleave", restartHeroAutoplay);
+
+  // Swipe táctil (móvil)
+  let touchStartX = 0;
+  heroSection.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    clearInterval(heroTimer);
+  }, { passive: true });
+
+  heroSection.addEventListener("touchend", (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    if (deltaX > 40) setHeroSlide(heroIndex - 1);
+    else if (deltaX < -40) setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+}
+
 // ---------- INICIALIZACIÓN ----------
 setGenericWhatsappLinks();
 loadProducts();
+initHeroCarousel();
