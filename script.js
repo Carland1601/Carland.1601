@@ -1,894 +1,702 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* =========================================================
+   CARLAND 1601 — Lógica del catálogo
+   Todo el catálogo se genera dinámicamente desde productos.json
+   ========================================================= */
 
-  <!-- ===== SEO ===== -->
-  <title>Carland 1601 | Miniaturas y vehículos de colección en Honduras</title>
-  <meta name="description" content="Catálogo de Carland 1601: miniaturas y vehículos de colección a escala. Autos, motos, camiones, rastras y maquinaria. Envíos a toda Honduras, contacto directo por WhatsApp.">
-  <meta name="keywords" content="miniaturas honduras, carros a escala, coleccionismo, diecast honduras, carland 1601, hot wheels honduras, camiones a escala">
-  <meta name="author" content="Carland 1601">
-  <meta name="robots" content="index, follow">
+// ---------- CONFIGURACIÓN ----------
+// Cambia este número por el WhatsApp real del negocio (código de país + número, sin + ni espacios)
+const WHATSAPP_NUMBER = "50489534880";
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Carland 1601 | Miniaturas y vehículos de colección">
-  <meta property="og:description" content="Explora nuestro catálogo de vehículos a escala. Compra fácil y directa por WhatsApp.">
-  <meta property="og:image" content="assets/banner.jpg">
-  <meta property="og:type" content="website">
+// Slides del carrusel principal (rota automáticamente cada 4.5s)
+const HERO_SLIDES = [
+  {
+    variant: "a", icon: "🔥",
+    eyebrow: "Lo más pedido",
+    title: "Más vendidos",
+    text: "Las piezas que más se llevan nuestros clientes esta semana.",
+    filterCategory: "Todos"
+  },
+  {
+    variant: "b", icon: "💥",
+    eyebrow: "Por tiempo limitado",
+    title: "Ofertas de la semana",
+    text: "Precios especiales en modelos seleccionados. No duran mucho.",
+    filterCategory: "Ofertas"
+  },
+  {
+    variant: "c", icon: "🚚",
+    eyebrow: "Cobertura nacional",
+    title: "Envíos a todo Honduras",
+    text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.",
+    filterCategory: "Todos"
+  },
+  {
+    variant: "h", icon: "📦",
+    type: "envios",
+    eyebrow: "Envíos verificados",
+    title: "Así llegan tus pedidos",
+    text: "Fotos reales de empaques y entregas hechas por nuestro equipo en toda Honduras. 📦🚚✅",
+    filterCategory: "Todos"
+  },
+  {
+    variant: "d", icon: "⭐",
+    eyebrow: "Recién llegados",
+    title: "Nuevos ingresos",
+    text: "Las últimas piezas que se sumaron al catálogo.",
+    filterCategory: "Novedades"
+  },
+  {
+    variant: "e", icon: "🚗",
+    eyebrow: "Colección",
+    title: "Tacoma Collection",
+    text: "Toda la línea Toyota Tacoma a escala, lista para coleccionar.",
+    filterCategory: "Autos"
+  },
+  {
+    variant: "f", icon: "🚙",
+    eyebrow: "Colección",
+    title: "Toyota Collection",
+    text: "Prado, Land Cruiser, Hilux y más, en un solo lugar.",
+    filterCategory: "Autos"
+  },
+  {
+    variant: "g", icon: "🎁",
+    eyebrow: "Sorpresa",
+    title: "Mystery Box",
+    text: "No sabes cuál te toca, pero seguro te va a encantar.",
+    filterCategory: "Todos"
+  }
+];
 
-  <link rel="icon" href="assets/logo.png" type="image/png">
+// Imágenes de pruebas de envíos reales (carpeta assets/productos, nombradas 1 a 6)
+const SHIP_PROOF_IMAGES = [
+  "assets/productos/1.jpg",
+  "assets/productos/2.jpg",
+  "assets/productos/3.jpg",
+  "assets/productos/4.jpg",
+  "assets/productos/5.jpg",
+  "assets/productos/6.jpg"
+];
 
-  <!-- Tipografías -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+// Emojis que giran alrededor de la foto de envío (estilo "aro" circular)
+const SHIP_PROOF_EMOJIS = ["📦", "🚚", "✅", "📍", "🎉", "🛵"];
 
-  <!-- Iconos (solo SVG inline, sin dependencias externas pesadas) -->
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+// Duración en milisegundos entre cada imagen de envío
+const SHIP_PROOF_INTERVAL = 2000;
 
-  <!-- ============ NAVBAR FIJA ============ -->
-  <header class="navbar" id="navbar">
-    <div class="navbar__inner">
-      <a href="#top" class="navbar__brand">
-        <img src="assets/logo.png" alt="Logo Carland 1601" class="navbar__logo" width="42" height="42">
-        <div class="navbar__brandtext">
-          <span class="navbar__title">CARLAND <em>1601</em></span>
-          <span class="navbar__subtitle">Miniaturas y vehículos de colección</span>
+// Emojis de autos, envíos y entregas para el aro que gira alrededor de cada foto
+const HERO_CIRCLE_EMOJIS = [
+  "🚗", "🏎️", "🚙", "🛻", "🏍️", "🚓", "🚕",
+  "📦", "🚚", "✅", "📍", "🎉", "🛵", "🚀", "🔥", "⭐"
+];
+
+// Mezcla un arreglo sin modificar el original (Fisher-Yates)
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+// Toma `count` elementos aleatorios y distintos de un arreglo
+function pickRandom(arr, count) {
+  return shuffleArray(arr).slice(0, Math.min(count, arr.length));
+}
+
+// Pool combinado: fotos de productos (autos/motos) + pruebas de envío reales
+function getCirclePoolImages() {
+  const fromProducts = Array.isArray(window.PRODUCTOS)
+    ? window.PRODUCTOS.map((p) => p.imagen).filter(Boolean)
+    : [];
+  return [...new Set([...fromProducts, ...SHIP_PROOF_IMAGES])];
+}
+
+// Orden en que deben aparecer los botones de categoría
+const CATEGORY_ORDER = [
+  "Todos",
+  "Autos",
+  "Motocicletas",
+  "Otros",
+  "Rastras",
+  "Maquinaria",
+  "Control Remoto",
+  "Novedades",
+  "Ofertas"
+];
+
+// ---------- ESTADO ----------
+let allProducts = [];
+let currentCategory = "Todos";
+let currentSearch = "";
+let renderedProducts = []; // productos actualmente visibles en el grid (tras filtros/búsqueda)
+let lastFocusedElement = null; // para devolver el foco al cerrar el modal
+
+// ---------- ELEMENTOS DEL DOM ----------
+const grid = document.getElementById("productsGrid");
+const emptyMessage = document.getElementById("emptyMessage");
+const searchInput = document.getElementById("searchInput");
+const filtersContainer = document.getElementById("categoryFilters");
+const navbar = document.getElementById("navbar");
+const navToggle = document.getElementById("navToggle");
+const navInfoMobile = document.getElementById("navInfoMobile");
+const backToTop = document.getElementById("backToTop");
+const modalOverlay = document.getElementById("modalOverlay");
+const modalContent = document.getElementById("modalContent");
+const heroTrack = document.getElementById("heroTrack");
+const heroDots = document.getElementById("heroDots");
+const heroPrevBtn = document.getElementById("heroPrev");
+const heroNextBtn = document.getElementById("heroNext");
+
+/**
+ * Formatea un número como moneda en Lempiras (L.)
+ */
+function formatPrice(value) {
+  const num = Number(value) || 0;
+  return "L. " + num.toLocaleString("es-HN", { minimumFractionDigits: 0 });
+}
+
+/**
+ * Construye el enlace de WhatsApp con mensaje precargado para un producto
+ */
+function buildWhatsappLink(product) {
+  const mensaje = `Hola, me interesa el ${product.nombre} escala ${product.escala} con precio de ${formatPrice(product.precio)}.`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
+}
+
+/**
+ * Determina qué "chip" de estado / etiqueta especial mostrar sobre la tarjeta,
+ * a partir del campo "etiqueta" del producto (acepta singular y plural)
+ */
+function getBadgeClass(etiqueta) {
+  const map = {
+    "Nuevo": "card__badge--nuevo",
+    "Nuevos": "card__badge--nuevo",
+    "Oferta": "card__badge--oferta",
+    "Ofertas": "card__badge--oferta",
+    "Novedad": "card__badge--novedad",
+    "Novedades": "card__badge--novedad"
+  };
+  return map[etiqueta] || null;
+}
+
+/**
+ * Etiquetas automáticas: para productos que no tienen ya una etiqueta fuerte
+ * (Nuevo/Oferta/Novedad), se les asigna al azar, en cada carga de página,
+ * una de estas para que el catálogo se sienta siempre activo.
+ */
+const AUTO_BADGE_POOL = [
+  { label: "🔥 HOT", cls: "card__badge--hot" },
+  { label: "⭐ Popular", cls: "card__badge--popular" },
+  { label: "🚚 Envío rápido", cls: "card__badge--envio" },
+  { label: "💥 Oferta", cls: "card__badge--oferta" }
+];
+const AUTO_BADGE_CHANCE = 0.3; // ~30% de los productos sin etiqueta reciben una automática
+
+/**
+ * Asigna una etiqueta automática (o ninguna) a cada producto sin etiqueta fuerte.
+ * Se llama una sola vez al cargar el catálogo para que el badge de cada
+ * producto se mantenga estable mientras el usuario filtra/busca.
+ */
+function assignAutoBadges(products) {
+  products.forEach((p) => {
+    if (getBadgeClass(p.etiqueta)) return; // ya tiene una etiqueta real, no se toca
+    if (Math.random() < AUTO_BADGE_CHANCE) {
+      const pick = AUTO_BADGE_POOL[Math.floor(Math.random() * AUTO_BADGE_POOL.length)];
+      p._autoBadge = pick;
+    }
+  });
+}
+
+/**
+ * Genera el HTML de una tarjeta de producto
+ */
+function renderCard(product, index) {
+  const isAvailable = product.estado === "Disponible";
+  const badgeClass = getBadgeClass(product.etiqueta);
+
+  let badgeHtml = "";
+  if (badgeClass) {
+    badgeHtml = `<span class="card__badge ${badgeClass}">${product.etiqueta}</span>`;
+  } else if (product._autoBadge) {
+    badgeHtml = `<span class="card__badge ${product._autoBadge.cls}">${product._autoBadge.label}</span>`;
+  }
+
+  const statusClass = isAvailable ? "card__status--disponible" : "card__status--agotado";
+  const statusLabel = isAvailable ? "Disponible" : "Agotado";
+
+  const buyBtn = isAvailable
+    ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="card__buy">
+         <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+         Comprar
+       </a>`
+    : `<span class="card__buy card__buy--disabled">Agotado</span>`;
+
+  return `
+    <article class="card" data-index="${index}" tabindex="0" role="button" aria-label="Ver ${product.nombre} en grande">
+      <div class="card__mediaWrap">
+        ${badgeHtml}
+        <span class="card__status ${statusClass}">${statusLabel}</span>
+        <img src="${product.imagen}" alt="${product.nombre}" loading="lazy" class="lazy-fade" onload="this.classList.add('is-loaded')">
+      </div>
+      <div class="card__body">
+        <span class="card__brand">${product.marca}</span>
+        <h3 class="card__name">${product.nombre}</h3>
+        <span class="card__scale">Escala ${product.escala}</span>
+        <div class="card__priceRow">
+          <span class="card__price">${formatPrice(product.precio)}</span>
         </div>
-      </a>
+        ${buyBtn}
+      </div>
+    </article>
+  `;
+}
 
-      <nav class="navbar__info">
-        <span class="navbar__pill">🚚 Envíos a toda Honduras</span>
-        <span class="navbar__pill">💳 Pago previo depósito o transferencia</span>
-        <span class="navbar__pill">📍 Santa Bárbara, Honduras</span>
-      </nav>
+/**
+ * Genera el contenido interno del modal para un producto dado
+ */
+function renderModalBody(product) {
+  const isAvailable = product.estado === "Disponible";
+  const badgeClass = getBadgeClass(product.etiqueta);
 
-      <a href="#" class="navbar__whatsapp" id="navWhatsapp" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
-        <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-        <span>Escríbenos</span>
-      </a>
+  const etiquetaChip = badgeClass
+    ? `<span class="modalContent__chip ${badgeClass.replace('card__badge', 'modalContent__chip')}">${product.etiqueta}</span>`
+    : "";
 
-      <button class="navbar__toggle" id="navToggle" aria-label="Abrir menú de información">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
+  const statusChip = isAvailable
+    ? `<span class="modalContent__chip modalContent__chip--disponible">Disponible</span>`
+    : `<span class="modalContent__chip modalContent__chip--agotado">Agotado</span>`;
 
-    <div class="navbar__infoMobile" id="navInfoMobile">
-      <span>🚚 Envíos a toda Honduras</span>
-      <span>💳 Pago previo depósito o transferencia bancaria</span>
-      <span>📍 Santa Bárbara, Honduras</span>
-    </div>
-  </header>
+  const buyBtn = isAvailable
+    ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="modalContent__buy">
+         <svg viewBox="0 0 32 32" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+         Comprar por WhatsApp
+       </a>`
+    : `<span class="modalContent__buy modalContent__buy--disabled">Agotado</span>`;
 
-  <a id="top"></a>
-
-  <!-- ============ CARRUSEL PRINCIPAL ============ -->
-  <section class="hero" id="heroCarousel" aria-roledescription="carrusel" aria-label="Destacados Carland 1601">
-    <div class="hero__track" id="heroTrack">
-      <!-- Los slides se generan dinámicamente en script.js (ver HERO_SLIDES) -->
-    </div>
-
-    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Anterior">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
+  return `
+    <button class="modalContent__close" id="modalCloseBtn" aria-label="Cerrar vista previa">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
-    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Siguiente">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
-    </button>
-
-    <div class="hero__dots" id="heroDots"></div>
-  </section>
-
-  <!-- ============ BUSCADOR + FILTROS ============ -->
-  <section class="controls" id="catalogo">
-    <div class="controls__search">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar por nombre, marca, categoría o escala..." aria-label="Buscar productos">
+    <div class="modalContent__media">
+      <img src="${product.imagen}" alt="${product.nombre}">
     </div>
-
-    <div class="controls__filters" id="categoryFilters">
-      <!-- Los botones de categoría se generan dinámicamente en script.js -->
+    <div class="modalContent__body">
+      <span class="modalContent__brand">${product.marca}</span>
+      <h2 class="modalContent__name" id="modalName">${product.nombre}</h2>
+      <div class="modalContent__meta">
+        <span class="modalContent__chip">Escala ${product.escala}</span>
+        <span class="modalContent__chip">${product.categoria}</span>
+        ${etiquetaChip}
+        ${statusChip}
+      </div>
+      <div class="modalContent__priceBlock">
+        <p class="modalContent__priceLabel">Precio</p>
+        <p class="modalContent__price">${formatPrice(product.precio)}</p>
+      </div>
+      ${buyBtn}
     </div>
-  </section>
+  `;
+}
 
-  <!-- ============ GRID DE PRODUCTOS ============ -->
-  <main>
-    <section class="products" id="productsGrid" aria-live="polite">
-      <!-- Las tarjetas de producto se insertan aquí vía JavaScript, desde productos.json -->
-    </section>
+/**
+ * Abre el modal de vista previa animando su crecimiento desde la
+ * posición y el tamaño exactos de la tarjeta en la que se hizo clic
+ * (técnica FLIP: First, Last, Invert, Play) — efecto tipo Canva.
+ */
+function openProductModal(product, cardEl) {
+  lastFocusedElement = document.activeElement;
 
-    <p class="products__empty" id="emptyMessage" hidden>
-      No encontramos productos con esa búsqueda. Prueba con otro nombre, marca o categoría.
-    </p>
-  </main>
+  const firstRect = cardEl.getBoundingClientRect();
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="footer__inner">
-      <div class="footer__brand">
-        <img src="assets/logo.png" alt="Logo Carland 1601" width="48" height="48">
-        <div>
-          <p class="footer__title">CARLAND 1601</p>
-          <p class="footer__tag">Miniaturas y vehículos de colección</p>
+  modalContent.innerHTML = renderModalBody(product);
+  modalOverlay.hidden = false;
+  document.body.classList.add("modal-open");
+
+  // "Last": posición/tamaño final una vez que el modal ya está centrado
+  const lastRect = modalContent.getBoundingClientRect();
+
+  const deltaX = firstRect.left - lastRect.left;
+  const deltaY = firstRect.top - lastRect.top;
+  const scaleX = firstRect.width / lastRect.width;
+  const scaleY = firstRect.height / lastRect.height;
+
+  // "Invert": colocamos el modal visualmente donde estaba la tarjeta
+  modalContent.style.transition = "none";
+  modalContent.style.transformOrigin = "top left";
+  modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+  modalContent.style.opacity = "0.5";
+  modalContent.style.borderRadius = "16px";
+
+  // Forzar reflow para que el navegador registre el estado inicial
+  void modalContent.offsetWidth;
+
+  // "Play": animamos hacia el estado final (tamaño completo, centrado)
+  requestAnimationFrame(() => {
+    modalContent.style.transition =
+      "transform 0.45s cubic-bezier(.22,.85,.3,1), opacity 0.28s ease";
+    modalContent.style.transform = "translate(0, 0) scale(1, 1)";
+    modalContent.style.opacity = "1";
+  });
+
+  requestAnimationFrame(() => {
+    modalOverlay.classList.add("is-visible");
+  });
+
+  document.getElementById("modalCloseBtn").addEventListener("click", closeProductModal);
+}
+
+/**
+ * Cierra el modal encogiéndolo de vuelta hacia la tarjeta original
+ * (si sigue visible en el grid) o con un simple fundido si ya no está.
+ */
+function closeProductModal() {
+  const activeIndex = modalContent.dataset.activeIndex;
+  const originCard = grid.querySelector(`.card[data-index="${activeIndex}"]`);
+
+  modalOverlay.classList.remove("is-visible");
+
+  if (originCard) {
+    const rect = originCard.getBoundingClientRect();
+    const modalRect = modalContent.getBoundingClientRect();
+    const deltaX = rect.left - modalRect.left;
+    const deltaY = rect.top - modalRect.top;
+    const scaleX = rect.width / modalRect.width;
+    const scaleY = rect.height / modalRect.height;
+
+    modalContent.style.transition =
+      "transform 0.32s cubic-bezier(.4,0,.6,1), opacity 0.25s ease";
+    modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+    modalContent.style.opacity = "0.4";
+  } else {
+    modalContent.style.transition = "transform 0.25s ease, opacity 0.25s ease";
+    modalContent.style.transform = "scale(0.94)";
+    modalContent.style.opacity = "0";
+  }
+
+  setTimeout(() => {
+    modalOverlay.hidden = true;
+    modalContent.style.transition = "none";
+    modalContent.style.transform = "none";
+    modalContent.style.opacity = "1";
+    modalContent.innerHTML = "";
+    document.body.classList.remove("modal-open");
+    if (lastFocusedElement) lastFocusedElement.focus();
+  }, 320);
+}
+
+// Abrir el modal al hacer clic (o presionar Enter/Espacio) en una tarjeta,
+// siempre que el clic no haya sido sobre el botón "Comprar por WhatsApp"
+grid.addEventListener("click", (e) => {
+  if (e.target.closest(".card__buy")) return; // deja que el enlace de WhatsApp funcione normal
+  const cardEl = e.target.closest(".card");
+  if (!cardEl) return;
+
+  const product = renderedProducts[Number(cardEl.dataset.index)];
+  if (!product) return;
+
+  modalContent.dataset.activeIndex = cardEl.dataset.index;
+  openProductModal(product, cardEl);
+});
+
+grid.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const cardEl = e.target.closest(".card");
+  if (!cardEl) return;
+  e.preventDefault();
+  cardEl.click();
+});
+
+// Cerrar el modal al hacer clic fuera del contenido, con Escape, o con el botón X
+modalOverlay.addEventListener("click", (e) => {
+  if (e.target === modalOverlay) closeProductModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modalOverlay.hidden) closeProductModal();
+});
+
+/**
+ * Aplica los filtros de búsqueda + categoría actuales y vuelve a pintar el grid
+ */
+function applyFiltersAndRender() {
+  const term = currentSearch.trim().toLowerCase();
+
+  const filtered = allProducts.filter((p) => {
+    const matchesCategory =
+      currentCategory === "Todos" || p.categoria === currentCategory;
+
+    const matchesSearch =
+      term === "" ||
+      p.nombre.toLowerCase().includes(term) ||
+      p.marca.toLowerCase().includes(term) ||
+      p.categoria.toLowerCase().includes(term) ||
+      p.escala.toLowerCase().includes(term);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  renderedProducts = filtered;
+  grid.innerHTML = filtered.map((p, i) => renderCard(p, i)).join("");
+  emptyMessage.hidden = filtered.length !== 0;
+}
+
+/**
+ * Genera dinámicamente los botones de categoría a partir de las categorías
+ * realmente presentes en productos.json (respetando el orden preferido)
+ */
+function renderCategoryFilters() {
+  const presentCategories = new Set(allProducts.map((p) => p.categoria));
+  const categoriesToShow = CATEGORY_ORDER.filter(
+    (cat) => cat === "Todos" || presentCategories.has(cat)
+  );
+
+  filtersContainer.innerHTML = categoriesToShow
+    .map((cat) => {
+      const activeClass = cat === currentCategory ? "is-active" : "";
+      return `<button class="filter-btn ${activeClass}" data-category="${cat}">${cat}</button>`;
+    })
+    .join("");
+
+  // Delegación de eventos para los botones de filtro
+  filtersContainer.querySelectorAll(".filter-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentCategory = btn.dataset.category;
+      renderCategoryFilters();
+      applyFiltersAndRender();
+    });
+  });
+}
+
+/**
+ * Carga el catálogo desde la lista de productos embebida en index.html
+ * (window.PRODUCTOS, definida en un <script> justo antes de script.js)
+ */
+function loadProducts() {
+  if (!Array.isArray(window.PRODUCTOS)) {
+    console.error("No se encontró window.PRODUCTOS. Revisa el bloque <script> en index.html");
+    grid.innerHTML = `<p class="products__empty">No se pudo cargar el catálogo. Revisa la lista de productos en index.html.</p>`;
+    return;
+  }
+
+  allProducts = window.PRODUCTOS;
+  assignAutoBadges(allProducts);
+  renderCategoryFilters();
+  applyFiltersAndRender();
+}
+
+// ---------- BUSCADOR EN TIEMPO REAL ----------
+searchInput.addEventListener("input", (e) => {
+  currentSearch = e.target.value;
+  applyFiltersAndRender();
+});
+
+// ---------- WHATSAPP: NAVBAR Y BOTÓN FLOTANTE (mensaje genérico) ----------
+function setGenericWhatsappLinks() {
+  const genericMsg = encodeURIComponent(
+    "Hola, quiero más información sobre el catálogo de Carland 1601."
+  );
+  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${genericMsg}`;
+  document.getElementById("navWhatsapp").href = link;
+  document.getElementById("floatWhatsapp").href = link;
+}
+
+// ---------- MENÚ DE INFORMACIÓN EN MÓVIL ----------
+navToggle.addEventListener("click", () => {
+  navInfoMobile.classList.toggle("is-open");
+});
+
+// ---------- BOTÓN VOLVER ARRIBA + NAVBAR ON SCROLL ----------
+window.addEventListener("scroll", () => {
+  const scrolled = window.scrollY > 400;
+  backToTop.hidden = !scrolled;
+});
+
+backToTop.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// ---------- AÑO DINÁMICO EN EL FOOTER ----------
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* =========================================================
+   CARRUSEL PRINCIPAL
+   Cambia de slide automáticamente cada 4.5s. También se puede
+   navegar con flechas, puntos, swipe (móvil) o teclado.
+   ========================================================= */
+let heroIndex = 0;
+let heroTimer = null;
+const HERO_INTERVAL = 4500;
+
+function goToCategory(categoryName) {
+  currentCategory = categoryName;
+  renderCategoryFilters();
+  applyFiltersAndRender();
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+}
+
+function buildHeroSlides() {
+  heroTrack.innerHTML = HERO_SLIDES.map((slide, i) => `
+    <div class="hero__slide hero__slide--${slide.variant}" role="group" aria-roledescription="slide">
+      <div class="hero__content">
+        <span class="hero__eyebrow">${slide.icon} ${slide.eyebrow}</span>
+        <h1 class="hero__title">${slide.title}</h1>
+        <p class="hero__text">${slide.text}</p>
+        <div class="hero__actions">
+          <a href="#catalogo" class="hero__cta" data-hero-category="${slide.filterCategory}">Comprar ahora</a>
+          <a href="#catalogo" class="hero__cta hero__cta--ghost">Ver catálogo</a>
         </div>
       </div>
-
-      <div class="footer__col">
-        <h3>Información</h3>
-        <p>🚚 Envíos a toda Honduras</p>
-        <p>💳 Pago únicamente previo depósito o transferencia bancaria</p>
-        <p>📍 Santa Bárbara, Honduras</p>
-        <p>🗂 Catálogo actualizado constantemente</p>
-      </div>
-
-      <div class="footer__col">
-        <h3>Síguenos</h3>
-        <div class="footer__social">
-          <a href="#" aria-label="Facebook">Facebook</a>
-          <a href="#" aria-label="Instagram">Instagram</a>
-          <a href="#" aria-label="TikTok">TikTok</a>
-        </div>
-      </div>
+      ${buildHeroCircleMarkup(i)}
     </div>
+  `).join("");
 
-    <p class="footer__rights">© <span id="year"></span> Carland 1601. Todos los derechos reservados.</p>
-  </footer>
+  heroDots.innerHTML = HERO_SLIDES.map((_, i) =>
+    `<button class="hero__dot" data-slide="${i}" aria-label="Ir al slide ${i + 1}"></button>`
+  ).join("");
 
-  <!-- ============ BOTONES FLOTANTES ============ -->
-  <a href="#" class="floatBtn floatBtn--whatsapp" id="floatWhatsapp" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
-    <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-  </a>
+  heroTrack.querySelectorAll("[data-hero-category]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      goToCategory(btn.dataset.heroCategory);
+    });
+  });
 
-  <button class="floatBtn floatBtn--top" id="backToTop" aria-label="Volver arriba" hidden>
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-  </button>
+  heroDots.querySelectorAll(".hero__dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      setHeroSlide(Number(dot.dataset.slide));
+      restartHeroAutoplay();
+    });
+  });
+}
 
-  <!-- ============ MODAL DE VISTA PREVIA DE PRODUCTO ============ -->
-  <div class="modalOverlay" id="modalOverlay" hidden>
-    <div class="modalContent" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalName">
-      <!-- Contenido inyectado dinámicamente por script.js -->
+/**
+ * Genera el markup de la galería circular de un slide: una foto que va
+ * cambiando entre varias imágenes aleatorias (autos, motos y envíos reales),
+ * rodeada de un aro de emojis (también aleatorios) que gira en círculo.
+ * Cada slide recibe su propia selección aleatoria de fotos, emojis,
+ * velocidad y sentido de giro para que se sienta dinámico y distinto.
+ */
+function buildHeroCircleMarkup(slideIndex) {
+  const pool = getCirclePoolImages();
+  if (!pool.length) return "";
+
+  const images = pickRandom(pool, Math.min(6, pool.length));
+  const emojis = pickRandom(HERO_CIRCLE_EMOJIS, 6);
+  const spinDuration = (12 + Math.random() * 10).toFixed(1); // entre 12s y 22s
+  const spinDirection = Math.random() < 0.5 ? "normal" : "reverse";
+
+  const emojiRing = emojis.map((emoji, i) => `
+    <div class="shipProof__orbit" style="--i:${i}">
+      <span class="shipProof__emoji">${emoji}</span>
     </div>
-  </div>
+  `).join("");
 
-  <!-- =========================================================
-       CATÁLOGO DE PRODUCTOS
-       Edita, agrega o elimina productos directamente aquí.
-       Cada producto es un bloque { ... } separado por coma.
-       Revisa el README.md para instrucciones detalladas.
-       ========================================================= -->
-  <script>
-    window.PRODUCTOS = [
-      {
-        "nombre": "Rolls-Royce Spectre",
-        "marca": "Rolls-Royce",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1550,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/roll.jpg"
-      },
-      {
-        "nombre": "Antorcha Minecraft decoracion de habitacion",
-        "marca": "Minecraft",
-        "categoria": "Otros",
-        "escala": "24cm alto",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/antorcha.png"
-      },
-      {
-        "nombre": "Rolls-Royce Spectre",
-        "marca": "Rolls-Royce",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1550,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rolld.jpg"
-      },
-      {
-        "nombre": "Auto Rc Drift",
-        "marca": "generic",
-        "categoria": "Autos Rc",
-        "escala": "1:24",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rcdrift.jpg"
-      },
-      {
-        "nombre": "Chiks Hiks 1/64",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:64",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/chiks.jpg"
-      },
-      {
-        "nombre": "Filmore 1/64",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:64",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/filmore.jpg"
-      },
-      {
-        "nombre": "Cabesal Transformer 1/24 Coleccionable",
-        "marca": "Jada",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/tc.jpg"
-      },
-      {
-        "nombre": "Cabesal Transformer 1/24 Coleccionable",
-        "marca": "Jada",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/trans.jpg"
-      },
-      {
-        "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tacoma.jpg"
-      },
-      {
-        "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tacoma-negra.jpg"
-      },
-      {
-         "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/dorada.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/troja.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tblanca.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tverde.jpg"
-      },
-      {
-        "nombre": "Alfa Romero Giulia GTAm 2021 ",
-        "marca": "Alfa Romero",
-        "categoria": "Autos",
-        "escala": "1:18",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "",
-        "imagen": "assets/productos/alfa.jpg"
-      },
-      {
-        "nombre": "Cybertruck Gris 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cgris.jpg"
-      },
-      {
-        "nombre": "Cybertruck negra 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cnegra.jpg"
-      },
-      {
-        "nombre": "Cybertruck dorada 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cdorada.jpg"
-      },
-       {
-        "nombre": "Lamborghini STO",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/sto.jpg"
-      },
-      {
-        "nombre": "Toyota Prado 1/24 blanca",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/pradob.jpg"
-      },
-      {
-        "nombre": "Toyota Prado 1/24 Gris",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/pradog.jpg"
-      },
-      {
-        "nombre": "Plymouth taxi escala",
-        "marca": "Polstergit",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/taxi.jpg"
-      },
-      {
-        "nombre": "LC300 Blanca",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lcb.jpg"
-      },
-      {
-        "nombre": "LC300 Negra",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lcn.jpg"
-      },
-      {
-        "nombre": "Suzuki Jimny verde 1/24",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/zv.jpg"
-      },
-      {
-        "nombre": "Cabesal Clasico 1/32 blanco con luz y sonido",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:32",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cb.jpg"
-      },
-      {
-        "nombre": "Cabesal Clasico 1/32 negro con luz y sonido",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:32",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cn.jpg"
-      },
-      {
-        "nombre": "Land Cruiser Series 200",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lb.jpg"
-      },
-      {
-        "nombre": "Land Cruiser Series 200",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/ln.jpg"
-      },
-      {
-        "nombre": "Dodge charger srt escala 1969 azul",
-        "marca": "Maisto",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/srt.jpg"
-      },
-      {
-        "nombre": "Tundra 1/28 blanca 2da generacion",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:28",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tb.jpg"
-      },
-       {
-        "nombre": "Tundra 1/28 negra 2da generacion",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:28",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tn.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxb.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxn.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxa.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxr.jpg"
-      },
-      {
-        "nombre": "Toyota land cruiser 70 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/landb.png"
-      },
-      {
-        "nombre": "Toyota land cruiser 70 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/landbe.png"
-      },
-       {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rr.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rb.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22ra.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rg.png"
-      },
-      {
-        "nombre": "Lexus Lx570 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 195,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/lexus.png"
-      },
-       {
-        "nombre": "Chevy clasico 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 225,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/chevy.png"
-      },
-       {
-        "nombre": "Lamborghini Rapidos y Furiosos",
-        "marca": "Maisto",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1350,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/lambo.jpg"
-      },
-      {
-        "nombre": "Mototaxi Roja",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/mototaxi.jpg"
-      },
-       {
-        "nombre": "Porsche Dakar",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/por.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 750,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/fa.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/cr.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/ca.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/cab.jpg"
-      },
-      {
-        "nombre": "Cabezal con pipa escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/pipa.jpg"
-      },
-      {
-        "nombre": "Mack Y Mcqueen set de dos",
-        "marca": "Matel",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 1500,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/mack.jpg"
-      },
-      {
-        "nombre": "Mcqueen Control remoto Cars",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/mcqueenrc.png"
-      },
-      {
-        "nombre": "Camioncito control remoto",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 795,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/rc1.png"
-      },
-      {
-        "nombre": "Buldoser RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/bulrc.png"
-      },
-      {
-        "nombre": "4x4 RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/4x4.png"
-      },
-      {
-        "nombre": "Land Cruiser RC 4x2",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/landrc.png"
-      },
-      {
-        "nombre": "Mario RC 4x2",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 895,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/mariorc.png"
-      },
-      {
-        "nombre": "Bus escolar 4x2 RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 795,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/busrc.png"
-      },
-      {
-        "nombre": "Escabadora 4x4 RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 795,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/escavador.jpg"
-      },
-      {
-        "nombre": "KTM Duke 1290",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/duke1290.jpg"
-      },
-      {
-        "nombre": "Yamaha R1",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/r1.jpg"
-      },
-      {
-        "nombre": "Yamaha R1",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/r1a.jpg"
-      },
-      {
-        "nombre": "Mini Biker",
-        "marca": "generic",
-        "categoria": "Otros",
-        "escala": "1:12",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/minibiker.jpg"
-      },
-      {
-        "nombre": "Hayabusa escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/haya.jpg"
-      },
-      {
-        "nombre": "Kawasaki Croos 450 escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/kawa.jpg"
-      },
-      {
-        "nombre": "H2R escala 1/12",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/h2r.jpg"
-      },
-      {
-        "nombre": "H2R mini escala 1/18",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/h2rmini.jpg"
-      },
-      {
-        "nombre": "KTM croos 690 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/ktmcroos.jpg"
-      },
-      {
-        "nombre": "Vstrom escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/vstrom.jpg"
-      },
-      {
-        "nombre": "Honda CB400X escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/hondacb400x.jpg"
-      },
-      
+  return `
+    <div class="shipProof" data-slide-index="${slideIndex}"
+         data-images='${JSON.stringify(images)}'
+         style="--spin-duration:${spinDuration}s; --spin-direction:${spinDirection};">
+      <div class="shipProof__ring" aria-hidden="true">${emojiRing}</div>
+      <div class="shipProof__circle">
+        <img src="${images[0]}" alt="Autos, motos y envíos reales de Carland 1601" class="shipProof__img">
+      </div>
+      <span class="shipProof__badge">✅ 100% real</span>
+    </div>
+  `;
+}
 
+/**
+ * Activa la rotación aleatoria de fotos en CADA galería circular del
+ * carrusel (una por slide), cada una de forma independiente y con un
+ * pequeño desfase inicial para que no cambien todas al mismo tiempo.
+ * Si una imagen no carga, se salta automáticamente a la siguiente.
+ */
+function initHeroCircleRotation() {
+  document.querySelectorAll(".shipProof").forEach((container) => {
+    const img = container.querySelector(".shipProof__img");
+    if (!img) return;
 
+    let images = [];
+    try {
+      images = JSON.parse(container.dataset.images || "[]");
+    } catch (e) {
+      images = [];
+    }
+    if (images.length < 2) return; // nada que rotar
 
+    // Precarga silenciosa para evitar parpadeos al cambiar de foto
+    images.forEach((src) => { const preloader = new Image(); preloader.src = src; });
 
+    let idx = 0;
+    img.onerror = () => {
+      idx = (idx + 1) % images.length;
+      img.src = images[idx];
+    };
 
-    ];
-  </script>
+    const startDelay = Math.floor(Math.random() * SHIP_PROOF_INTERVAL);
+    setTimeout(() => {
+      setInterval(() => {
+        idx = (idx + 1) % images.length;
+        img.classList.add("is-fading");
+        setTimeout(() => {
+          img.src = images[idx];
+          img.classList.remove("is-fading");
+        }, 220);
+      }, SHIP_PROOF_INTERVAL);
+    }, startDelay);
+  });
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+function setHeroSlide(index) {
+  heroIndex = (index + HERO_SLIDES.length) % HERO_SLIDES.length;
+  heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
+  heroDots.querySelectorAll(".hero__dot").forEach((dot, i) => {
+    dot.classList.toggle("is-active", i === heroIndex);
+  });
+}
+
+function restartHeroAutoplay() {
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => setHeroSlide(heroIndex + 1), HERO_INTERVAL);
+}
+
+function initHeroCarousel() {
+  buildHeroSlides();
+  setHeroSlide(0);
+  restartHeroAutoplay();
+  initHeroCircleRotation();
+
+  heroPrevBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex - 1);
+    restartHeroAutoplay();
+  });
+  heroNextBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+
+  // Pausar mientras el cursor está encima (desktop)
+  const heroSection = document.getElementById("heroCarousel");
+  heroSection.addEventListener("mouseenter", () => clearInterval(heroTimer));
+  heroSection.addEventListener("mouseleave", restartHeroAutoplay);
+
+  // Swipe táctil (móvil)
+  let touchStartX = 0;
+  heroSection.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    clearInterval(heroTimer);
+  }, { passive: true });
+
+  heroSection.addEventListener("touchend", (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    if (deltaX > 40) setHeroSlide(heroIndex - 1);
+    else if (deltaX < -40) setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+}
+
+// ---------- INICIALIZACIÓN ----------
+setGenericWhatsappLinks();
+loadProducts();
+initHeroCarousel();
