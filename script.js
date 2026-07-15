@@ -569,17 +569,40 @@ function buildShipProofMarkup() {
 /**
  * Rota las fotos de pruebas de envío cada SHIP_PROOF_INTERVAL ms,
  * con un pequeño efecto de desvanecido entre imagen e imagen.
+ * Si una imagen no carga (nombre/ruta incorrecta), se salta automáticamente
+ * a la siguiente para que el carrusel nunca se quede "roto" o vacío.
  */
 function initShipProofRotation() {
   const img = document.getElementById("shipProofImg");
   if (!img) return;
 
+  // Precarga todas las imágenes para evitar parpadeos y detectar rutas rotas
+  const workingImages = [];
+  let loadedCount = 0;
+  SHIP_PROOF_IMAGES.forEach((src) => {
+    const preloader = new Image();
+    preloader.onload = () => { workingImages.push(src); loadedCount++; };
+    preloader.onerror = () => {
+      loadedCount++;
+      console.warn(`No se pudo cargar la imagen de envío: ${src}`);
+    };
+    preloader.src = src;
+  });
+
   let shipIndex = 0;
+  img.onerror = () => {
+    // Si la imagen actual falla al mostrarse, avanza a la siguiente disponible
+    const pool = workingImages.length ? workingImages : SHIP_PROOF_IMAGES;
+    shipIndex = (shipIndex + 1) % pool.length;
+    img.src = pool[shipIndex];
+  };
+
   setInterval(() => {
-    shipIndex = (shipIndex + 1) % SHIP_PROOF_IMAGES.length;
+    const pool = workingImages.length ? workingImages : SHIP_PROOF_IMAGES;
+    shipIndex = (shipIndex + 1) % pool.length;
     img.classList.add("is-fading");
     setTimeout(() => {
-      img.src = SHIP_PROOF_IMAGES[shipIndex];
+      img.src = pool[shipIndex];
       img.classList.remove("is-fading");
     }, 220);
   }, SHIP_PROOF_INTERVAL);
