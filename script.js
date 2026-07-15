@@ -14,65 +14,75 @@ const HERO_SLIDES = [
     eyebrow: "Lo más pedido",
     title: "Más vendidos",
     text: "Las piezas que más se llevan nuestros clientes esta semana.",
-    filterCategory: "Todos",
-    image: "assets/productos/roll.jpg",
-    imageAlt: "Rolls-Royce Spectre a escala"
+    filterCategory: "Todos"
   },
   {
     variant: "b", icon: "💥",
     eyebrow: "Por tiempo limitado",
     title: "Ofertas de la semana",
     text: "Precios especiales en modelos seleccionados. No duran mucho.",
-    filterCategory: "Ofertas",
-    image: "assets/productos/sto.jpg",
-    imageAlt: "Modelo en oferta"
+    filterCategory: "Ofertas"
   },
   {
     variant: "c", icon: "🚚",
     eyebrow: "Cobertura nacional",
     title: "Envíos a todo Honduras",
     text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.",
-    filterCategory: "Todos",
-    image: "assets/productos/mack.jpg",
-    imageAlt: "Camión Mack a escala"
+    filterCategory: "Todos"
+  },
+  {
+    variant: "h", icon: "📦",
+    type: "envios",
+    eyebrow: "Envíos verificados",
+    title: "Así llegan tus pedidos",
+    text: "Fotos reales de empaques y entregas hechas por nuestro equipo en toda Honduras. 📦🚚✅",
+    filterCategory: "Todos"
   },
   {
     variant: "d", icon: "⭐",
     eyebrow: "Recién llegados",
     title: "Nuevos ingresos",
     text: "Las últimas piezas que se sumaron al catálogo.",
-    filterCategory: "Novedades",
-    image: "assets/productos/h2r.jpg",
-    imageAlt: "Kawasaki H2R a escala"
+    filterCategory: "Novedades"
   },
   {
     variant: "e", icon: "🚗",
     eyebrow: "Colección",
     title: "Tacoma Collection",
     text: "Toda la línea Toyota Tacoma a escala, lista para coleccionar.",
-    filterCategory: "Autos",
-    image: "assets/productos/dorada.jpg",
-    imageAlt: "Toyota Tacoma dorada a escala"
+    filterCategory: "Autos"
   },
   {
     variant: "f", icon: "🚙",
     eyebrow: "Colección",
     title: "Toyota Collection",
     text: "Prado, Land Cruiser, Hilux y más, en un solo lugar.",
-    filterCategory: "Autos",
-    image: "assets/productos/landb.png",
-    imageAlt: "Toyota Land Cruiser 70 a escala"
+    filterCategory: "Autos"
   },
   {
     variant: "g", icon: "🎁",
     eyebrow: "Sorpresa",
     title: "Mystery Box",
     text: "No sabes cuál te toca, pero seguro te va a encantar.",
-    filterCategory: "Todos",
-    image: "assets/productos/mcqueenrc.png",
-    imageAlt: "Auto de control remoto sorpresa"
+    filterCategory: "Todos"
   }
 ];
+
+// Imágenes de pruebas de envíos reales (carpeta assets/productos, nombradas 1 a 6)
+const SHIP_PROOF_IMAGES = [
+  "assets/productos/1.jpg",
+  "assets/productos/2.jpg",
+  "assets/productos/3.jpg",
+  "assets/productos/4.jpg",
+  "assets/productos/5.jpg",
+  "assets/productos/6.jpg"
+];
+
+// Emojis que giran alrededor de la foto de envío (estilo "aro" circular)
+const SHIP_PROOF_EMOJIS = ["📦", "🚚", "✅", "📍", "🎉", "🛵"];
+
+// Duración en milisegundos entre cada imagen de envío
+const SHIP_PROOF_INTERVAL = 2000;
 
 // Orden en que deben aparecer los botones de categoría
 const CATEGORY_ORDER = [
@@ -500,9 +510,7 @@ function goToCategory(categoryName) {
 function buildHeroSlides() {
   heroTrack.innerHTML = HERO_SLIDES.map((slide) => `
     <div class="hero__slide hero__slide--${slide.variant}" role="group" aria-roledescription="slide">
-      <div class="hero__slideMedia">
-        <img src="${slide.image}" alt="${slide.imageAlt}" class="hero__slideImg">
-      </div>
+      <span class="hero__slideIcon" aria-hidden="true">${slide.icon}</span>
       <div class="hero__content">
         <span class="hero__eyebrow">${slide.icon} ${slide.eyebrow}</span>
         <h1 class="hero__title">${slide.title}</h1>
@@ -512,6 +520,7 @@ function buildHeroSlides() {
           <a href="#catalogo" class="hero__cta hero__cta--ghost">Ver catálogo</a>
         </div>
       </div>
+      ${slide.type === "envios" ? buildShipProofMarkup() : ""}
     </div>
   `).join("");
 
@@ -534,6 +543,48 @@ function buildHeroSlides() {
   });
 }
 
+/**
+ * Genera el markup del bloque de "pruebas de envío": una foto circular
+ * que va cambiando cada SHIP_PROOF_INTERVAL ms, rodeada de un aro de
+ * emojis de envíos/entregas que gira en forma de círculo.
+ */
+function buildShipProofMarkup() {
+  const emojiRing = SHIP_PROOF_EMOJIS.map((emoji, i) => `
+    <div class="shipProof__orbit" style="--i:${i}">
+      <span class="shipProof__emoji">${emoji}</span>
+    </div>
+  `).join("");
+
+  return `
+    <div class="shipProof" id="shipProof">
+      <div class="shipProof__ring" aria-hidden="true">${emojiRing}</div>
+      <div class="shipProof__circle">
+        <img src="${SHIP_PROOF_IMAGES[0]}" alt="Prueba real de envío entregado por Carland 1601" class="shipProof__img" id="shipProofImg">
+      </div>
+      <span class="shipProof__badge">✅ Entrega real</span>
+    </div>
+  `;
+}
+
+/**
+ * Rota las fotos de pruebas de envío cada SHIP_PROOF_INTERVAL ms,
+ * con un pequeño efecto de desvanecido entre imagen e imagen.
+ */
+function initShipProofRotation() {
+  const img = document.getElementById("shipProofImg");
+  if (!img) return;
+
+  let shipIndex = 0;
+  setInterval(() => {
+    shipIndex = (shipIndex + 1) % SHIP_PROOF_IMAGES.length;
+    img.classList.add("is-fading");
+    setTimeout(() => {
+      img.src = SHIP_PROOF_IMAGES[shipIndex];
+      img.classList.remove("is-fading");
+    }, 220);
+  }, SHIP_PROOF_INTERVAL);
+}
+
 function setHeroSlide(index) {
   heroIndex = (index + HERO_SLIDES.length) % HERO_SLIDES.length;
   heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
@@ -551,6 +602,7 @@ function initHeroCarousel() {
   buildHeroSlides();
   setHeroSlide(0);
   restartHeroAutoplay();
+  initShipProofRotation();
 
   heroPrevBtn.addEventListener("click", () => {
     setHeroSlide(heroIndex - 1);
