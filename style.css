@@ -416,7 +416,11 @@ button { font-family: inherit; cursor: pointer; }
   position: absolute;
   inset: 0;
   z-index: 1;
-  animation: shipRingSpin 16s linear infinite;
+  animation-name: shipRingSpin;
+  animation-duration: var(--spin-duration, 16s);
+  animation-direction: var(--spin-direction, normal);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .shipProof__orbit {
