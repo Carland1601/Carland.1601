@@ -1,1125 +1,832 @@
 /* =========================================================
-   CARLAND 1601 — Hoja de estilos
-   Paleta: Rojo carrera (#d60000), Negro, Blanco, Grises
-   Tipografía: Rajdhani (display / técnica) + Inter (texto)
-               JetBrains Mono (precios / datos)
+   CARLAND 1601 — Lógica del catálogo
+   Todo el catálogo se genera dinámicamente desde productos.json
    ========================================================= */
 
-:root {
-  --red: #d60000;
-  --red-dark: #a10000;
-  --black: #0a0a0a;
-  --charcoal: #1c1c1e;
-  --charcoal-soft: #2a2a2d;
-  --white: #ffffff;
-  --gray-100: #f4f4f5;
-  --gray-200: #e7e7e9;
-  --gray-400: #b8b8bc;
-  --gray-600: #8a8a8e;
+// ---------- CONFIGURACIÓN ----------
+// Cambia este número por el WhatsApp real del negocio (código de país + número, sin + ni espacios)
+const WHATSAPP_NUMBER = "50489534880";
 
-  --font-display: 'Rajdhani', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  --radius: 14px;
-  --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
-  --shadow-hover: 0 18px 40px rgba(0,0,0,0.16);
-  --navbar-h: 78px;
-}
-
-* { box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-body);
-  color: var(--charcoal);
-  background: var(--white);
-  -webkit-font-smoothing: antialiased;
-}
-
-img { max-width: 100%; display: block; }
-a { text-decoration: none; color: inherit; }
-button { font-family: inherit; cursor: pointer; }
-
-:focus-visible {
-  outline: 3px solid var(--red);
-  outline-offset: 2px;
-}
-
-/* =========================================================
-   NAVBAR
-   ========================================================= */
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--black);
-  border-bottom: 3px solid var(--red);
-}
-
-.navbar__inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  height: var(--navbar-h);
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.navbar__brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.navbar__logo {
-  border-radius: 50%;
-}
-
-.navbar__brandtext {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-
-.navbar__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 22px;
-  letter-spacing: 0.5px;
-  color: var(--white);
-}
-
-.navbar__title em {
-  font-style: normal;
-  color: var(--red);
-}
-
-.navbar__subtitle {
-  font-size: 11px;
-  color: var(--gray-400);
-  letter-spacing: 0.3px;
-}
-
-.navbar__info {
-  display: none;
-  gap: 10px;
-  margin-left: auto;
-  flex-wrap: wrap;
-}
-
-.navbar__pill {
-  font-size: 12px;
-  color: var(--gray-200);
-  background: var(--charcoal);
-  border: 1px solid var(--charcoal-soft);
-  padding: 6px 12px;
-  border-radius: 100px;
-  white-space: nowrap;
-}
-
-.navbar__whatsapp {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  background: var(--red);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 13px;
-  padding: 9px 16px;
-  border-radius: 100px;
-  transition: transform 0.2s ease, background 0.2s ease;
-  flex-shrink: 0;
-}
-
-.navbar__whatsapp:hover {
-  background: var(--red-dark);
-  transform: translateY(-1px);
-}
-
-.navbar__toggle {
-  margin-left: auto;
-  background: none;
-  border: none;
-  color: var(--white);
-  padding: 6px;
-}
-
-.navbar__infoMobile {
-  display: none;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 20px 16px;
-  border-top: 1px solid var(--charcoal-soft);
-}
-
-.navbar__infoMobile span {
-  font-size: 12.5px;
-  color: var(--gray-200);
-}
-
-.navbar__infoMobile.is-open {
-  display: flex;
-}
-
-@media (min-width: 860px) {
-  .navbar__info { display: flex; }
-  .navbar__whatsapp { display: flex; }
-  .navbar__toggle { display: none; }
-}
-
-/* =========================================================
-   HERO / BANNER
-   ========================================================= */
-.hero {
-  position: relative;
-  height: 56vh;
-  min-height: 380px;
-  max-height: 560px;
-  overflow: hidden;
-  background: var(--black);
-}
-
-.hero__track {
-  display: flex;
-  height: 100%;
-  transition: transform 0.55s cubic-bezier(.65,0,.35,1);
-  will-change: transform;
-}
-
-.hero__slide {
-  position: relative;
-  flex: 0 0 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.hero__slide::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(-38deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 46px);
-  z-index: 0;
-}
-
-.hero__slide::after {
-  content: "";
-  position: absolute;
-  right: -8%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 62vw;
-  max-width: 640px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.16), transparent 70%);
-  z-index: 0;
-}
-
-.hero__slideMedia {
-  position: absolute;
-  right: 2%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: min(52vw, 380px);
-  aspect-ratio: 1;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: heroIconFloat 3.6s ease-in-out infinite;
-}
-
-.hero__slideMedia::before {
-  content: "";
-  position: absolute;
-  inset: 6%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 42% 38%, rgba(255,255,255,0.95), rgba(255,255,255,0.65) 60%, rgba(255,255,255,0) 78%);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-}
-
-.hero__slideImg {
-  position: relative;
-  z-index: 1;
-  width: 84%;
-  height: 84%;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 20px rgba(0,0,0,0.35));
-}
-
-@keyframes heroIconFloat {
-  0%, 100% { transform: translateY(-50%); }
-  50% { transform: translateY(calc(-50% - 10px)); }
-}
-
-.hero__content {
-  position: relative;
-  z-index: 2;
-  padding: 32px 16px 32px 20px;
-  max-width: 56%;
-  color: var(--white);
-}
-
-@media (min-width: 640px) {
-  .hero__content {
-    max-width: 640px;
-    padding: 40px 24px;
+// Slides del carrusel principal (rota automáticamente cada 4.5s)
+const HERO_SLIDES = [
+  {
+    variant: "a", icon: "🔥",
+    eyebrow: "Lo más pedido",
+    title: "Más vendidos",
+    text: "Las piezas que más se llevan nuestros clientes esta semana.",
+    filterCategory: "Todos"
+  },
+  {
+    variant: "b", icon: "💥",
+    eyebrow: "Por tiempo limitado",
+    title: "Ofertas de la semana",
+    text: "Precios especiales en modelos seleccionados. No duran mucho.",
+    filterCategory: "Ofertas"
+  },
+  {
+    variant: "c", icon: "🚚",
+    eyebrow: "Cobertura nacional",
+    title: "Envíos a todo Honduras",
+    text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.",
+    filterCategory: "Todos"
+  },
+  {
+    variant: "h", icon: "📦",
+    type: "envios",
+    eyebrow: "Envíos verificados",
+    title: "Así llegan tus pedidos",
+    text: "Fotos reales de empaques y entregas hechas por nuestro equipo en toda Honduras. 📦🚚✅",
+    filterCategory: "Todos"
+  },
+  {
+    variant: "d", icon: "⭐",
+    eyebrow: "Recién llegados",
+    title: "Nuevos ingresos",
+    text: "Las últimas piezas que se sumaron al catálogo.",
+    filterCategory: "Novedades"
+  },
+  {
+    variant: "e", icon: "🚗",
+    eyebrow: "Colección",
+    title: "Tacoma Collection",
+    text: "Toda la línea Toyota Tacoma a escala, lista para coleccionar.",
+    filterCategory: "Autos"
+  },
+  {
+    variant: "f", icon: "🚙",
+    eyebrow: "Colección",
+    title: "Toyota Collection",
+    text: "Prado, Land Cruiser, Hilux y más, en un solo lugar.",
+    filterCategory: "Autos"
+  },
+  {
+    variant: "g", icon: "🎁",
+    eyebrow: "Sorpresa",
+    title: "Mystery Box",
+    text: "No sabes cuál te toca, pero seguro te va a encantar.",
+    filterCategory: "Todos"
   }
-}
+];
 
-.hero__eyebrow {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.6px;
-  color: var(--white);
-  background: rgba(255,255,255,0.14);
-  border: 1px solid rgba(255,255,255,0.35);
-  padding: 4px 10px;
-  border-radius: 100px;
-  margin-bottom: 12px;
-}
+// Imágenes de pruebas de envíos reales (carpeta assets/productos, nombradas 1 a 6)
+const SHIP_PROOF_IMAGES = [
+  "assets/productos/1.jpg",
+  "assets/productos/2.jpg",
+  "assets/productos/3.jpg",
+  "assets/productos/4.jpg",
+  "assets/productos/5.jpg",
+  "assets/productos/6.jpg"
+];
 
-@media (min-width: 640px) {
-  .hero__eyebrow { font-size: 12px; letter-spacing: 1px; padding: 5px 12px; margin-bottom: 16px; }
-}
+// Emojis que giran alrededor de la foto de envío (estilo "aro" circular)
+const SHIP_PROOF_EMOJIS = ["📦", "🚚", "✅", "📍", "🎉", "🛵"];
 
-.hero__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(21px, 5.4vw, 48px);
-  line-height: 1.08;
-  margin: 0 0 10px;
-}
+// Duración en milisegundos entre cada imagen de envío
+const SHIP_PROOF_INTERVAL = 2000;
 
-.hero__text {
-  font-size: 12.5px;
-  color: var(--gray-200);
-  max-width: 460px;
-  margin: 0 0 16px;
-  line-height: 1.45;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+// Emojis de autos, envíos y entregas para el aro que gira alrededor de cada foto
+const HERO_CIRCLE_EMOJIS = [
+  "🚗", "🏎️", "🚙", "🛻", "🏍️", "🚓", "🚕",
+  "📦", "🚚", "✅", "📍", "🎉", "🛵", "🚀", "🔥", "⭐"
+];
 
-@media (min-width: 640px) {
-  .hero__text { font-size: 15px; margin: 0 0 24px; -webkit-line-clamp: unset; }
-}
-
-.hero__actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.hero__cta {
-  display: inline-block;
-  background: var(--red);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 12px;
-  padding: 10px 16px;
-  border-radius: 100px;
-  transition: transform 0.2s ease, background 0.2s ease;
-  white-space: nowrap;
-}
-
-@media (min-width: 640px) {
-  .hero__cta { font-size: 14px; padding: 13px 26px; }
-}
-
-.hero__cta:hover {
-  background: var(--red-dark);
-  transform: translateY(-2px);
-}
-
-.hero__cta--ghost {
-  background: transparent;
-  border: 1.5px solid rgba(255,255,255,0.55);
-}
-
-.hero__cta--ghost:hover {
-  background: rgba(255,255,255,0.12);
-}
-
-/* Variantes de color por slide, sobre la base negra del carrusel */
-.hero__slide--a { background: linear-gradient(120deg, #0a0a0a, #3a0000 78%); }
-.hero__slide--b { background: linear-gradient(120deg, #1c1c1e, #d60000 130%); }
-.hero__slide--c { background: linear-gradient(120deg, #0a0a0a, #1c1c1e); }
-.hero__slide--d { background: linear-gradient(120deg, #3a0000, #0a0a0a 70%); }
-.hero__slide--e { background: linear-gradient(120deg, #1c1c1e, #2a2a2d 60%, #d60000 160%); }
-.hero__slide--f { background: linear-gradient(120deg, #0a0a0a, #2a2a2d); }
-.hero__slide--g { background: linear-gradient(120deg, #3a0000, #d60000 150%); }
-.hero__slide--h { background: linear-gradient(120deg, #0a0a0a, #1c1c1e 55%, #d60000 170%); }
-.hero__slide--h .hero__slideIcon { display: none; }
-
-/* =========================================================
-   BLOQUE DE PRUEBAS DE ENVÍO (foto circular + aro de emojis)
-   ========================================================= */
-.shipProof {
-  position: absolute;
-  right: 4%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: min(56vw, 320px);
-  aspect-ratio: 1;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.shipProof__circle {
-  position: relative;
-  width: 62%;
-  height: 62%;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid rgba(255,255,255,0.9);
-  box-shadow: 0 20px 46px rgba(0,0,0,0.45), 0 0 0 8px rgba(214,0,0,0.22);
-  z-index: 2;
-  background: #111;
-}
-
-.shipProof__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  opacity: 1;
-  transition: opacity 0.22s ease;
-}
-
-.shipProof__img.is-fading {
-  opacity: 0;
-}
-
-.shipProof__ring {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  animation: shipRingSpin 16s linear infinite;
-}
-
-.shipProof__orbit {
-  position: absolute;
-  inset: 0;
-  transform: rotate(calc(var(--i) * 60deg));
-}
-
-.shipProof__emoji {
-  position: absolute;
-  top: -2px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  font-size: 20px;
-  line-height: 1;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
-}
-
-@media (min-width: 640px) {
-  .shipProof__emoji { font-size: 26px; }
-}
-
-.shipProof__badge {
-  position: absolute;
-  left: 50%;
-  bottom: -6px;
-  transform: translateX(-50%);
-  z-index: 3;
-  background: var(--white);
-  color: var(--black);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.4px;
-  padding: 5px 11px;
-  border-radius: 100px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
-  white-space: nowrap;
-}
-
-@media (min-width: 640px) {
-  .shipProof__badge { font-size: 12px; padding: 6px 14px; bottom: -4px; }
-}
-
-@keyframes shipRingSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.hero__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: var(--white);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-}
-
-.hero__arrow:hover { background: rgba(0,0,0,0.6); }
-.hero__arrow--prev { left: 16px; }
-.hero__arrow--next { right: 16px; }
-
-.hero__dots {
-  position: absolute;
-  z-index: 3;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-}
-
-.hero__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.35);
-  border: none;
-  padding: 0;
-  transition: background 0.2s ease, width 0.2s ease;
-}
-
-.hero__dot.is-active {
-  background: var(--white);
-  width: 22px;
-  border-radius: 4px;
-}
-
-@media (min-width: 640px) {
-  .hero__arrow { display: flex; }
-}
-
-/* =========================================================
-   CONTROLES: BUSCADOR + FILTROS
-   ========================================================= */
-.controls {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 34px 20px 10px;
-}
-
-.controls__search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--gray-100);
-  border: 1.5px solid var(--gray-200);
-  border-radius: 100px;
-  padding: 13px 20px;
-  color: var(--gray-600);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.controls__search:focus-within {
-  border-color: var(--red);
-  box-shadow: 0 0 0 4px rgba(214,0,0,0.08);
-}
-
-.controls__search input {
-  border: none;
-  background: none;
-  outline: none;
-  font-size: 15px;
-  font-family: var(--font-body);
-  width: 100%;
-  color: var(--charcoal);
-}
-
-.controls__filters {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 20px 0 6px;
-  scrollbar-width: thin;
-}
-
-.controls__filters::-webkit-scrollbar { height: 5px; }
-.controls__filters::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 10px; }
-
-.filter-btn {
-  flex-shrink: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.3px;
-  background: var(--white);
-  color: var(--charcoal);
-  border: 1.5px solid var(--gray-200);
-  padding: 9px 20px;
-  border-radius: 100px;
-  transition: all 0.2s ease;
-}
-
-.filter-btn:hover {
-  border-color: var(--red);
-  color: var(--red);
-}
-
-.filter-btn.is-active {
-  background: var(--black);
-  border-color: var(--black);
-  color: var(--white);
-}
-
-.filter-btn.is-active:hover { color: var(--white); }
-
-/* =========================================================
-   GRID DE PRODUCTOS
-   ========================================================= */
-.products {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px 12px 60px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-@media (min-width: 640px) {
-  .products {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    padding: 20px 20px 60px;
+// Mezcla un arreglo sin modificar el original (Fisher-Yates)
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
   }
+  return copy;
 }
 
-@media (min-width: 1000px) {
-  .products {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
+// Toma `count` elementos aleatorios y distintos de un arreglo
+function pickRandom(arr, count) {
+  return shuffleArray(arr).slice(0, Math.min(count, arr.length));
+}
+
+// Pool combinado: fotos de productos (autos/motos) + pruebas de envío reales
+function getCirclePoolImages() {
+  const fromProducts = Array.isArray(window.PRODUCTOS)
+    ? window.PRODUCTOS.map((p) => p.imagen).filter(Boolean)
+    : [];
+  return [...new Set([...fromProducts, ...SHIP_PROOF_IMAGES])];
+}
+
+// Orden en que deben aparecer los botones de categoría
+const CATEGORY_ORDER = [
+  "Todos",
+  "Autos",
+  "Motocicletas",
+  "Otros",
+  "Rastras",
+  "Maquinaria",
+  "Control Remoto",
+  "Novedades",
+  "Ofertas"
+];
+
+// ---------- ESTADO ----------
+let allProducts = [];
+let currentCategory = "Todos";
+let currentSearch = "";
+let renderedProducts = []; // productos actualmente visibles en el grid (tras filtros/búsqueda)
+let lastFocusedElement = null; // para devolver el foco al cerrar el modal
+
+// ---------- ELEMENTOS DEL DOM ----------
+const grid = document.getElementById("productsGrid");
+const emptyMessage = document.getElementById("emptyMessage");
+const searchInput = document.getElementById("searchInput");
+const filtersContainer = document.getElementById("categoryFilters");
+const navbar = document.getElementById("navbar");
+const navToggle = document.getElementById("navToggle");
+const navInfoMobile = document.getElementById("navInfoMobile");
+const backToTop = document.getElementById("backToTop");
+const modalOverlay = document.getElementById("modalOverlay");
+const modalContent = document.getElementById("modalContent");
+const heroTrack = document.getElementById("heroTrack");
+const heroDots = document.getElementById("heroDots");
+const heroPrevBtn = document.getElementById("heroPrev");
+const heroNextBtn = document.getElementById("heroNext");
+
+/**
+ * Formatea un número como moneda en Lempiras (L.)
+ */
+function formatPrice(value) {
+  const num = Number(value) || 0;
+  return "L. " + num.toLocaleString("es-HN", { minimumFractionDigits: 0 });
+}
+
+/**
+ * Construye el enlace de WhatsApp con mensaje precargado para un producto
+ */
+function buildWhatsappLink(product) {
+  const mensaje = `Hola, me interesa el ${product.nombre} escala ${product.escala} con precio de ${formatPrice(product.precio)}.`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
+}
+
+/**
+ * Determina qué "chip" de estado / etiqueta especial mostrar sobre la tarjeta,
+ * a partir del campo "etiqueta" del producto (acepta singular y plural)
+ */
+function getBadgeClass(etiqueta) {
+  const map = {
+    "Nuevo": "card__badge--nuevo",
+    "Nuevos": "card__badge--nuevo",
+    "Oferta": "card__badge--oferta",
+    "Ofertas": "card__badge--oferta",
+    "Novedad": "card__badge--novedad",
+    "Novedades": "card__badge--novedad"
+  };
+  return map[etiqueta] || null;
+}
+
+/**
+ * NOTA: Este catálogo NO asigna etiquetas automáticas/falsas a los productos.
+ * Un producto solo muestra un badge ("Nuevo", "Oferta", "Novedad") cuando el
+ * campo "etiqueta" en window.PRODUCTOS realmente lo define. Para marcar un
+ * producto como oferta o novedad, edita su campo "etiqueta" en index.html.
+ */
+
+/**
+ * Genera el HTML de una tarjeta de producto
+ */
+function renderCard(product, index) {
+  const isAvailable = product.estado === "Disponible";
+  const badgeClass = getBadgeClass(product.etiqueta);
+
+  let badgeHtml = "";
+  if (badgeClass) {
+    badgeHtml = `<span class="card__badge ${badgeClass}">${product.etiqueta}</span>`;
   }
+
+  const statusClass = isAvailable ? "card__status--disponible" : "card__status--agotado";
+  const statusLabel = isAvailable ? "Disponible" : "Agotado";
+
+  const buyBtn = isAvailable
+    ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="card__buy">
+         <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+         Comprar
+       </a>`
+    : `<span class="card__buy card__buy--disabled">Agotado</span>`;
+
+  return `
+    <article class="card" data-index="${index}" tabindex="0" role="button" aria-label="Ver ${product.nombre} en grande">
+      <div class="card__mediaWrap">
+        ${badgeHtml}
+        <span class="card__status ${statusClass}">${statusLabel}</span>
+        <img src="${product.imagen}" alt="${product.nombre}" loading="lazy" class="lazy-fade" onload="this.classList.add('is-loaded')">
+      </div>
+      <div class="card__body">
+        <span class="card__brand">${product.marca}</span>
+        <h3 class="card__name">${product.nombre}</h3>
+        <span class="card__scale">Escala ${product.escala}</span>
+        <div class="card__priceRow">
+          <span class="card__price">${formatPrice(product.precio)}</span>
+        </div>
+        ${buyBtn}
+      </div>
+    </article>
+  `;
 }
 
-.products__empty {
-  text-align: center;
-  color: var(--gray-600);
-  font-size: 15px;
-  padding: 40px 20px 80px;
+/**
+ * Genera el contenido interno del modal para un producto dado
+ */
+function renderModalBody(product) {
+  const isAvailable = product.estado === "Disponible";
+  const badgeClass = getBadgeClass(product.etiqueta);
+
+  const etiquetaChip = badgeClass
+    ? `<span class="modalContent__chip ${badgeClass.replace('card__badge', 'modalContent__chip')}">${product.etiqueta}</span>`
+    : "";
+
+  const statusChip = isAvailable
+    ? `<span class="modalContent__chip modalContent__chip--disponible">Disponible</span>`
+    : `<span class="modalContent__chip modalContent__chip--agotado">Agotado</span>`;
+
+  const buyBtn = isAvailable
+    ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="modalContent__buy">
+         <svg viewBox="0 0 32 32" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+         Comprar por WhatsApp
+       </a>`
+    : `<span class="modalContent__buy modalContent__buy--disabled">Agotado</span>`;
+
+  return `
+    <button class="modalContent__close" id="modalCloseBtn" aria-label="Cerrar vista previa">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modalContent__media">
+      <img src="${product.imagen}" alt="${product.nombre}">
+    </div>
+    <div class="modalContent__body">
+      <span class="modalContent__brand">${product.marca}</span>
+      <h2 class="modalContent__name" id="modalName">${product.nombre}</h2>
+      <div class="modalContent__meta">
+        <span class="modalContent__chip">Escala ${product.escala}</span>
+        <span class="modalContent__chip">${product.categoria}</span>
+        ${etiquetaChip}
+        ${statusChip}
+      </div>
+      <div class="modalContent__priceBlock">
+        <p class="modalContent__priceLabel">Precio</p>
+        <p class="modalContent__price">${formatPrice(product.precio)}</p>
+      </div>
+      ${buyBtn}
+    </div>
+  `;
 }
 
-.card {
-  position: relative;
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.28s ease, box-shadow 0.28s ease;
-  animation: cardIn 0.5s ease both;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
+/**
+ * Abre el modal de vista previa animando su crecimiento desde la
+ * posición y el tamaño exactos de la tarjeta en la que se hizo clic
+ * (técnica FLIP: First, Last, Invert, Play) — efecto tipo Canva.
+ */
+function openProductModal(product, cardEl) {
+  lastFocusedElement = document.activeElement;
+
+  const firstRect = cardEl.getBoundingClientRect();
+
+  modalContent.innerHTML = renderModalBody(product);
+  modalOverlay.hidden = false;
+  document.body.classList.add("modal-open");
+
+  // "Last": posición/tamaño final una vez que el modal ya está centrado
+  const lastRect = modalContent.getBoundingClientRect();
+
+  const deltaX = firstRect.left - lastRect.left;
+  const deltaY = firstRect.top - lastRect.top;
+  const scaleX = firstRect.width / lastRect.width;
+  const scaleY = firstRect.height / lastRect.height;
+
+  // "Invert": colocamos el modal visualmente donde estaba la tarjeta
+  modalContent.style.transition = "none";
+  modalContent.style.transformOrigin = "top left";
+  modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+  modalContent.style.opacity = "0.5";
+  modalContent.style.borderRadius = "16px";
+
+  // Forzar reflow para que el navegador registre el estado inicial
+  void modalContent.offsetWidth;
+
+  // "Play": animamos hacia el estado final (tamaño completo, centrado)
+  requestAnimationFrame(() => {
+    modalContent.style.transition =
+      "transform 0.45s cubic-bezier(.22,.85,.3,1), opacity 0.28s ease";
+    modalContent.style.transform = "translate(0, 0) scale(1, 1)";
+    modalContent.style.opacity = "1";
+  });
+
+  requestAnimationFrame(() => {
+    modalOverlay.classList.add("is-visible");
+  });
+
+  document.getElementById("modalCloseBtn").addEventListener("click", closeProductModal);
 }
 
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/**
+ * Cierra el modal encogiéndolo de vuelta hacia la tarjeta original
+ * (si sigue visible en el grid) o con un simple fundido si ya no está.
+ */
+function closeProductModal() {
+  const activeIndex = modalContent.dataset.activeIndex;
+  const originCard = grid.querySelector(`.card[data-index="${activeIndex}"]`);
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-hover);
-}
+  modalOverlay.classList.remove("is-visible");
 
-.card__mediaWrap {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: var(--gray-100);
-}
+  if (originCard) {
+    const rect = originCard.getBoundingClientRect();
+    const modalRect = modalContent.getBoundingClientRect();
+    const deltaX = rect.left - modalRect.left;
+    const deltaY = rect.top - modalRect.top;
+    const scaleX = rect.width / modalRect.width;
+    const scaleY = rect.height / modalRect.height;
 
-.card__mediaWrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.card:hover .card__mediaWrap img {
-  transform: scale(1.06);
-}
-
-.card__badge {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: var(--white);
-  text-transform: uppercase;
-  max-width: calc(100% - 16px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (min-width: 640px) {
-  .card__badge { font-size: 11.5px; padding: 5px 10px; top: 10px; left: 10px; }
-}
-
-.card__badge--nuevo { background: var(--red); }
-.card__badge--oferta { background: var(--black); }
-.card__badge--novedad { background: var(--charcoal-soft); }
-.card__badge--hot { background: linear-gradient(120deg, var(--red), #ff5a1f); }
-.card__badge--popular { background: #b8860b; }
-.card__badge--envio { background: #1b6fa8; }
-
-.card__status {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 9.5px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 6px;
-  backdrop-filter: blur(2px);
-}
-
-@media (min-width: 640px) {
-  .card__status { font-size: 11px; padding: 5px 10px; top: 10px; right: 10px; }
-}
-
-.card__status--disponible { background: rgba(255,255,255,0.9); color: #1b7a3d; }
-.card__status--agotado { background: rgba(255,255,255,0.9); color: var(--gray-600); }
-
-.card__body {
-  padding: 10px 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 1;
-}
-
-.card__brand {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--gray-600);
-  font-weight: 600;
-}
-
-.card__name {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--charcoal);
-  line-height: 1.2;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.card__scale {
-  font-size: 11px;
-  color: var(--gray-600);
-  margin-bottom: 4px;
-}
-
-.card__priceRow {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.card__price {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--black);
-  background: var(--gray-100);
-  padding: 5px 8px;
-  border-radius: 7px;
-  letter-spacing: 0.2px;
-}
-
-.card__buy {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  margin-top: 8px;
-  background: var(--red);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 12px;
-  padding: 9px 10px;
-  border-radius: 9px;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-@media (min-width: 640px) {
-  .card__body { padding: 14px 14px 16px; gap: 4px; }
-  .card__name { font-size: 17px; }
-  .card__price { font-size: 17px; padding: 6px 10px; }
-  .card__buy { font-size: 13px; padding: 10px 12px; }
-}
-
-.card__buy:hover {
-  background: var(--red-dark);
-  transform: translateY(-1px);
-}
-
-.card__buy--disabled {
-  background: var(--gray-200);
-  color: var(--gray-600);
-  pointer-events: none;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-.footer {
-  background: var(--black);
-  color: var(--gray-200);
-  padding: 50px 20px 24px;
-  margin-top: 20px;
-}
-
-.footer__inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 1fr;
-}
-
-.footer__brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.footer__brand img { border-radius: 50%; }
-
-.footer__title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--white);
-  margin: 0;
-}
-
-.footer__tag {
-  font-size: 12.5px;
-  color: var(--gray-600);
-  margin: 2px 0 0;
-}
-
-.footer__col h3 {
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--red);
-  margin: 0 0 12px;
-}
-
-.footer__col p {
-  font-size: 13px;
-  margin: 0 0 8px;
-  color: var(--gray-400);
-}
-
-.footer__social {
-  display: flex;
-  gap: 14px;
-}
-
-.footer__social a {
-  font-size: 13px;
-  color: var(--gray-200);
-  border-bottom: 1px solid var(--charcoal-soft);
-  padding-bottom: 2px;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.footer__social a:hover {
-  color: var(--red);
-  border-color: var(--red);
-}
-
-.footer__rights {
-  max-width: 1280px;
-  margin: 40px auto 0;
-  padding-top: 18px;
-  border-top: 1px solid var(--charcoal-soft);
-  font-size: 12px;
-  color: var(--gray-600);
-  text-align: center;
-}
-
-@media (min-width: 760px) {
-  .footer__inner {
-    grid-template-columns: 1.4fr 1fr 1fr;
+    modalContent.style.transition =
+      "transform 0.32s cubic-bezier(.4,0,.6,1), opacity 0.25s ease";
+    modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+    modalContent.style.opacity = "0.4";
+  } else {
+    modalContent.style.transition = "transform 0.25s ease, opacity 0.25s ease";
+    modalContent.style.transform = "scale(0.94)";
+    modalContent.style.opacity = "0";
   }
+
+  setTimeout(() => {
+    modalOverlay.hidden = true;
+    modalContent.style.transition = "none";
+    modalContent.style.transform = "none";
+    modalContent.style.opacity = "1";
+    modalContent.innerHTML = "";
+    document.body.classList.remove("modal-open");
+    if (lastFocusedElement) lastFocusedElement.focus();
+  }, 320);
 }
 
-/* =========================================================
-   BOTONES FLOTANTES
-   ========================================================= */
-.floatBtn {
-  position: fixed;
-  right: 20px;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  z-index: 90;
-  border: none;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+// Abrir el modal al hacer clic (o presionar Enter/Espacio) en una tarjeta,
+// siempre que el clic no haya sido sobre el botón "Comprar por WhatsApp"
+grid.addEventListener("click", (e) => {
+  if (e.target.closest(".card__buy")) return; // deja que el enlace de WhatsApp funcione normal
+  const cardEl = e.target.closest(".card");
+  if (!cardEl) return;
+
+  const product = renderedProducts[Number(cardEl.dataset.index)];
+  if (!product) return;
+
+  modalContent.dataset.activeIndex = cardEl.dataset.index;
+  openProductModal(product, cardEl);
+});
+
+grid.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const cardEl = e.target.closest(".card");
+  if (!cardEl) return;
+  e.preventDefault();
+  cardEl.click();
+});
+
+// Cerrar el modal al hacer clic fuera del contenido, con Escape, o con el botón X
+modalOverlay.addEventListener("click", (e) => {
+  if (e.target === modalOverlay) closeProductModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modalOverlay.hidden) closeProductModal();
+});
+
+/**
+ * Aplica los filtros de búsqueda + categoría actuales y vuelve a pintar el grid
+ */
+function applyFiltersAndRender() {
+  const term = currentSearch.trim().toLowerCase();
+  const cat = currentCategory.trim().toLowerCase();
+
+  const filtered = allProducts.filter((p) => {
+    // Comparación insensible a mayúsculas/minúsculas: evita que productos
+    // guardados como "autos" (minúscula) desaparezcan al filtrar "Autos".
+    // "Ofertas" y "Novedades" no son categorías reales del producto, sino
+    // grupos derivados del campo "etiqueta" (Oferta / Novedad).
+    let matchesCategory;
+    if (cat === "todos") {
+      matchesCategory = true;
+    } else if (cat === "ofertas") {
+      matchesCategory = getBadgeClass(p.etiqueta) === "card__badge--oferta";
+    } else if (cat === "novedades") {
+      matchesCategory = getBadgeClass(p.etiqueta) === "card__badge--novedad";
+    } else {
+      matchesCategory = (p.categoria || "").trim().toLowerCase() === cat;
+    }
+
+    const matchesSearch =
+      term === "" ||
+      p.nombre.toLowerCase().includes(term) ||
+      p.marca.toLowerCase().includes(term) ||
+      p.categoria.toLowerCase().includes(term) ||
+      p.escala.toLowerCase().includes(term);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  renderedProducts = filtered;
+  grid.innerHTML = filtered.map((p, i) => renderCard(p, i)).join("");
+  emptyMessage.hidden = filtered.length !== 0;
 }
 
-.floatBtn:hover { transform: translateY(-3px) scale(1.04); }
+/**
+ * Genera dinámicamente los botones de categoría a partir de las categorías
+ * realmente presentes en productos.json (respetando el orden preferido)
+ */
+function renderCategoryFilters() {
+  const presentCategories = new Set(
+    allProducts.map((p) => (p.categoria || "").trim().toLowerCase())
+  );
+  const hasOfertas = allProducts.some((p) => getBadgeClass(p.etiqueta) === "card__badge--oferta");
+  const hasNovedades = allProducts.some((p) => getBadgeClass(p.etiqueta) === "card__badge--novedad");
 
-.floatBtn--whatsapp {
-  bottom: 24px;
-  background: #25D366;
-  color: var(--white);
+  const categoriesToShow = CATEGORY_ORDER.filter((cat) => {
+    if (cat === "Todos") return true;
+    if (cat === "Ofertas") return hasOfertas;
+    if (cat === "Novedades") return hasNovedades;
+    return presentCategories.has(cat.toLowerCase());
+  });
+
+  filtersContainer.innerHTML = categoriesToShow
+    .map((cat) => {
+      const activeClass = cat === currentCategory ? "is-active" : "";
+      return `<button class="filter-btn ${activeClass}" data-category="${cat}">${cat}</button>`;
+    })
+    .join("");
+
+  // Delegación de eventos para los botones de filtro
+  filtersContainer.querySelectorAll(".filter-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentCategory = btn.dataset.category;
+      // Limpia cualquier búsqueda activa (p. ej. "RC" del botón Control
+      // Remoto) para que un filtro de categoría no quede oculto por un
+      // término de búsqueda que el usuario ya no ve en el input.
+      currentSearch = "";
+      searchInput.value = "";
+      renderCategoryFilters();
+      applyFiltersAndRender();
+    });
+  });
 }
 
-.floatBtn--top {
-  bottom: 90px;
-  background: var(--black);
-  color: var(--white);
-}
-
-@media (min-width: 860px) {
-  .floatBtn--whatsapp { display: none; } /* ya está en la navbar en escritorio */
-}
-
-/* =========================================================
-   MODAL DE VISTA PREVIA DE PRODUCTO
-   (efecto tipo "vista previa de plantilla" — crece desde la tarjeta)
-   ========================================================= */
-body.modal-open {
-  overflow: hidden;
-}
-
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: rgba(10,10,10,0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  transition: background 0.32s ease;
-}
-
-.modalOverlay[hidden] {
-  display: none;
-}
-
-.modalOverlay.is-visible {
-  background: rgba(10,10,10,0.72);
-  backdrop-filter: blur(3px);
-}
-
-.modalContent {
-  position: relative;
-  width: min(880px, 100%);
-  max-height: 88vh;
-  background: var(--white);
-  border-radius: 20px;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1fr;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.4);
-  will-change: transform, opacity;
-}
-
-@media (min-width: 720px) {
-  .modalContent {
-    grid-template-columns: 1.1fr 1fr;
-    max-height: 78vh;
+/**
+ * Carga el catálogo desde la lista de productos embebida en index.html
+ * (window.PRODUCTOS, definida en un <script> justo antes de script.js)
+ */
+function loadProducts() {
+  if (!Array.isArray(window.PRODUCTOS)) {
+    console.error("No se encontró window.PRODUCTOS. Revisa el bloque <script> en index.html");
+    grid.innerHTML = `<p class="products__empty">No se pudo cargar el catálogo. Revisa la lista de productos en index.html.</p>`;
+    return;
   }
+
+  allProducts = window.PRODUCTOS;
+  renderCategoryFilters();
+  applyFiltersAndRender();
+  renderOffersPreview();
+  renderNoveltiesPreview();
 }
 
-.modalContent__media {
-  position: relative;
-  background: var(--gray-100);
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
+// ---------- TARJETAS DE COLECCIÓN Y ENLACES "VER TODAS" ----------
+// Estos botones (Autos, Motocicletas, Rastras, Control remoto, Novedades,
+// Ofertas, "Ver todas las ofertas →") antes no tenían ningún listener y no
+// hacían nada al hacer clic. Ahora todos llevan al catálogo ya filtrado.
+document.querySelectorAll("[data-category-jump]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goToCategory(el.dataset.categoryJump);
+  });
+});
+
+// ---------- PREVIEW DE PRODUCTOS REALES: OFERTAS Y NOVEDADES ----------
+// Solo muestran productos cuyo campo "etiqueta" en window.PRODUCTOS los
+// marca realmente como Oferta/Novedad. Si no hay ninguno, se oculta el
+// bloque de preview en vez de inventar productos.
+function renderProductPreview(containerId, badgeClass, limit = 4) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const matches = allProducts.filter((p) => getBadgeClass(p.etiqueta) === badgeClass);
+
+  if (!matches.length) {
+    container.innerHTML = `<p class="previewGrid__empty">Por ahora no hay productos marcados en esta sección. Vuelve pronto.</p>`;
+    return;
+  }
+
+  container.innerHTML = matches
+    .slice(0, limit)
+    .map((p, i) => renderCard(p, i))
+    .join("");
 }
 
-@media (min-width: 720px) {
-  .modalContent__media { aspect-ratio: auto; height: 100%; }
+function renderOffersPreview() {
+  renderProductPreview("ofertasPreview", "card__badge--oferta");
 }
 
-.modalContent__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+function renderNoveltiesPreview() {
+  renderProductPreview("novedadesPreview", "card__badge--novedad");
 }
 
-.modalContent__close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(10,10,10,0.55);
-  color: var(--white);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  transition: background 0.2s ease, transform 0.2s ease;
+// Los productos de las secciones de preview también deben abrir el modal.
+// Como usan tarjetas .card idénticas a las del grid principal, reutilizamos
+// la misma lógica de apertura buscando el producto por nombre+imagen.
+[["ofertasPreview", "card__badge--oferta"], ["novedadesPreview", "card__badge--novedad"]].forEach(
+  ([containerId, badgeClass]) => {
+    document.addEventListener("click", (e) => {
+      const container = document.getElementById(containerId);
+      if (!container || !container.contains(e.target)) return;
+      if (e.target.closest(".card__buy")) return;
+      const cardEl = e.target.closest(".card");
+      if (!cardEl) return;
+
+      const matches = allProducts.filter((p) => getBadgeClass(p.etiqueta) === badgeClass);
+      const product = matches[Number(cardEl.dataset.index)];
+      if (!product) return;
+
+      modalContent.dataset.activeIndex = "";
+      openProductModal(product, cardEl);
+    });
+  }
+);
+
+// ---------- BUSCADOR EN TIEMPO REAL ----------
+searchInput.addEventListener("input", (e) => {
+  currentSearch = e.target.value;
+  applyFiltersAndRender();
+});
+
+// ---------- WHATSAPP: NAVBAR Y BOTÓN FLOTANTE (mensaje genérico) ----------
+function setGenericWhatsappLinks() {
+  const genericMsg = encodeURIComponent(
+    "Hola, quiero más información sobre el catálogo de Carland 1601."
+  );
+  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${genericMsg}`;
+  document.getElementById("navWhatsapp").href = link;
+  document.getElementById("floatWhatsapp").href = link;
 }
 
-.modalContent__close:hover {
-  background: var(--red);
-  transform: rotate(90deg);
-}
+// ---------- MENÚ DE INFORMACIÓN EN MÓVIL ----------
+navToggle.addEventListener("click", () => {
+  navInfoMobile.classList.toggle("is-open");
+});
 
-.modalContent__body {
-  padding: 30px 30px 26px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+// ---------- BOTÓN VOLVER ARRIBA + NAVBAR ON SCROLL ----------
+window.addEventListener("scroll", () => {
+  const scrolled = window.scrollY > 400;
+  backToTop.hidden = !scrolled;
+});
 
-.modalContent__brand {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--gray-600);
-  font-weight: 600;
-}
+backToTop.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
-.modalContent__name {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 30px);
-  font-weight: 700;
-  color: var(--charcoal);
-  line-height: 1.1;
-}
+// ---------- AÑO DINÁMICO EN EL FOOTER ----------
+document.getElementById("year").textContent = new Date().getFullYear();
 
-.modalContent__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 2px;
-}
+// ---------- WHATSAPP: BOTÓN DE MAYOREO ----------
+// Antes apuntaba a href="#" sin mensaje. Usa el mismo WHATSAPP_NUMBER que
+// el resto del sitio y el mensaje de mayoreo pedido en el brief.
+(function setWholesaleWhatsapp() {
+  const btn = document.getElementById("wholesaleWhatsapp");
+  if (!btn) return;
+  const mensaje = encodeURIComponent(
+    "Hola, Carland 1601. Estoy interesado en comprar al mayoreo 3 o más unidades del mismo modelo. Quisiera información sobre disponibilidad y beneficios."
+  );
+  btn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
+  btn.target = "_blank";
+  btn.rel = "noopener";
+})();
 
-.modalContent__chip {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 100px;
-  background: var(--gray-100);
-  color: var(--charcoal);
-  border: 1px solid var(--gray-200);
-}
+// ---------- TICKER DEL TOPBAR ----------
+// Duplica el contenido de la barra superior una vez para que la animación
+// CSS (translateX(-50%)) haga un loop perfectamente continuo, sin salto.
+(function initTopbarTicker() {
+  const track = document.querySelector(".topbar__track");
+  if (!track) return;
+  track.innerHTML += track.innerHTML;
+})();
 
-.modalContent__chip--nuevo { background: var(--red); color: var(--white); border-color: var(--red); }
-.modalContent__chip--oferta { background: var(--black); color: var(--white); border-color: var(--black); }
-.modalContent__chip--novedad { background: var(--charcoal-soft); color: var(--white); border-color: var(--charcoal-soft); }
-.modalContent__chip--disponible { color: #1b7a3d; border-color: #cdeada; background: #f1faf4; }
-.modalContent__chip--agotado { color: var(--gray-600); }
+// ---------- REVELADO AL HACER SCROLL (.reveal) ----------
+// Sin esto, .reveal quedaba como una clase sin ningún efecto real.
+(function initScrollReveal() {
+  const targets = document.querySelectorAll(".reveal");
+  if (!targets.length) return;
 
-.modalContent__priceBlock {
-  margin-top: 6px;
-  padding-top: 16px;
-  border-top: 1px solid var(--gray-200);
-}
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    targets.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
 
-.modalContent__priceLabel {
-  font-size: 11.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--gray-600);
-  margin-bottom: 6px;
-}
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+  );
 
-.modalContent__price {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 30px;
-  color: var(--black);
-}
-
-.modalContent__buy {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  background: var(--red);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 15px;
-  padding: 15px 18px;
-  border-radius: 12px;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.modalContent__buy:hover {
-  background: var(--red-dark);
-  transform: translateY(-1px);
-}
-
-.modalContent__buy--disabled {
-  background: var(--gray-200);
-  color: var(--gray-600);
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .modalContent { transition: none !important; }
-}
+  targets.forEach((el) => observer.observe(el));
+})();
 
 /* =========================================================
-   UTILIDADDES EN EL PROMT
+   CARRUSEL PRINCIPAL
+   Cambia de slide automáticamente cada 4.5s. También se puede
+   navegar con flechas, puntos, swipe (móvil) o teclado.
    ========================================================= */
-.lazy-fade {
-  opacity: 0;
-  transition: opacity 0.4s ease;
+let heroIndex = 0;
+let heroTimer = null;
+const HERO_INTERVAL = 4500;
+
+function goToCategory(categoryName) {
+  // "Control Remoto" no existe como categoría propia en window.PRODUCTOS hoy
+  // (los vehículos RC están guardados dentro de "Autos"). Para que el botón
+  // funcione de verdad en vez de mostrar 0 resultados, se resuelve como una
+  // búsqueda por "RC" en vez de un filtro de categoría exacto.
+  if (categoryName === "Control Remoto") {
+    currentCategory = "Todos";
+    currentSearch = "RC";
+    searchInput.value = "RC";
+  } else {
+    currentCategory = categoryName;
+    currentSearch = "";
+    searchInput.value = "";
+  }
+  renderCategoryFilters();
+  applyFiltersAndRender();
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
 }
 
-.lazy-fade.is-loaded {
-  opacity: 1;
+function buildHeroSlides() {
+  heroTrack.innerHTML = HERO_SLIDES.map((slide, i) => `
+    <div class="hero__slide hero__slide--${slide.variant}" role="group" aria-roledescription="slide">
+      <div class="hero__content">
+        <span class="hero__eyebrow">${slide.icon} ${slide.eyebrow}</span>
+        <h1 class="hero__title">${slide.title}</h1>
+        <p class="hero__text">${slide.text}</p>
+        <div class="hero__actions">
+          <a href="#catalogo" class="hero__cta" data-hero-category="${slide.filterCategory}">Comprar ahora</a>
+          <a href="#catalogo" class="hero__cta hero__cta--ghost">Ver catálogo</a>
+        </div>
+      </div>
+      ${buildHeroCircleMarkup(i)}
+    </div>
+  `).join("");
+
+  heroDots.innerHTML = HERO_SLIDES.map((_, i) =>
+    `<button class="hero__dot" data-slide="${i}" aria-label="Ir al slide ${i + 1}"></button>`
+  ).join("");
+
+  heroTrack.querySelectorAll("[data-hero-category]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      goToCategory(btn.dataset.heroCategory);
+    });
+  });
+
+  heroDots.querySelectorAll(".hero__dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      setHeroSlide(Number(dot.dataset.slide));
+      restartHeroAutoplay();
+    });
+  });
 }
+
+/**
+ * Genera el markup de la galería circular de un slide: una foto que va
+ * cambiando entre varias imágenes aleatorias (autos, motos y envíos reales),
+ * rodeada de un aro de emojis (también aleatorios) que gira en círculo.
+ * Cada slide recibe su propia selección aleatoria de fotos, emojis,
+ * velocidad y sentido de giro para que se sienta dinámico y distinto.
+ */
+function buildHeroCircleMarkup(slideIndex) {
+  const pool = getCirclePoolImages();
+  if (!pool.length) return "";
+
+  const images = pickRandom(pool, Math.min(6, pool.length));
+  const emojis = pickRandom(HERO_CIRCLE_EMOJIS, 6);
+  const spinDuration = (12 + Math.random() * 10).toFixed(1); // entre 12s y 22s
+  const spinDirection = Math.random() < 0.5 ? "normal" : "reverse";
+
+  const emojiRing = emojis.map((emoji, i) => `
+    <div class="shipProof__orbit" style="--i:${i}">
+      <span class="shipProof__emoji">${emoji}</span>
+    </div>
+  `).join("");
+
+  return `
+    <div class="shipProof" data-slide-index="${slideIndex}"
+         data-images='${JSON.stringify(images)}'
+         style="--spin-duration:${spinDuration}s; --spin-direction:${spinDirection};">
+      <div class="shipProof__ring" aria-hidden="true">${emojiRing}</div>
+      <div class="shipProof__circle">
+        <img src="${images[0]}" alt="Autos, motos y envíos reales de Carland 1601" class="shipProof__img">
+      </div>
+      <span class="shipProof__badge">✅ 100% real</span>
+    </div>
+  `;
+}
+
+/**
+ * Activa la rotación aleatoria de fotos en CADA galería circular del
+ * carrusel (una por slide), cada una de forma independiente y con un
+ * pequeño desfase inicial para que no cambien todas al mismo tiempo.
+ * Si una imagen no carga, se salta automáticamente a la siguiente.
+ */
+function initHeroCircleRotation() {
+  document.querySelectorAll(".shipProof").forEach((container) => {
+    const img = container.querySelector(".shipProof__img");
+    if (!img) return;
+
+    let images = [];
+    try {
+      images = JSON.parse(container.dataset.images || "[]");
+    } catch (e) {
+      images = [];
+    }
+    if (images.length < 2) return; // nada que rotar
+
+    // Precarga silenciosa para evitar parpadeos al cambiar de foto
+    images.forEach((src) => { const preloader = new Image(); preloader.src = src; });
+
+    let idx = 0;
+    img.onerror = () => {
+      idx = (idx + 1) % images.length;
+      img.src = images[idx];
+    };
+
+    const startDelay = Math.floor(Math.random() * SHIP_PROOF_INTERVAL);
+    setTimeout(() => {
+      setInterval(() => {
+        idx = (idx + 1) % images.length;
+        img.classList.add("is-fading");
+        setTimeout(() => {
+          img.src = images[idx];
+          img.classList.remove("is-fading");
+        }, 220);
+      }, SHIP_PROOF_INTERVAL);
+    }, startDelay);
+  });
+}
+
+function setHeroSlide(index) {
+  heroIndex = (index + HERO_SLIDES.length) % HERO_SLIDES.length;
+  heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
+  heroDots.querySelectorAll(".hero__dot").forEach((dot, i) => {
+    dot.classList.toggle("is-active", i === heroIndex);
+  });
+}
+
+function restartHeroAutoplay() {
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => setHeroSlide(heroIndex + 1), HERO_INTERVAL);
+}
+
+function initHeroCarousel() {
+  buildHeroSlides();
+  setHeroSlide(0);
+  restartHeroAutoplay();
+  initHeroCircleRotation();
+
+  heroPrevBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex - 1);
+    restartHeroAutoplay();
+  });
+  heroNextBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+
+  // Pausar mientras el cursor está encima (desktop)
+  const heroSection = document.getElementById("heroCarousel");
+  heroSection.addEventListener("mouseenter", () => clearInterval(heroTimer));
+  heroSection.addEventListener("mouseleave", restartHeroAutoplay);
+
+  // Swipe táctil (móvil)
+  let touchStartX = 0;
+  heroSection.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    clearInterval(heroTimer);
+  }, { passive: true });
+
+  heroSection.addEventListener("touchend", (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    if (deltaX > 40) setHeroSlide(heroIndex - 1);
+    else if (deltaX < -40) setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+}
+
+// ---------- INICIALIZACIÓN ----------
+setGenericWhatsappLinks();
+loadProducts();
+initHeroCarousel();
