@@ -855,7 +855,7 @@ button { font-family: inherit; cursor: pointer; }
   .previewGrid { gap: 12px; }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .previewGrid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
 }
 
@@ -1231,7 +1231,7 @@ button { font-family: inherit; cursor: pointer; }
   .products { gap: 12px; padding: 18px 12px 55px; }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .products {
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
