@@ -107,7 +107,7 @@
     </div>
   </section>
 
-  <!-- ============ COLECCIONES ============ -->
+  <!-- ============ COLECCIONES (se mantiene arriba) ============ -->
   <section class="section section--dark reveal" id="colecciones">
     <div class="section__head">
       <span class="section__eyebrow">EXPLORA CARLAND</span>
@@ -124,6 +124,34 @@
     </div>
   </section>
 
+  <!-- ============ BUSCADOR + FILTROS (justo antes del catálogo) ============ -->
+  <section class="catalogIntro reveal">
+    <div><span class="section__eyebrow">CATÁLOGO DIGITAL</span><h2>Todo Carland 1601, en un solo lugar</h2><p>Busca por nombre, marca, categoría o escala.</p></div>
+    <div class="catalogIntro__trust">✓ Disponibilidad visible<br>✓ Compra directa por WhatsApp</div>
+  </section>
+
+  <section class="controls" id="catalogo">
+    <div class="controls__search">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar por nombre, marca, categoría o escala..." aria-label="Buscar productos">
+    </div>
+
+    <div class="controls__filters" id="categoryFilters">
+      <!-- Los botones de categoría se generan dinámicamente en script.js -->
+    </div>
+  </section>
+
+  <!-- ============ GRID DE PRODUCTOS (primero, como pediste) ============ -->
+  <main>
+    <section class="products" id="productsGrid" aria-live="polite">
+      <!-- Las tarjetas de producto se insertan aquí vía JavaScript, desde productos.json -->
+    </section>
+
+    <p class="products__empty" id="emptyMessage" hidden>
+      No encontramos productos con esa búsqueda. Prueba con otro nombre, marca o categoría.
+    </p>
+  </main>
+
   <!-- ============ OFERTAS ============ -->
   <section class="section section--light reveal" id="ofertas">
     <div class="section__head section__head--row">
@@ -137,6 +165,18 @@
     </div>
     <div class="previewGrid" id="ofertasPreview" aria-live="polite">
       <!-- Productos reales marcados con etiqueta "Oferta" — generado en script.js -->
+    </div>
+  </section>
+
+  <!-- ============ MAYOREO (publicidad de mayoristas, al centro) ============ -->
+  <section class="wholesale reveal" id="mayoreo">
+    <div class="wholesale__visual"><span>📦</span><i>×3</i><b>MAYOREO</b></div>
+    <div class="wholesale__content">
+      <span class="section__eyebrow">PARA COLECCIONISTAS Y REVENDEDORES</span>
+      <h2>¿Compras varias unidades?</h2>
+      <p>Desde <strong>3 productos del mismo modelo</strong>, activa nuestro beneficio para clientes mayoristas. Ideal para revendedores, negocios, coleccionistas y compras por volumen.</p>
+      <ul><li>✓ Envío gratis para pedidos que cumplan la condición</li><li>✓ Atención directa por WhatsApp</li><li>✓ Disponibilidad confirmada antes del pago</li></ul>
+      <a class="premiumCta" href="#" id="wholesaleWhatsapp">Quiero comprar al mayoreo</a>
     </div>
   </section>
 
@@ -183,18 +223,6 @@
     </div>
   </section>
 
-  <!-- ============ MAYOREO ============ -->
-  <section class="wholesale reveal" id="mayoreo">
-    <div class="wholesale__visual"><span>📦</span><i>×3</i><b>MAYOREO</b></div>
-    <div class="wholesale__content">
-      <span class="section__eyebrow">PARA COLECCIONISTAS Y REVENDEDORES</span>
-      <h2>¿Compras varias unidades?</h2>
-      <p>Desde <strong>3 productos del mismo modelo</strong>, activa nuestro beneficio para clientes mayoristas. Ideal para revendedores, negocios, coleccionistas y compras por volumen.</p>
-      <ul><li>✓ Envío gratis para pedidos que cumplan la condición</li><li>✓ Atención directa por WhatsApp</li><li>✓ Disponibilidad confirmada antes del pago</li></ul>
-      <a class="premiumCta" href="#" id="wholesaleWhatsapp">Quiero comprar al mayoreo</a>
-    </div>
-  </section>
-
   <!-- ============ EXPERIENCIA CARLAND ============ -->
   <section class="process section section--light reveal">
     <div class="section__head">
@@ -207,34 +235,6 @@
       <div class="processStep"><span>03</span><div>📦</div><h3>Recibe</h3><p>Confirmamos tu pedido y gestionamos el envío a Honduras.</p></div>
     </div>
   </section>
-
-  <!-- ============ BUSCADOR + FILTROS ============ -->
-  <section class="catalogIntro reveal">
-    <div><span class="section__eyebrow">CATÁLOGO DIGITAL</span><h2>Todo Carland 1601, en un solo lugar</h2><p>Busca por nombre, marca, categoría o escala.</p></div>
-    <div class="catalogIntro__trust">✓ Disponibilidad visible<br>✓ Compra directa por WhatsApp</div>
-  </section>
-
-  <section class="controls" id="catalogo">
-    <div class="controls__search">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar por nombre, marca, categoría o escala..." aria-label="Buscar productos">
-    </div>
-
-    <div class="controls__filters" id="categoryFilters">
-      <!-- Los botones de categoría se generan dinámicamente en script.js -->
-    </div>
-  </section>
-
-  <!-- ============ GRID DE PRODUCTOS ============ -->
-  <main>
-    <section class="products" id="productsGrid" aria-live="polite">
-      <!-- Las tarjetas de producto se insertan aquí vía JavaScript, desde productos.json -->
-    </section>
-
-    <p class="products__empty" id="emptyMessage" hidden>
-      No encontramos productos con esa búsqueda. Prueba con otro nombre, marca o categoría.
-    </p>
-  </main>
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
