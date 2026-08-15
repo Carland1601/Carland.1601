@@ -847,16 +847,16 @@ button { font-family: inherit; cursor: pointer; }
   max-width: 1280px;
   margin: 28px auto 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 
 @media (min-width: 480px) {
-  .previewGrid { gap: 10px; }
+  .previewGrid { gap: 12px; }
 }
 
 @media (min-width: 640px) {
-  .previewGrid { gap: 18px; }
+  .previewGrid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
 }
 
 @media (min-width: 1000px) {
@@ -1221,18 +1221,19 @@ button { font-family: inherit; cursor: pointer; }
 .products {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 16px 7px 50px;
+  padding: 16px 8px 50px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 
 @media (min-width: 480px) {
-  .products { gap: 10px; padding: 18px 10px 55px; }
+  .products { gap: 12px; padding: 18px 12px 55px; }
 }
 
 @media (min-width: 640px) {
   .products {
+    grid-template-columns: repeat(4, 1fr);
     gap: 18px;
     padding: 20px 20px 60px;
   }
@@ -1302,17 +1303,17 @@ button { font-family: inherit; cursor: pointer; }
 
 .card__badge {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 5px;
+  left: 5px;
   font-family: var(--font-display);
-  font-size: 6.5px;
+  font-size: 7.5px;
   font-weight: 700;
   letter-spacing: 0.1px;
-  padding: 2px 4px;
-  border-radius: 4px;
+  padding: 3px 5px;
+  border-radius: 5px;
   color: var(--white);
   text-transform: uppercase;
-  max-width: calc(100% - 8px);
+  max-width: calc(100% - 10px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1331,15 +1332,14 @@ button { font-family: inherit; cursor: pointer; }
 
 .card__status {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  font-size: 0;
+  top: 5px;
+  right: 5px;
+  font-size: 7px;
   font-weight: 600;
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border-radius: 50%;
+  padding: 3px 6px;
+  border-radius: 100px;
   backdrop-filter: blur(2px);
+  background: rgba(255,255,255,0.9);
 }
 
 @media (min-width: 640px) {
@@ -1348,30 +1348,22 @@ button { font-family: inherit; cursor: pointer; }
     padding: 5px 10px;
     top: 10px;
     right: 10px;
-    width: auto;
-    height: auto;
-    border-radius: 100px;
   }
 }
 
-.card__status--disponible { background: #1b7a3d; color: #1b7a3d; }
-.card__status--agotado { background: var(--gray-600); color: var(--gray-600); }
-
-@media (min-width: 640px) {
-  .card__status--disponible { background: rgba(255,255,255,0.9); color: #1b7a3d; }
-  .card__status--agotado { background: rgba(255,255,255,0.9); color: var(--gray-600); }
-}
+.card__status--disponible { color: #1b7a3d; }
+.card__status--agotado { color: var(--gray-600); }
 
 .card__body {
-  padding: 6px 6px 7px;
+  padding: 8px 8px 9px;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
   flex: 1;
 }
 
 .card__brand {
-  font-size: 6.5px;
+  font-size: 7.5px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
   color: var(--gray-600);
@@ -1380,7 +1372,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .card__name {
   font-family: var(--font-display);
-  font-size: 9.5px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--charcoal);
   line-height: 1.2;
@@ -1391,10 +1383,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .card__scale {
-  font-size: 7px;
+  font-size: 8px;
   color: var(--gray-600);
   margin-bottom: 1px;
-  display: none;
 }
 
 .card__priceRow {
@@ -1402,16 +1393,16 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
+  gap: 6px;
 }
 
 .card__price {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--black);
   background: var(--gray-100);
-  padding: 3px 4px;
+  padding: 3px 5px;
   border-radius: 5px;
   letter-spacing: 0;
 }
@@ -1420,14 +1411,14 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   width: 100%;
-  margin-top: 4px;
+  margin-top: 5px;
   background: var(--red);
   color: var(--white);
   font-weight: 600;
-  font-size: 8px;
-  padding: 6px 4px;
+  font-size: 9.5px;
+  padding: 7px 5px;
   border-radius: 7px;
   transition: background 0.2s ease, transform 0.2s ease;
 }
@@ -1442,17 +1433,10 @@ button { font-family: inherit; cursor: pointer; }
   white-space: nowrap;
 }
 
-@media (max-width: 359px) {
-  .card__buyLabel { display: none; }
-}
-
 @media (min-width: 480px) {
-  .card__body { padding: 8px 8px 9px; gap: 2px; }
-  .card__brand { font-size: 8px; }
-  .card__name { font-size: 11px; }
-  .card__scale { display: block; font-size: 8.5px; }
-  .card__price { font-size: 10.5px; padding: 4px 6px; }
-  .card__buy { font-size: 9px; padding: 6px 6px; }
+  .card__name { font-size: 12px; }
+  .card__price { font-size: 11.5px; padding: 4px 6px; }
+  .card__buy { font-size: 10px; padding: 7px 6px; }
 }
 
 @media (min-width: 640px) {
