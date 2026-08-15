@@ -24,16 +24,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- Iconos (solo SVG inline, sin dependencias externas pesadas) -->
+  <!-- Iconos -->
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <!-- ============ NAVBAR FIJA ============ -->
   <header class="navbar" id="navbar">
     <div class="navbar__inner">
+
       <a href="#top" class="navbar__brand">
         <img src="assets/logo.png" alt="Logo Carland 1601" class="navbar__logo" width="42" height="42">
+
         <div class="navbar__brandtext">
           <span class="navbar__title">CARLAND <em>1601</em></span>
           <span class="navbar__subtitle">Miniaturas y vehículos de colección</span>
@@ -47,13 +50,20 @@
       </nav>
 
       <a href="#" class="navbar__whatsapp" id="navWhatsapp" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
-        <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+
+        <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/>
+        </svg>
+
         <span>Escríbenos</span>
       </a>
 
       <button class="navbar__toggle" id="navToggle" aria-label="Abrir menú de información">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
       </button>
+
     </div>
 
     <div class="navbar__infoMobile" id="navInfoMobile">
@@ -67,99 +77,160 @@
 
   <!-- ============ CARRUSEL PRINCIPAL ============ -->
   <section class="hero" id="heroCarousel" aria-roledescription="carrusel" aria-label="Destacados Carland 1601">
+
     <div class="hero__track" id="heroTrack">
-      <!-- Los slides se generan dinámicamente en script.js (ver HERO_SLIDES) -->
+      <!-- Los slides se generan dinámicamente en script.js -->
     </div>
 
     <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Anterior">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4">
+        <path d="M15 6l-6 6 6 6"/>
+      </svg>
     </button>
+
     <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Siguiente">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4">
+        <path d="M9 6l6 6-6 6"/>
+      </svg>
     </button>
 
     <div class="hero__dots" id="heroDots"></div>
+
   </section>
 
   <!-- ============ BUSCADOR + FILTROS ============ -->
   <section class="controls" id="catalogo">
+
     <div class="controls__search">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar por nombre, marca, categoría o escala..." aria-label="Buscar productos">
+
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="M21 21l-4.3-4.3"/>
+      </svg>
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Buscar por nombre, marca, categoría o escala..."
+        aria-label="Buscar productos"
+      >
+
     </div>
 
     <div class="controls__filters" id="categoryFilters">
       <!-- Los botones de categoría se generan dinámicamente en script.js -->
     </div>
+
   </section>
 
   <!-- ============ GRID DE PRODUCTOS ============ -->
   <main>
+
     <section class="products" id="productsGrid" aria-live="polite">
-      <!-- Las tarjetas de producto se insertan aquí vía JavaScript, desde productos.json -->
+      <!-- Las tarjetas de producto se insertan aquí vía JavaScript -->
     </section>
 
     <p class="products__empty" id="emptyMessage" hidden>
       No encontramos productos con esa búsqueda. Prueba con otro nombre, marca o categoría.
     </p>
+
   </main>
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
+
     <div class="footer__inner">
+
       <div class="footer__brand">
+
         <img src="assets/logo.png" alt="Logo Carland 1601" width="48" height="48">
+
         <div>
           <p class="footer__title">CARLAND 1601</p>
           <p class="footer__tag">Miniaturas y vehículos de colección</p>
         </div>
+
       </div>
 
       <div class="footer__col">
+
         <h3>Información</h3>
+
         <p>🚚 Envíos a toda Honduras</p>
         <p>💳 Pago únicamente previo depósito o transferencia bancaria</p>
         <p>📍 Santa Bárbara, Honduras</p>
         <p>🗂 Catálogo actualizado constantemente</p>
+
       </div>
 
       <div class="footer__col">
+
         <h3>Síguenos</h3>
+
         <div class="footer__social">
           <a href="#" aria-label="Facebook">Facebook</a>
           <a href="#" aria-label="Instagram">Instagram</a>
           <a href="#" aria-label="TikTok">TikTok</a>
         </div>
+
       </div>
+
     </div>
 
-    <p class="footer__rights">© <span id="year"></span> Carland 1601. Todos los derechos reservados.</p>
+    <p class="footer__rights">
+      © <span id="year"></span> Carland 1601. Todos los derechos reservados.
+    </p>
+
   </footer>
 
   <!-- ============ BOTONES FLOTANTES ============ -->
-  <a href="#" class="floatBtn floatBtn--whatsapp" id="floatWhatsapp" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
-    <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+
+  <a
+    href="#"
+    class="floatBtn floatBtn--whatsapp"
+    id="floatWhatsapp"
+    target="_blank"
+    rel="noopener"
+    aria-label="Contactar por WhatsApp"
+  >
+    <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor">
+      <path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/>
+    </svg>
   </a>
 
   <button class="floatBtn floatBtn--top" id="backToTop" aria-label="Volver arriba" hidden>
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+
   </button>
 
   <!-- ============ MODAL DE VISTA PREVIA DE PRODUCTO ============ -->
+
   <div class="modalOverlay" id="modalOverlay" hidden>
-    <div class="modalContent" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalName">
+
+    <div
+      class="modalContent"
+      id="modalContent"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalName"
+    >
       <!-- Contenido inyectado dinámicamente por script.js -->
     </div>
+
   </div>
 
   <!-- =========================================================
        CATÁLOGO DE PRODUCTOS
        Edita, agrega o elimina productos directamente aquí.
-       Cada producto es un bloque { ... } separado por coma.
-       Revisa el README.md para instrucciones detalladas.
        ========================================================= -->
+
   <script>
+
     window.PRODUCTOS = [
+
       {
         "nombre": "Toyota MN-82",
         "marca": "MN",
@@ -170,7 +241,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/mn82.jpg"
       },
-      
+
       {
         "nombre": "Mcqueen Ruzteze",
         "marca": "Mattel",
@@ -181,6 +252,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/ruzteze.jpg"
       },
+
       {
         "nombre": "Antorcha Minecraft decoracion de habitacion",
         "marca": "Minecraft",
@@ -191,6 +263,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/antorcha.png"
       },
+
       {
         "nombre": "Mcqueen set de tres mini cars version nueva pelicula",
         "marca": "Mattel",
@@ -201,7 +274,8 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/new.jpg"
       },
-       {
+
+      {
         "nombre": "Mcqueen set de tres mini cars version rescue",
         "marca": "Mattel",
         "categoria": "autos",
@@ -211,7 +285,8 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/rescue.jpg"
       },
-       {
+
+      {
         "nombre": "Mcqueen 20 aniversario",
         "marca": "Mattel",
         "categoria": "autos",
@@ -221,6 +296,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/mcqueen1.jpg"
       },
+
       {
         "nombre": "Mcqueen en blister",
         "marca": "Mattel",
@@ -231,6 +307,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/mcqueen2.jpg"
       },
+
       {
         "nombre": "Llavero Arma AK-47 Metalico",
         "marca": "Armas",
@@ -241,6 +318,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/Gemini_Generated_Image_7nrj917nrj917nrj.png"
       },
+
       {
         "nombre": "Llavero Biker Plastico",
         "marca": "Motos",
@@ -251,6 +329,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/Gemini_Generated_Image_yi98rpyi98rpyi98 (1).png"
       },
+
       {
         "nombre": "Llavero Trionda Goma",
         "marca": "Futbol",
@@ -261,6 +340,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/Gemini_Generated_Image_5kocr05kocr05koc.png"
       },
+
       {
         "nombre": "Rolls-Royce Spectre",
         "marca": "Rolls-Royce",
@@ -271,7 +351,8 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/rolld.jpg"
       },
-       {
+
+      {
         "nombre": "Rav-4",
         "marca": "Toyota",
         "categoria": "Autos",
@@ -281,6 +362,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/rav.jpg"
       },
+
       {
         "nombre": "Auto Rc Drift",
         "marca": "generic",
@@ -291,6 +373,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/rcdrift.jpg"
       },
+
       {
         "nombre": "Chiks Hiks 1/64",
         "marca": "generic",
@@ -301,6 +384,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/chiks.jpg"
       },
+
       {
         "nombre": "Filmore 1/64",
         "marca": "generic",
@@ -311,6 +395,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/filmore.jpg"
       },
+
       {
         "nombre": "Cabesal Transformer 1/24 Coleccionable",
         "marca": "Jada",
@@ -321,6 +406,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/tc.jpg"
       },
+
       {
         "nombre": "Cabesal Transformer 1/24 Coleccionable",
         "marca": "Jada",
@@ -331,6 +417,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/trans.jpg"
       },
+
       {
         "nombre": "Toyota Tacoma 2025",
         "marca": "Toyota",
@@ -341,6 +428,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/tacoma.jpg"
       },
+
       {
         "nombre": "Toyota Tacoma 2025",
         "marca": "Toyota",
@@ -351,8 +439,9 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/tacoma-negra.jpg"
       },
+
       {
-         "nombre": "Toyota Tacoma 2025",
+        "nombre": "Toyota Tacoma 2025",
         "marca": "Toyota",
         "categoria": "Autos",
         "escala": "1:24",
@@ -361,6 +450,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/dorada.jpg"
       },
+
       {
         "nombre": "Toyota Tundra 2025",
         "marca": "Toyota",
@@ -371,6 +461,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/troja.jpg"
       },
+
       {
         "nombre": "Toyota Tundra 2025",
         "marca": "Toyota",
@@ -381,6 +472,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/tblanca.jpg"
       },
+
       {
         "nombre": "Toyota Tundra 2025",
         "marca": "Toyota",
@@ -391,6 +483,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/tverde.jpg"
       },
+
       {
         "nombre": "Alfa Romero Giulia GTAm 2021 ",
         "marca": "Alfa Romero",
@@ -401,6 +494,7 @@
         "etiqueta": "",
         "imagen": "assets/productos/alfa.jpg"
       },
+
       {
         "nombre": "Cybertruck Gris 1/32",
         "marca": "generic",
@@ -411,6 +505,7 @@
         "etiqueta": "Novedad",
         "imagen": "assets/productos/cgris.jpg"
       },
+
       {
         "nombre": "Cybertruck negra 1/32",
         "marca": "generic",
@@ -421,6 +516,7 @@
         "etiqueta": "Novedad",
         "imagen": "assets/productos/cnegra.jpg"
       },
+
       {
         "nombre": "Cybertruck dorada 1/32",
         "marca": "generic",
@@ -431,7 +527,8 @@
         "etiqueta": "Novedad",
         "imagen": "assets/productos/cdorada.jpg"
       },
-       {
+
+      {
         "nombre": "Lamborghini STO",
         "marca": "CCA",
         "categoria": "autos",
@@ -441,6 +538,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/sto.jpg"
       },
+
       {
         "nombre": "Toyota Prado 1/24 blanca",
         "marca": "CCA",
@@ -451,6 +549,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/pradob.jpg"
       },
+
       {
         "nombre": "Toyota Prado 1/24 Gris",
         "marca": "CCA",
@@ -461,6 +560,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/pradog.jpg"
       },
+
       {
         "nombre": "Plymouth taxi escala",
         "marca": "Polstergit",
@@ -471,6 +571,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/taxi.jpg"
       },
+
       {
         "nombre": "LC300 Blanca",
         "marca": "generic",
@@ -481,6 +582,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/lcb.jpg"
       },
+
       {
         "nombre": "LC300 Negra",
         "marca": "generic",
@@ -491,6 +593,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/lcn.jpg"
       },
+
       {
         "nombre": "Suzuki Jimny verde 1/24",
         "marca": "CCA",
@@ -501,6 +604,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/zv.jpg"
       },
+
       {
         "nombre": "Cabesal Clasico 1/32 blanco con luz y sonido",
         "marca": "generic",
@@ -511,6 +615,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/cb.jpg"
       },
+
       {
         "nombre": "Cabesal Clasico 1/32 negro con luz y sonido",
         "marca": "generic",
@@ -521,6 +626,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/cn.jpg"
       },
+
       {
         "nombre": "Land Cruiser Series 200",
         "marca": "generic",
@@ -531,6 +637,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/lb.jpg"
       },
+
       {
         "nombre": "Land Cruiser Series 200",
         "marca": "generic",
@@ -541,6 +648,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/ln.jpg"
       },
+
       {
         "nombre": "Dodge charger srt escala 1969 azul",
         "marca": "Maisto",
@@ -551,6 +659,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/srt.jpg"
       },
+
       {
         "nombre": "Tundra 1/28 blanca 2da generacion",
         "marca": "generic",
@@ -561,7 +670,8 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/tb.jpg"
       },
-       {
+
+      {
         "nombre": "Tundra 1/28 negra 2da generacion",
         "marca": "generic",
         "categoria": "Autos",
@@ -571,6 +681,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/tn.jpg"
       },
+
       {
         "nombre": "Toyota Hilux 1/32 con luz",
         "marca": "generic",
@@ -581,6 +692,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/hiluxb.jpg"
       },
+
       {
         "nombre": "Toyota Hilux 1/32 con luz",
         "marca": "generic",
@@ -591,6 +703,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/hiluxn.jpg"
       },
+
       {
         "nombre": "Toyota Hilux 1/32 con luz",
         "marca": "generic",
@@ -601,6 +714,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/hiluxa.jpg"
       },
+
       {
         "nombre": "Toyota Hilux 1/32 con luz",
         "marca": "generic",
@@ -611,6 +725,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/hiluxr.jpg"
       },
+
       {
         "nombre": "Toyota land cruiser 70 1/32",
         "marca": "generic",
@@ -621,6 +736,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/landb.png"
       },
+
       {
         "nombre": "Toyota land cruiser 70 1/32",
         "marca": "generic",
@@ -631,7 +747,8 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/landbe.png"
       },
-       {
+
+      {
         "nombre": "Toyota 22r 1/32",
         "marca": "generic",
         "categoria": "Autos",
@@ -641,6 +758,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/22rr.png"
       },
+
       {
         "nombre": "Toyota 22r 1/32",
         "marca": "generic",
@@ -651,6 +769,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/22rb.png"
       },
+
       {
         "nombre": "Toyota 22r 1/32",
         "marca": "generic",
@@ -661,6 +780,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/22ra.png"
       },
+
       {
         "nombre": "Toyota 22r 1/32",
         "marca": "generic",
@@ -671,6 +791,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/22rg.png"
       },
+
       {
         "nombre": "Lexus Lx570 1/32",
         "marca": "generic",
@@ -681,7 +802,8 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/lexus.png"
       },
-       {
+
+      {
         "nombre": "Chevy clasico 1/32",
         "marca": "generic",
         "categoria": "Autos",
@@ -691,7 +813,8 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/chevy.png"
       },
-       {
+
+      {
         "nombre": "Lamborghini Rapidos y Furiosos",
         "marca": "Maisto",
         "categoria": "Autos",
@@ -701,6 +824,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/lambo.jpg"
       },
+
       {
         "nombre": "Mototaxi Roja",
         "marca": "generic",
@@ -711,7 +835,8 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/mototaxi.jpg"
       },
-       {
+
+      {
         "nombre": "Porsche Dakar",
         "marca": "generic",
         "categoria": "Autos",
@@ -721,6 +846,7 @@
         "etiqueta": "Oferta",
         "imagen": "assets/productos/por.jpg"
       },
+
       {
         "nombre": "Cabezal Freightliner escala",
         "marca": "generic",
@@ -731,6 +857,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/fa.jpg"
       },
+
       {
         "nombre": "Cabezal Freightliner escala",
         "marca": "generic",
@@ -741,6 +868,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/cr.jpg"
       },
+
       {
         "nombre": "Cabezal Freightliner escala",
         "marca": "generic",
@@ -751,6 +879,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/ca.jpg"
       },
+
       {
         "nombre": "Cabezal Freightliner escala",
         "marca": "generic",
@@ -761,6 +890,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/cab.jpg"
       },
+
       {
         "nombre": "Cabezal con pipa escala",
         "marca": "generic",
@@ -771,6 +901,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/pipa.jpg"
       },
+
       {
         "nombre": "Mcqueen Control remoto Cars",
         "marca": "generic",
@@ -781,6 +912,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/mcqueenrc.png"
       },
+
       {
         "nombre": "Camioncito control remoto",
         "marca": "generic",
@@ -791,6 +923,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/rc1.png"
       },
+
       {
         "nombre": "Buldoser RC",
         "marca": "generic",
@@ -801,6 +934,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/bulrc.png"
       },
+
       {
         "nombre": "4x4 RC",
         "marca": "generic",
@@ -811,6 +945,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/4x4.png"
       },
+
       {
         "nombre": "Land Cruiser RC 4x2",
         "marca": "generic",
@@ -821,6 +956,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/landrc.png"
       },
+
       {
         "nombre": "Mario RC 4x2",
         "marca": "generic",
@@ -831,6 +967,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/mariorc.png"
       },
+
       {
         "nombre": "Bus escolar 4x2 RC",
         "marca": "generic",
@@ -841,6 +978,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/busrc.png"
       },
+
       {
         "nombre": "Escabadora 4x4 RC",
         "marca": "generic",
@@ -851,6 +989,7 @@
         "etiqueta": "Novedades",
         "imagen": "assets/productos/escavador.jpg"
       },
+
       {
         "nombre": "KTM Duke 1290",
         "marca": "CCA",
@@ -861,6 +1000,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/duke1290.jpg"
       },
+
       {
         "nombre": "Yamaha R1",
         "marca": "Maisto",
@@ -871,6 +1011,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/r1.jpg"
       },
+
       {
         "nombre": "Yamaha R1",
         "marca": "Maisto",
@@ -881,6 +1022,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/r1a.jpg"
       },
+
       {
         "nombre": "Mini Biker",
         "marca": "generic",
@@ -891,6 +1033,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/minibiker.jpg"
       },
+
       {
         "nombre": "Hayabusa escala 1/12",
         "marca": "Maisto",
@@ -901,6 +1044,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/haya.jpg"
       },
+
       {
         "nombre": "Kawasaki Croos 450 escala 1/12",
         "marca": "Maisto",
@@ -911,6 +1055,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/kawa.jpg"
       },
+
       {
         "nombre": "H2R escala 1/12",
         "marca": "CCA",
@@ -921,7 +1066,8 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/h2r.jpg"
       },
-        {
+
+      {
         "nombre": "YZ 450F escala 1/12",
         "marca": "CCA",
         "categoria": "Motocicletas",
@@ -931,6 +1077,7 @@
         "etiqueta": "Nuevo",
         "imagen": "assets/productos/yz.jpg"
       },
+
       {
         "nombre": "H2R mini escala 1/18",
         "marca": "CCA",
@@ -941,6 +1088,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/h2rmini.jpg"
       },
+
       {
         "nombre": "KTM croos 690 1/12",
         "marca": "Maisto",
@@ -951,6 +1099,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/ktmcroos.jpg"
       },
+
       {
         "nombre": "Vstrom escala 1/12",
         "marca": "Maisto",
@@ -961,6 +1110,7 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/vstrom.jpg"
       },
+
       {
         "nombre": "Honda CB400X escala 1/12",
         "marca": "Maisto",
@@ -970,24 +1120,36 @@
         "estado": "Disponible",
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/hondacb400x.jpg"
-      },
-      
-    window.PRODUCTOS = window.PRODUCTOS.filter(producto => 
-      ![
-        "assets/productos/tacoma-negra.jpg",
-        "assets/productos/22rr.png",
-        "assets/productos/h2rmini.jpg"
-      ].includes(producto.imagen)
-    );
-  
-
-
-
-
+      }
 
     ];
+
+    /* =========================================================
+       PRODUCTOS OCULTOS
+       Se filtran por el nombre exacto de la imagen.
+       
+       Esto permite ocultar solamente:
+       - Tacoma negra
+       - Toyota 22R con imagen 22rr.png
+       - H2R mini
+       
+       Los productos con el mismo nombre pero con otra imagen
+       CONTINÚAN MOSTRÁNDOSE.
+       ========================================================= */
+
+    const productosOcultos = [
+      "assets/productos/tacoma-negra.jpg",
+      "assets/productos/22rr.png",
+      "assets/productos/h2rmini.jpg"
+    ];
+
+    window.PRODUCTOS = window.PRODUCTOS.filter(producto => {
+      return !productosOcultos.includes(producto.imagen);
+    });
+
   </script>
 
   <script src="script.js"></script>
+
 </body>
 </html>
