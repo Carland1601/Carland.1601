@@ -284,6 +284,25 @@
     </div>
   </div>
 
+  <!-- ============ MODAL DE COMPRA POR WHATSAPP ============
+       Contenedor estático y reutilizable para TODOS los productos.
+       El contenido (producto, cantidad, entrega, formulario, resumen,
+       mini factura) se genera dinámicamente en script.js mediante
+       openPurchaseModal(product). No se debe duplicar este bloque. -->
+  <div class="purchaseOverlay" id="purchaseOverlay" hidden>
+    <div class="purchaseModal" id="purchaseModal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
+      <button class="purchaseModal__close" id="purchaseCloseBtn" aria-label="Cerrar ventana de compra">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="purchaseModal__scroll" id="purchaseScroll">
+        <!-- Contenido del paso "formulario" o "mini factura" — inyectado por script.js -->
+      </div>
+      <div class="purchaseModal__footer" id="purchaseFooter">
+        <!-- Botón principal (Confirmar orden / Enviar por WhatsApp) — inyectado por script.js -->
+      </div>
+    </div>
+  </div>
+
   <!-- =========================================================
        CATÁLOGO DE PRODUCTOS
        Edita, agrega o elimina productos directamente aquí.
