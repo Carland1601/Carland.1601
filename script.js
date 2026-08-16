@@ -132,6 +132,7 @@ let currentCategory = "Todos";
 let currentSearch = "";
 let renderedProducts = []; // productos actualmente visibles en el grid (tras filtros/búsqueda)
 let lastFocusedElement = null; // para devolver el foco al cerrar el modal
+let activeModalProduct = null; // producto mostrado actualmente en el modal de vista previa
 
 // ---------- ELEMENTOS DEL DOM ----------
 const grid = document.getElementById("productsGrid");
@@ -204,14 +205,14 @@ function renderCard(product, index) {
   const statusLabel = isAvailable ? "Disponible" : "Agotado";
 
   const buyBtn = isAvailable
-    ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="card__buy">
+    ? `<button type="button" class="card__buy" aria-label="Comprar ${product.nombre} por WhatsApp">
          <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
          <span class="card__buyLabel">Comprar</span>
-       </a>`
+       </button>`
     : `<span class="card__buy card__buy--disabled">Agotado</span>`;
 
   return `
-    <article class="card" data-index="${index}" tabindex="0" role="button" aria-label="Ver ${product.nombre} en grande">
+    <article class="card" data-index="${index}" data-pid="${product.__pid}" tabindex="0" role="button" aria-label="Ver ${product.nombre} en grande">
       <div class="card__mediaWrap">
         ${badgeHtml}
         <span class="card__status ${statusClass}">${statusLabel}</span>
@@ -246,10 +247,10 @@ function renderModalBody(product) {
     : `<span class="modalContent__chip modalContent__chip--agotado">Agotado</span>`;
 
   const buyBtn = isAvailable
-    ? `<a href="${buildWhatsappLink(product)}" target="_blank" rel="noopener" class="modalContent__buy">
+    ? `<button type="button" class="modalContent__buy">
          <svg viewBox="0 0 32 32" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
          Comprar por WhatsApp
-       </a>`
+       </button>`
     : `<span class="modalContent__buy modalContent__buy--disabled">Agotado</span>`;
 
   return `
@@ -284,6 +285,7 @@ function renderModalBody(product) {
  */
 function openProductModal(product, cardEl) {
   lastFocusedElement = document.activeElement;
+  activeModalProduct = product;
 
   const firstRect = cardEl.getBoundingClientRect();
 
@@ -359,6 +361,7 @@ function closeProductModal() {
     modalContent.style.opacity = "1";
     modalContent.innerHTML = "";
     document.body.classList.remove("modal-open");
+    activeModalProduct = null;
     if (lastFocusedElement) lastFocusedElement.focus();
   }, 320);
 }
@@ -484,6 +487,10 @@ function loadProducts() {
   }
 
   allProducts = window.PRODUCTOS;
+  // Asigna a cada producto un identificador estable (posición en el catálogo).
+  // Se usa para reconocer el producto exacto sin importar en qué grid
+  // (catálogo, ofertas, novedades) o modal se haya presionado "Comprar".
+  allProducts.forEach((p, i) => { p.__pid = i; });
   renderCategoryFilters();
   applyFiltersAndRender();
   renderOffersPreview();
@@ -551,6 +558,567 @@ function renderNoveltiesPreview() {
     });
   }
 );
+
+/* =========================================================
+   MODAL DE COMPRA POR WHATSAPP
+   Funciona con TODOS los productos del catálogo (autos, motos,
+   rastras, RC, novedades, ofertas). Se abre siempre desde la
+   misma función reutilizable openPurchaseModal(product), tomando
+   automáticamente imagen, nombre, precio, categoría e identificador
+   del producto que se le pase — nunca datos inventados.
+
+   Flujo:
+   producto → cantidad → entrega → datos → resumen → confirmar
+   → mini factura → enviar por WhatsApp
+   ========================================================= */
+
+// ---------- ELEMENTOS DEL DOM ----------
+const purchaseOverlay = document.getElementById("purchaseOverlay");
+const purchaseModal = document.getElementById("purchaseModal");
+const purchaseScroll = document.getElementById("purchaseScroll");
+const purchaseFooter = document.getElementById("purchaseFooter");
+const purchaseCloseBtn = document.getElementById("purchaseCloseBtn");
+
+// ---------- DATOS DE ENTREGA / RECOGIDA ----------
+const PICKUP_LOCATIONS = {
+  carland: "Carland.1601 — Santa Bárbara",
+  mave: "Tiendas Mave — Santa Bárbara"
+};
+
+const HONDURAS_DEPARTMENTS = [
+  "Atlántida", "Choluteca", "Colón", "Comayagua", "Copán", "Cortés",
+  "El Paraíso", "Francisco Morazán", "Gracias a Dios", "Intibucá",
+  "Islas de la Bahía", "La Paz", "Lempira", "Ocotepeque", "Olancho",
+  "Santa Bárbara", "Valle", "Yoro"
+];
+
+// ---------- ESTADO DE LA COMPRA ACTUAL ----------
+// Se recrea desde cero cada vez que se abre el modal, para un producto
+// concreto. Nunca se comparte estado entre productos distintos.
+let purchaseState = null;
+let lastPurchaseFocusedElement = null;
+
+/**
+ * Evita que texto escrito por el cliente (nombre, referencia, etc.)
+ * rompa el HTML generado dinámicamente.
+ */
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+}
+
+function computePurchaseSubtotal() {
+  if (!purchaseState) return 0;
+  return (Number(purchaseState.product.precio) || 0) * purchaseState.quantity;
+}
+
+/**
+ * Abre el modal de compra para UN producto específico. Reutilizable:
+ * se llama exactamente igual sin importar de qué tarjeta, preview o
+ * modal de vista previa provenga el clic en "Comprar por WhatsApp".
+ */
+function openPurchaseModal(product) {
+  if (!product) return;
+  lastPurchaseFocusedElement = document.activeElement;
+
+  purchaseState = {
+    product,
+    quantity: 1,
+    deliveryMethod: null, // "domicilio" | "tienda"
+    pickupLocation: null, // "carland" | "mave"
+    customer: { nombre: "", telefono: "", departamento: "", ciudad: "", barrio: "", referencia: "" },
+    step: "form", // "form" | "invoice"
+    errors: {},
+    attemptedConfirm: false
+  };
+
+  renderPurchaseModal();
+  purchaseOverlay.hidden = false;
+  document.body.classList.add("modal-open");
+  requestAnimationFrame(() => purchaseOverlay.classList.add("is-visible"));
+}
+
+function closePurchaseModal() {
+  if (!purchaseOverlay || purchaseOverlay.hidden) return;
+  purchaseOverlay.classList.remove("is-visible");
+
+  setTimeout(() => {
+    purchaseOverlay.hidden = true;
+    purchaseScroll.innerHTML = "";
+    purchaseFooter.innerHTML = "";
+    document.body.classList.remove("modal-open");
+    purchaseState = null;
+    if (lastPurchaseFocusedElement) lastPurchaseFocusedElement.focus();
+  }, 260);
+}
+
+/**
+ * Vuelve a pintar el paso actual del modal (formulario o mini factura)
+ * y conecta todos sus listeners. Se usa cada vez que cambia algo que
+ * altera la ESTRUCTURA del modal (cantidad de secciones visibles,
+ * cambio de paso, etc.). Para actualizaciones en vivo mientras el
+ * cliente escribe se usan funciones más puntuales (ver más abajo) para
+ * no perder el foco del campo de texto.
+ */
+function renderPurchaseModal() {
+  if (!purchaseState) return;
+  if (purchaseState.step === "invoice") {
+    purchaseScroll.innerHTML = renderInvoiceScroll();
+    purchaseFooter.innerHTML = renderInvoiceFooter();
+  } else {
+    purchaseScroll.innerHTML = renderPurchaseFormScroll();
+    purchaseFooter.innerHTML = renderPurchaseFormFooter();
+  }
+  attachPurchaseListeners();
+}
+
+/**
+ * PASO 1: producto + cantidad + entrega + datos + resumen en vivo
+ */
+function renderPurchaseFormScroll() {
+  const s = purchaseState;
+  const p = s.product;
+  const errors = s.attemptedConfirm ? s.errors : {};
+
+  const generalError =
+    errors.delivery ? `<div class="purchaseError">${escapeHtml(errors.delivery)}</div>` :
+    errors.pickup ? `<div class="purchaseError">${escapeHtml(errors.pickup)}</div>` : "";
+
+  return `
+    <div class="purchaseProduct">
+      <img src="${p.imagen}" alt="${escapeHtml(p.nombre)}" class="purchaseProduct__img">
+      <div class="purchaseProduct__info">
+        <span class="purchaseProduct__brand">${escapeHtml(p.marca)}</span>
+        <h2 class="purchaseProduct__name" id="purchaseModalTitle">${escapeHtml(p.nombre)}</h2>
+        <span class="purchaseProduct__scale">Escala ${escapeHtml(p.escala)}</span>
+        <span class="purchaseProduct__price">${formatPrice(p.precio)}</span>
+      </div>
+    </div>
+
+    <div class="purchaseSection">
+      <span class="purchaseSection__label">Cantidad</span>
+      <div class="qtyStepper">
+        <button type="button" class="qtyStepper__btn" id="qtyDecBtn" aria-label="Disminuir cantidad">−</button>
+        <span class="qtyStepper__value" id="qtyValue">${s.quantity}</span>
+        <button type="button" class="qtyStepper__btn" id="qtyIncBtn" aria-label="Aumentar cantidad">+</button>
+      </div>
+    </div>
+
+    <div class="purchaseSubtotalRow">
+      <span>Subtotal</span>
+      <strong id="purchaseSubtotalValue">${formatPrice(computePurchaseSubtotal())}</strong>
+    </div>
+
+    <div class="purchaseSection">
+      <span class="purchaseSection__label">¿Cómo deseas recibir tu pedido?</span>
+      <div class="deliveryChoice">
+        <button type="button" class="deliveryChoice__btn ${s.deliveryMethod === "domicilio" ? "is-active" : ""}" data-delivery="domicilio">
+          <span class="deliveryChoice__icon">🚚</span><span>Domicilio</span>
+        </button>
+        <button type="button" class="deliveryChoice__btn ${s.deliveryMethod === "tienda" ? "is-active" : ""}" data-delivery="tienda">
+          <span class="deliveryChoice__icon">🏪</span><span>Recoger en tienda</span>
+        </button>
+      </div>
+    </div>
+
+    ${s.deliveryMethod === "domicilio" ? renderDomicilioFields(errors) : ""}
+    ${s.deliveryMethod === "tienda" ? renderPickupFields(errors) : ""}
+
+    ${generalError}
+
+    <div class="purchaseSummary" id="purchaseSummary">
+      ${renderPurchaseSummaryHtml()}
+    </div>
+  `;
+}
+
+function renderPurchaseFormFooter() {
+  return `<button type="button" class="purchaseConfirmBtn" id="purchaseConfirmBtn">CONFIRMAR ORDEN</button>`;
+}
+
+function fieldErrorHtml(errors, key) {
+  return errors[key] ? `<small class="purchaseField__error">${escapeHtml(errors[key])}</small>` : "";
+}
+
+function renderDomicilioFields(errors) {
+  const c = purchaseState.customer;
+  return `
+    <div class="purchaseSection purchaseForm">
+      <span class="purchaseSection__label">Datos de entrega</span>
+
+      <label class="purchaseField ${errors.nombre ? "has-error" : ""}">
+        <span>Nombre completo</span>
+        <input type="text" id="fNombre" value="${escapeHtml(c.nombre)}" placeholder="Ej. Juan Pérez" autocomplete="name">
+        ${fieldErrorHtml(errors, "nombre")}
+      </label>
+
+      <label class="purchaseField ${errors.telefono ? "has-error" : ""}">
+        <span>Número de teléfono</span>
+        <input type="tel" id="fTelefono" value="${escapeHtml(c.telefono)}" placeholder="Ej. 9999-9999" autocomplete="tel" inputmode="tel">
+        ${fieldErrorHtml(errors, "telefono")}
+      </label>
+
+      <label class="purchaseField ${errors.departamento ? "has-error" : ""}">
+        <span>Departamento</span>
+        <select id="fDepartamento">
+          <option value="">Selecciona un departamento</option>
+          ${HONDURAS_DEPARTMENTS.map((d) => `<option value="${d}" ${c.departamento === d ? "selected" : ""}>${d}</option>`).join("")}
+        </select>
+        ${fieldErrorHtml(errors, "departamento")}
+      </label>
+
+      <label class="purchaseField ${errors.ciudad ? "has-error" : ""}">
+        <span>Ciudad</span>
+        <input type="text" id="fCiudad" value="${escapeHtml(c.ciudad)}" placeholder="Ej. Santa Bárbara">
+        ${fieldErrorHtml(errors, "ciudad")}
+      </label>
+
+      <label class="purchaseField ${errors.barrio ? "has-error" : ""}">
+        <span>Barrio / Aldea / Casa o Caserío</span>
+        <input type="text" id="fBarrio" value="${escapeHtml(c.barrio)}" placeholder="Ej. Barrio El Centro">
+        ${fieldErrorHtml(errors, "barrio")}
+      </label>
+
+      <label class="purchaseField ${errors.referencia ? "has-error" : ""}">
+        <span>Referencia de entrega</span>
+        <textarea id="fReferencia" rows="2" placeholder="Ej. Casa de esquina, frente a pulpería, portón negro.">${escapeHtml(c.referencia)}</textarea>
+        ${fieldErrorHtml(errors, "referencia")}
+      </label>
+    </div>
+  `;
+}
+
+function renderPickupFields() {
+  const s = purchaseState;
+  return `
+    <div class="purchaseSection">
+      <span class="purchaseSection__label">Selecciona dónde recoger</span>
+      <div class="pickupChoice">
+        <button type="button" class="pickupChoice__btn ${s.pickupLocation === "carland" ? "is-active" : ""}" data-pickup="carland">
+          <span class="pickupChoice__radio"></span><span>Carland.1601 — Santa Bárbara</span>
+        </button>
+        <button type="button" class="pickupChoice__btn ${s.pickupLocation === "mave" ? "is-active" : ""}" data-pickup="mave">
+          <span class="pickupChoice__radio"></span><span>Tiendas Mave — Santa Bárbara</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Genera el bloque "Resumen de orden" a partir del estado actual.
+ * Se llama tanto en el render completo como en cada actualización
+ * en vivo (cantidad, texto escrito, selección de entrega).
+ */
+function renderPurchaseSummaryHtml() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+
+  const rows = [
+    ["Producto", p.nombre],
+    ["Precio unitario", formatPrice(p.precio)],
+    ["Cantidad", String(s.quantity)],
+    ["Subtotal", formatPrice(subtotal)]
+  ];
+
+  if (s.deliveryMethod === "domicilio") {
+    rows.push(["Método de entrega", "🚚 Domicilio"]);
+    if (s.customer.nombre) rows.push(["Nombre", s.customer.nombre]);
+    if (s.customer.telefono) rows.push(["Teléfono", s.customer.telefono]);
+    if (s.customer.departamento) rows.push(["Departamento", s.customer.departamento]);
+    if (s.customer.ciudad) rows.push(["Ciudad", s.customer.ciudad]);
+    if (s.customer.barrio) rows.push(["Dirección", s.customer.barrio]);
+    if (s.customer.referencia) rows.push(["Referencia", s.customer.referencia]);
+  } else if (s.deliveryMethod === "tienda") {
+    rows.push(["Método de entrega", "🏪 Recoger en tienda"]);
+    if (s.pickupLocation) rows.push(["Punto de recogida", PICKUP_LOCATIONS[s.pickupLocation]]);
+  } else {
+    rows.push(["Método de entrega", "Sin seleccionar"]);
+  }
+
+  return `
+    <p class="purchaseSummary__title">Resumen de orden</p>
+    <div class="purchaseSummary__rows">
+      ${rows.map(([label, value]) => `
+        <div class="purchaseSummary__row"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function updatePurchaseSummary() {
+  const el = document.getElementById("purchaseSummary");
+  if (el) el.innerHTML = renderPurchaseSummaryHtml();
+}
+
+function refreshPurchaseQuantityUI() {
+  const qtyValueEl = document.getElementById("qtyValue");
+  const subtotalEl = document.getElementById("purchaseSubtotalValue");
+  if (qtyValueEl) qtyValueEl.textContent = purchaseState.quantity;
+  if (subtotalEl) subtotalEl.textContent = formatPrice(computePurchaseSubtotal());
+  updatePurchaseSummary();
+}
+
+/**
+ * PASO 2: mini factura / confirmación (después de "Confirmar orden")
+ */
+function renderInvoiceScroll() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+  const deliveryLabel = s.deliveryMethod === "domicilio" ? "🚚 Domicilio" : "🏪 Recoger en tienda";
+
+  const domicilioRows = s.deliveryMethod === "domicilio" ? `
+    <div class="invoice__row"><span>Nombre</span><strong>${escapeHtml(s.customer.nombre)}</strong></div>
+    <div class="invoice__row"><span>Teléfono</span><strong>${escapeHtml(s.customer.telefono)}</strong></div>
+    <div class="invoice__row"><span>Departamento</span><strong>${escapeHtml(s.customer.departamento)}</strong></div>
+    <div class="invoice__row"><span>Ciudad</span><strong>${escapeHtml(s.customer.ciudad)}</strong></div>
+    <div class="invoice__row"><span>Dirección</span><strong>${escapeHtml(s.customer.barrio)}</strong></div>
+    <div class="invoice__row"><span>Referencia</span><strong>${escapeHtml(s.customer.referencia)}</strong></div>
+  ` : "";
+
+  const pickupRow = s.deliveryMethod === "tienda" ? `
+    <div class="invoice__row"><span>Punto de recogida</span><strong>${escapeHtml(PICKUP_LOCATIONS[s.pickupLocation])}</strong></div>
+  ` : "";
+
+  return `
+    <div class="invoice">
+      <div class="invoice__header">
+        <span class="invoice__brand">CARLAND 1601</span>
+        <span class="invoice__type">ORDEN DE COMPRA</span>
+      </div>
+      <div class="invoice__body">
+        <div class="invoice__row"><span>Producto</span><strong>${escapeHtml(p.nombre)}</strong></div>
+        <div class="invoice__row"><span>Cantidad</span><strong>${s.quantity}</strong></div>
+        <div class="invoice__row"><span>Precio unitario</span><strong>${formatPrice(p.precio)}</strong></div>
+        <div class="invoice__row"><span>Subtotal</span><strong>${formatPrice(subtotal)}</strong></div>
+        <div class="invoice__divider"></div>
+        <div class="invoice__row"><span>Método de entrega</span><strong>${deliveryLabel}</strong></div>
+        ${domicilioRows}
+        ${pickupRow}
+        <div class="invoice__divider"></div>
+        <div class="invoice__row invoice__row--total"><span>TOTAL</span><strong>${formatPrice(subtotal)}</strong></div>
+      </div>
+      <p class="invoice__note">Tu pedido está listo para ser enviado a Carland.1601 por WhatsApp.</p>
+    </div>
+  `;
+}
+
+function renderInvoiceFooter() {
+  return `
+    <div class="purchaseActions">
+      <button type="button" class="invoiceSendBtn" id="invoiceSendBtn">📲 Enviar pedido por WhatsApp</button>
+      <button type="button" class="invoiceEditBtn" id="invoiceEditBtn">← Editar pedido</button>
+    </div>
+  `;
+}
+
+/**
+ * Valida los datos obligatorios antes de permitir confirmar la orden.
+ * Producto, cantidad y precio siempre son válidos por construcción
+ * (vienen del catálogo y el stepper nunca baja de 1); lo que sí debe
+ * validarse es el método de entrega y sus datos asociados.
+ */
+function validatePurchaseOrder() {
+  const s = purchaseState;
+  const errors = {};
+
+  if (!s.deliveryMethod) {
+    errors.delivery = "Selecciona un método de entrega.";
+  } else if (s.deliveryMethod === "domicilio") {
+    const c = s.customer;
+    if (!c.nombre.trim()) errors.nombre = "Ingresa el nombre completo.";
+    if (!c.telefono.trim()) errors.telefono = "Ingresa un número de teléfono.";
+    if (!c.departamento.trim()) errors.departamento = "Selecciona un departamento.";
+    if (!c.ciudad.trim()) errors.ciudad = "Ingresa la ciudad.";
+    if (!c.barrio.trim()) errors.barrio = "Ingresa el barrio, aldea, casa o caserío.";
+    if (!c.referencia.trim()) errors.referencia = "Ingresa una referencia de entrega.";
+  } else if (s.deliveryMethod === "tienda") {
+    if (!s.pickupLocation) errors.pickup = "Selecciona dónde deseas recoger tu pedido.";
+  }
+
+  s.errors = errors;
+  return Object.keys(errors).length === 0;
+}
+
+function handleConfirmOrderClick() {
+  purchaseState.attemptedConfirm = true;
+  if (!validatePurchaseOrder()) {
+    renderPurchaseModal();
+    const errEl = purchaseScroll.querySelector(".purchaseError, .purchaseField__error");
+    const scrollTarget = errEl ? errEl.closest(".purchaseSection, .purchaseError") : null;
+    if (scrollTarget && typeof scrollTarget.scrollIntoView === "function") {
+      scrollTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    return;
+  }
+  purchaseState.step = "invoice";
+  renderPurchaseModal();
+  purchaseScroll.scrollTop = 0;
+}
+
+/**
+ * Construye el mensaje de WhatsApp con los datos REALES introducidos
+ * por el cliente para ESTE pedido — nunca datos ficticios.
+ */
+function buildOrderWhatsappMessage() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+  const lines = [];
+
+  lines.push("🛒 *NUEVA ORDEN — CARLAND.1601*");
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push("📦 *PRODUCTO*");
+  lines.push(p.nombre);
+  lines.push(`💰 Precio: ${formatPrice(p.precio)}`);
+  lines.push(`🔢 Cantidad: ${s.quantity}`);
+  lines.push(`💵 Subtotal: ${formatPrice(subtotal)}`);
+  lines.push("━━━━━━━━━━━━━━");
+
+  if (s.deliveryMethod === "domicilio") {
+    lines.push("🚚 *ENTREGA*");
+    lines.push("Domicilio");
+    lines.push(`👤 Nombre: ${s.customer.nombre}`);
+    lines.push(`📱 Teléfono: ${s.customer.telefono}`);
+    lines.push(`📍 Departamento: ${s.customer.departamento}`);
+    lines.push(`🏙️ Ciudad: ${s.customer.ciudad}`);
+    lines.push(`🏠 Dirección: ${s.customer.barrio}`);
+    lines.push(`📌 Referencia: ${s.customer.referencia}`);
+  } else {
+    lines.push("🏪 *ENTREGA*");
+    lines.push("Recoger en tienda");
+    lines.push(`📍 Punto de recogida: ${PICKUP_LOCATIONS[s.pickupLocation]}`);
+  }
+
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push(`💰 *TOTAL: ${formatPrice(subtotal)}*`);
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push("Gracias por comprar en *Carland 1601*.");
+
+  return lines.join("\n");
+}
+
+function sendOrderToWhatsapp() {
+  const message = buildOrderWhatsappMessage();
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener");
+}
+
+/**
+ * Conecta todos los listeners del contenido dinámico del modal.
+ * Se llama después de CADA renderPurchaseModal(), porque el HTML
+ * interno se reemplaza por completo en cada paso.
+ */
+function attachPurchaseListeners() {
+  const qtyDecBtn = document.getElementById("qtyDecBtn");
+  const qtyIncBtn = document.getElementById("qtyIncBtn");
+  if (qtyDecBtn) {
+    qtyDecBtn.addEventListener("click", () => {
+      if (purchaseState.quantity > 1) purchaseState.quantity -= 1;
+      refreshPurchaseQuantityUI();
+    });
+  }
+  if (qtyIncBtn) {
+    qtyIncBtn.addEventListener("click", () => {
+      purchaseState.quantity += 1;
+      refreshPurchaseQuantityUI();
+    });
+  }
+
+  purchaseScroll.querySelectorAll("[data-delivery]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      purchaseState.deliveryMethod = btn.dataset.delivery;
+      purchaseState.pickupLocation = null;
+      purchaseState.errors = {};
+      renderPurchaseModal();
+    });
+  });
+
+  purchaseScroll.querySelectorAll("[data-pickup]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      purchaseState.pickupLocation = btn.dataset.pickup;
+      purchaseState.errors = {};
+      renderPurchaseModal();
+    });
+  });
+
+  // Los campos de texto solo refrescan el resumen (no todo el modal),
+  // para no perder el foco ni la posición del cursor mientras se escribe.
+  const bindField = (id, key) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", () => {
+      purchaseState.customer[key] = el.value;
+      updatePurchaseSummary();
+    });
+  };
+  bindField("fNombre", "nombre");
+  bindField("fTelefono", "telefono");
+  bindField("fDepartamento", "departamento");
+  bindField("fCiudad", "ciudad");
+  bindField("fBarrio", "barrio");
+  bindField("fReferencia", "referencia");
+
+  const confirmBtn = document.getElementById("purchaseConfirmBtn");
+  if (confirmBtn) confirmBtn.addEventListener("click", handleConfirmOrderClick);
+
+  const editBtn = document.getElementById("invoiceEditBtn");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      purchaseState.step = "form";
+      renderPurchaseModal();
+    });
+  }
+
+  const sendBtn = document.getElementById("invoiceSendBtn");
+  if (sendBtn) sendBtn.addEventListener("click", sendOrderToWhatsapp);
+}
+
+// ---------- ABRIR EL MODAL DE COMPRA DESDE CUALQUIER "COMPRAR POR WHATSAPP" ----------
+// Un solo listener delegado cubre el catálogo completo, las previews de
+// Ofertas/Novedades y el modal de vista previa: todos usan la misma
+// función openPurchaseModal(product), por lo que no hay código duplicado
+// por producto y cualquier producto nuevo agregado a window.PRODUCTOS
+// queda cubierto automáticamente.
+document.addEventListener("click", (e) => {
+  const buyEl = e.target.closest(".card__buy, .modalContent__buy");
+  if (!buyEl) return;
+  if (buyEl.classList.contains("card__buy--disabled") || buyEl.classList.contains("modalContent__buy--disabled")) return;
+  e.preventDefault();
+
+  let product = null;
+  if (buyEl.classList.contains("modalContent__buy")) {
+    product = activeModalProduct;
+  } else {
+    const cardEl = buyEl.closest(".card");
+    const pid = cardEl ? Number(cardEl.dataset.pid) : NaN;
+    product = allProducts.find((p) => p.__pid === pid) || null;
+  }
+  if (!product) return;
+
+  // Si el modal de vista previa (FLIP) está abierto, se cierra al instante
+  // para dar paso al modal de compra, evitando dos modales apilados.
+  if (!modalOverlay.hidden) {
+    modalOverlay.hidden = true;
+    modalOverlay.classList.remove("is-visible");
+    document.body.classList.remove("modal-open");
+  }
+
+  openPurchaseModal(product);
+});
+
+purchaseCloseBtn.addEventListener("click", closePurchaseModal);
+
+purchaseOverlay.addEventListener("click", (e) => {
+  if (e.target === purchaseOverlay) closePurchaseModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !purchaseOverlay.hidden) closePurchaseModal();
+});
 
 // ---------- BUSCADOR EN TIEMPO REAL ----------
 searchInput.addEventListener("input", (e) => {
