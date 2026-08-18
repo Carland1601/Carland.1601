@@ -1,10 +1,13 @@
 /* =========================================================
-   CARLAND 1601 — Lógica del catálogo + Nuevas funcionalidades
+   CARLAND 1601 — Lógica del catálogo
+   Todo el catálogo se genera dinámicamente desde productos.json
    ========================================================= */
 
+// ---------- CONFIGURACIÓN ----------
+// Cambia este número por el WhatsApp real del negocio (código de país + número, sin + ni espacios)
 const WHATSAPP_NUMBER = "50489534880";
-const SHIPPING_COST = 100;
 
+// Slides del carrusel principal (rota automáticamente cada 4.5s)
 const HERO_SLIDES = [
   {
     variant: "a", icon: "🔥",
@@ -28,415 +31,384 @@ const HERO_SLIDES = [
     filterCategory: "Todos"
   },
   {
+    variant: "h", icon: "📦",
+    type: "envios",
+    eyebrow: "Envíos verificados",
+    title: "Así llegan tus pedidos",
+    text: "Fotos reales de empaques y entregas hechas por nuestro equipo en toda Honduras. 📦🚚✅",
+    filterCategory: "Todos"
+  },
+  {
     variant: "d", icon: "⭐",
     eyebrow: "Recién llegados",
     title: "Nuevos ingresos",
     text: "Las últimas piezas que se sumaron al catálogo.",
     filterCategory: "Novedades"
+  },
+  {
+    variant: "e", icon: "🚗",
+    eyebrow: "Colección",
+    title: "Tacoma Collection",
+    text: "Toda la línea Toyota Tacoma a escala, lista para coleccionar.",
+    filterCategory: "Autos"
+  },
+  {
+    variant: "f", icon: "🚙",
+    eyebrow: "Colección",
+    title: "Toyota Collection",
+    text: "Prado, Land Cruiser, Hilux y más, en un solo lugar.",
+    filterCategory: "Autos"
+  },
+  {
+    variant: "g", icon: "🎁",
+    eyebrow: "Sorpresa",
+    title: "Mystery Box",
+    text: "No sabes cuál te toca, pero seguro te va a encantar.",
+    filterCategory: "Todos"
   }
 ];
 
-const CATEGORY_ORDER = ["Todos", "Autos", "Motocicletas", "Rastras", "Control Remoto", "Otros", "Ofertas", "Novedades"];
+// Imágenes de pruebas de envíos reales (carpeta assets/productos, nombradas 1 a 6)
+const SHIP_PROOF_IMAGES = [
+  "assets/productos/1.jpg",
+  "assets/productos/2.jpg",
+  "assets/productos/3.jpg",
+  "assets/productos/4.jpg",
+  "assets/productos/5.jpg",
+  "assets/productos/6.jpg"
+];
 
+// Emojis que giran alrededor de la foto de envío (estilo "aro" circular)
+const SHIP_PROOF_EMOJIS = ["📦", "🚚", "✅", "📍", "🎉", "🛵"];
+
+// Duración en milisegundos entre cada imagen de envío
+const SHIP_PROOF_INTERVAL = 2000;
+
+// Emojis de autos, envíos y entregas para el aro que gira alrededor de cada foto
+const HERO_CIRCLE_EMOJIS = [
+  "🚗", "🏎️", "🚙", "🛻", "🏍️", "🚓", "🚕",
+  "📦", "🚚", "✅", "📍", "🎉", "🛵", "🚀", "🔥", "⭐"
+];
+
+// Mezcla un arreglo sin modificar el original (Fisher-Yates)
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+// Toma `count` elementos aleatorios y distintos de un arreglo
+function pickRandom(arr, count) {
+  return shuffleArray(arr).slice(0, Math.min(count, arr.length));
+}
+
+// Pool combinado: fotos de productos (autos/motos) + pruebas de envío reales
+function getCirclePoolImages() {
+  const fromProducts = Array.isArray(window.PRODUCTOS)
+    ? window.PRODUCTOS.map((p) => p.imagen).filter(Boolean)
+    : [];
+  return [...new Set([...fromProducts, ...SHIP_PROOF_IMAGES])];
+}
+
+// Orden en que deben aparecer los botones de categoría
+const CATEGORY_ORDER = [
+  "Todos",
+  "Autos",
+  "Motocicletas",
+  "Otros",
+  "Rastras",
+  "Maquinaria",
+  "Control Remoto",
+  "Novedades",
+  "Ofertas"
+];
+
+// ---------- ESTADO ----------
 let allProducts = [];
-let renderedProducts = [];
-let currentSearch = "";
 let currentCategory = "Todos";
-let currentHeroIndex = 0;
-let cart = [];
-let wishlist = [];
+let currentSearch = "";
+let renderedProducts = []; // productos actualmente visibles en el grid (tras filtros/búsqueda)
+let lastFocusedElement = null; // para devolver el foco al cerrar el modal
+let activeModalProduct = null; // producto mostrado actualmente en el modal de vista previa
 
-/* =========================================================
-   ALMACENAMIENTO LOCAL
-   ========================================================= */
-function loadCart() {
-  const saved = localStorage.getItem("carland_cart");
-  cart = saved ? JSON.parse(saved) : [];
-  updateCartUI();
+// ---------- ELEMENTOS DEL DOM ----------
+const grid = document.getElementById("productsGrid");
+const emptyMessage = document.getElementById("emptyMessage");
+const searchInput = document.getElementById("searchInput");
+const filtersContainer = document.getElementById("categoryFilters");
+const navbar = document.getElementById("navbar");
+const navToggle = document.getElementById("navToggle");
+const navInfoMobile = document.getElementById("navInfoMobile");
+const backToTop = document.getElementById("backToTop");
+const modalOverlay = document.getElementById("modalOverlay");
+const modalContent = document.getElementById("modalContent");
+const heroTrack = document.getElementById("heroTrack");
+const heroDots = document.getElementById("heroDots");
+const heroPrevBtn = document.getElementById("heroPrev");
+const heroNextBtn = document.getElementById("heroNext");
+
+/**
+ * Formatea un número como moneda en Lempiras (L.)
+ */
+function formatPrice(value) {
+  const num = Number(value) || 0;
+  return "L. " + num.toLocaleString("es-HN", { minimumFractionDigits: 0 });
 }
 
-function saveCart() {
-  localStorage.setItem("carland_cart", JSON.stringify(cart));
-  updateCartUI();
+/**
+ * Construye el enlace de WhatsApp con mensaje precargado para un producto
+ */
+function buildWhatsappLink(product) {
+  const mensaje = `Hola, me interesa el ${product.nombre} escala ${product.escala} con precio de ${formatPrice(product.precio)}.`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
 }
 
-function loadWishlist() {
-  const saved = localStorage.getItem("carland_wishlist");
-  wishlist = saved ? JSON.parse(saved) : [];
-  updateWishlistUI();
-}
-
-function saveWishlist() {
-  localStorage.setItem("carland_wishlist", JSON.stringify(wishlist));
-  updateWishlistUI();
-}
-
-/* =========================================================
-   CARRITO DE COMPRAS
-   ========================================================= */
-function addToCart(product) {
-  const existingItem = cart.find(item => item.__pid === product.__pid);
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-    cart.push({ ...product, quantity: 1 });
-  }
-  saveCart();
-  showCartNotification("✓ Agregado al carrito");
-}
-
-function removeFromCart(productId) {
-  cart = cart.filter(item => item.__pid !== productId);
-  saveCart();
-}
-
-function updateCartItemQty(productId, qty) {
-  const item = cart.find(item => item.__pid === productId);
-  if (item) {
-    item.quantity = Math.max(1, qty);
-    saveCart();
-  }
-}
-
-function getCartTotal() {
-  const subtotal = cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
-  return subtotal + SHIPPING_COST;
-}
-
-function getCartSubtotal() {
-  return cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
-}
-
-function updateCartUI() {
-  const cartBtn = document.getElementById("cartBtn");
-  const cartBadge = document.getElementById("cartBadge");
-  const cartPanelBody = document.getElementById("cartPanelBody");
-  const cartPanelFooter = document.getElementById("cartPanelFooter");
-  
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartBadge.textContent = totalItems;
-  
-  if (cart.length === 0) {
-    cartPanelBody.innerHTML = '<div class="cartPanel__empty">Tu carrito está vacío</div>';
-    cartPanelFooter.innerHTML = '<button class="cartAction cartAction--secondary" onclick="toggleCart()">Seguir comprando</button>';
-  } else {
-    cartPanelBody.innerHTML = cart.map(item => `
-      <div class="cartItem">
-        <div class="cartItem__img">
-          <img src="${item.imagen}" alt="${item.nombre}">
-        </div>
-        <div class="cartItem__info">
-          <div class="cartItem__name">${item.nombre}</div>
-          <div class="cartItem__price">L. ${formatPrice(item.precio)}</div>
-          <div class="cartItem__qty">
-            <button class="cartItem__qtyBtn" onclick="updateCartItemQty(${item.__pid}, ${item.quantity - 1})">−</button>
-            <span class="cartItem__qtyValue">${item.quantity}</span>
-            <button class="cartItem__qtyBtn" onclick="updateCartItemQty(${item.__pid}, ${item.quantity + 1})">+</button>
-          </div>
-        </div>
-        <button class="cartItem__remove" onclick="removeFromCart(${item.__pid})">×</button>
-      </div>
-    `).join("");
-    
-    const subtotal = getCartSubtotal();
-    cartPanelFooter.innerHTML = `
-      <div>
-        <div class="cartSummary">
-          <div class="cartSummary__row">
-            <span>Subtotal:</span>
-            <strong>L. ${formatPrice(subtotal)}</strong>
-          </div>
-          <div class="cartSummary__row">
-            <span>Envío C807:</span>
-            <strong>L. ${formatPrice(SHIPPING_COST)}</strong>
-          </div>
-          <div class="cartSummary__row cartSummary__row--total">
-            <span>Total:</span>
-            <strong>L. ${formatPrice(getCartTotal())}</strong>
-          </div>
-        </div>
-        <button class="cartAction cartAction--primary" onclick="proceedToCheckout()">Ir a pagar</button>
-        <button class="cartAction cartAction--secondary" onclick="toggleCart()">Seguir comprando</button>
-      </div>
-    `;
-    
-    checkShipmentIncentive();
-  }
-}
-
-function toggleCart() {
-  const overlay = document.getElementById("cartOverlay");
-  const panel = document.getElementById("cartPanel");
-  overlay.classList.toggle("is-open");
-  panel.classList.toggle("is-open");
-}
-
-function proceedToCheckout() {
-  if (cart.length === 0) return;
-  toggleCart();
-  buildMultiProductOrder();
-}
-
-/* =========================================================
-   LISTA DE COMPRA / WISHLIST
-   ========================================================= */
-function addToWishlist(product) {
-  const exists = wishlist.find(item => item.__pid === product.__pid);
-  if (!exists) {
-    wishlist.push({ ...product });
-    saveWishlist();
-    showCartNotification("♥ Agregado a lista de compra");
-  }
-}
-
-function removeFromWishlist(productId) {
-  wishlist = wishlist.filter(item => item.__pid !== productId);
-  saveWishlist();
-}
-
-function moveWishlistToCart(productId) {
-  const item = wishlist.find(w => w.__pid === productId);
-  if (item) {
-    addToCart(item);
-    showCartNotification("✓ Movido al carrito");
-  }
-}
-
-function updateWishlistUI() {
-  const wishlistBadge = document.getElementById("wishlistBadge");
-  const wishlistPanelBody = document.getElementById("wishlistPanelBody");
-  const wishlistPanelFooter = document.getElementById("wishlistPanelFooter");
-  
-  wishlistBadge.textContent = wishlist.length;
-  
-  if (wishlist.length === 0) {
-    wishlistPanelBody.innerHTML = '<div class="wishlistPanel__empty">Tu lista de compra está vacía</div>';
-    wishlistPanelFooter.innerHTML = '<button class="wishlistAction wishlistAction--secondary" onclick="toggleWishlist()">Ir al catálogo</button>';
-  } else {
-    wishlistPanelBody.innerHTML = wishlist.map(item => `
-      <div class="wishlistItem">
-        <div class="wishlistItem__img">
-          <img src="${item.imagen}" alt="${item.nombre}">
-        </div>
-        <div class="wishlistItem__info">
-          <div class="wishlistItem__name">${item.nombre}</div>
-          <div class="wishlistItem__price">L. ${formatPrice(item.precio)}</div>
-          <div class="wishlistItem__actions">
-            <button class="wishlistItem__btn wishlistItem__btn--primary" onclick="moveWishlistToCart(${item.__pid})">Al carrito</button>
-            <button class="wishlistItem__btn wishlistItem__btn--secondary" onclick="removeFromWishlist(${item.__pid})">Quitar</button>
-          </div>
-        </div>
-        <button class="wishlistItem__remove" onclick="removeFromWishlist(${item.__pid})">×</button>
-      </div>
-    `).join("");
-    
-    wishlistPanelFooter.innerHTML = `
-      <button class="wishlistAction wishlistAction--primary" onclick="addAllWishlistToCart()">Agregar todos al carrito</button>
-      <button class="wishlistAction wishlistAction--secondary" onclick="toggleWishlist()">Seguir comprando</button>
-    `;
-  }
-}
-
-function toggleWishlist() {
-  const overlay = document.getElementById("wishlistOverlay");
-  const panel = document.getElementById("wishlistPanel");
-  overlay.classList.toggle("is-open");
-  panel.classList.toggle("is-open");
-}
-
-function addAllWishlistToCart() {
-  wishlist.forEach(item => addToCart(item));
-  showCartNotification("✓ Todos agregados al carrito");
-  toggleWishlist();
-  toggleCart();
-}
-
-/* =========================================================
-   INCENTIVO DE ENVÍO (1 producto)
-   ========================================================= */
-function checkShipmentIncentive() {
-  const incentive = document.getElementById("shipmentIncentive");
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  
-  if (totalItems === 1) {
-    const recommendedProducts = getRecommendedProducts(3);
-    const productsHtml = recommendedProducts.map(p => `
-      <div class="shipmentIncentiveProduct" onclick="addToCartFromIncentive(${p.__pid})">
-        <div class="shipmentIncentiveProduct__img">
-          <img src="${p.imagen}" alt="${p.nombre}">
-        </div>
-        <div class="shipmentIncentiveProduct__info">
-          <div class="shipmentIncentiveProduct__name">${p.nombre}</div>
-          <div class="shipmentIncentiveProduct__price">L. ${formatPrice(p.precio)}</div>
-        </div>
-      </div>
-    `).join("");
-    
-    document.getElementById("shipmentIncentiveProducts").innerHTML = productsHtml;
-    incentive.hidden = false;
-  } else {
-    incentive.hidden = true;
-  }
-}
-
-function addToCartFromIncentive(productId) {
-  const product = allProducts.find(p => p.__pid === productId);
-  if (product) {
-    addToCart(product);
-  }
-}
-
-/* =========================================================
-   RECOMENDACIONES FLOTANTES
-   ========================================================= */
-function getRecommendedProducts(limit = 1) {
-  const available = allProducts.filter(p => !cart.find(c => c.__pid === p.__pid));
-  const shuffled = [...available].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, limit);
-}
-
-function showRandomRecommendation() {
-  const recommended = getRecommendedProducts(1)[0];
-  if (!recommended) return;
-  
-  const box = document.getElementById("recommendationBox");
-  const productHtml = `
-    <div class="recommendationProduct" onclick="addToCartFromRecommendation(${recommended.__pid})">
-      <div class="recommendationProduct__img">
-        <img src="${recommended.imagen}" alt="${recommended.nombre}">
-      </div>
-      <div class="recommendationProduct__name">${recommended.nombre}</div>
-      <div class="recommendationProduct__price">L. ${formatPrice(recommended.precio)}</div>
-    </div>
-    <button class="recommendationBox__cta" onclick="addToCartFromRecommendation(${recommended.__pid})">Agregar al carrito</button>
-  `;
-  
-  document.getElementById("recommendationBoxProduct").innerHTML = productHtml;
-  box.hidden = false;
-  
-  setTimeout(() => {
-    box.hidden = true;
-  }, 8000);
-}
-
-function addToCartFromRecommendation(productId) {
-  const product = allProducts.find(p => p.__pid === productId);
-  if (product) {
-    addToCart(product);
-    document.getElementById("recommendationBox").hidden = true;
-  }
-}
-
-
-
-/* =========================================================
-   ORDEN CON MÚLTIPLES PRODUCTOS
-   ========================================================= */
-function buildMultiProductOrder() {
-  if (cart.length === 0) return;
-  
-  const subtotal = getCartSubtotal();
-  const lines = [];
-  
-  lines.push("🛒 *NUEVA ORDEN — CARLAND.1601*");
-  lines.push("━━━━━━━━━━━━━━");
-  lines.push("📦 *PRODUCTOS*");
-  
-  cart.forEach(item => {
-    lines.push(`${item.nombre} x${item.quantity} — L. ${formatPrice(item.precio * item.quantity)}`);
-  });
-  
-  lines.push("━━━━━━━━━━━━━━");
-  lines.push(`💵 Subtotal: L. ${formatPrice(subtotal)}`);
-  lines.push(`🚚 Envío C807: L. ${formatPrice(SHIPPING_COST)}`);
-  lines.push(`💰 *TOTAL: L. ${formatPrice(getCartTotal())}*`);
-  lines.push("━━━━━━━━━━━━━━");
-  lines.push("Gracias por comprar en *Carland 1601*.");
-  
-  const message = lines.join("%0A");
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-  window.open(whatsappUrl, "_blank");
-}
-
-/* =========================================================
-   NOTIFICACIONES
-   ========================================================= */
-function showCartNotification(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  div.style.cssText = `
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    background: var(--red);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    z-index: 999;
-    animation: slideIn 0.3s ease;
-  `;
-  document.body.appendChild(div);
-  setTimeout(() => div.remove(), 3000);
-}
-
-/* =========================================================
-   FUNCIONES EXISTENTES DEL CATÁLOGO
-   ========================================================= */
-function formatPrice(price) {
-  if (typeof price !== "number") price = parseInt(price, 10);
-  return price.toLocaleString("es-HN");
-}
-
-function escapeHtml(text) {
-  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
-  return text.replace(/[&<>"']/g, m => map[m]);
-}
-
+/**
+ * Determina qué "chip" de estado / etiqueta especial mostrar sobre la tarjeta,
+ * a partir del campo "etiqueta" del producto (acepta singular y plural)
+ */
 function getBadgeClass(etiqueta) {
-  if (etiqueta === "Oferta") return "card__badge--oferta";
-  if (etiqueta === "Novedades") return "card__badge--novedad";
-  if (etiqueta === "Hot") return "card__badge--hot";
-  return "card__badge--nuevo";
+  const map = {
+    "Nuevo": "card__badge--nuevo",
+    "Nuevos": "card__badge--nuevo",
+    "Oferta": "card__badge--oferta",
+    "Ofertas": "card__badge--oferta",
+    "Novedad": "card__badge--novedad",
+    "Novedades": "card__badge--novedad"
+  };
+  return map[etiqueta] || null;
 }
 
+/**
+ * NOTA: Este catálogo NO asigna etiquetas automáticas/falsas a los productos.
+ * Un producto solo muestra un badge ("Nuevo", "Oferta", "Novedad") cuando el
+ * campo "etiqueta" en window.PRODUCTOS realmente lo define. Para marcar un
+ * producto como oferta o novedad, edita su campo "etiqueta" en index.html.
+ */
+
+/**
+ * Genera el HTML de una tarjeta de producto
+ */
 function renderCard(product, index) {
+  const isAvailable = product.estado === "Disponible";
   const badgeClass = getBadgeClass(product.etiqueta);
-  const statusClass = product.estado === "Disponible" ? "card__status--disponible" : "card__status--agotado";
-  
+
+  let badgeHtml = "";
+  if (badgeClass) {
+    badgeHtml = `<span class="card__badge ${badgeClass}">${product.etiqueta}</span>`;
+  }
+
+  const statusClass = isAvailable ? "card__status--disponible" : "card__status--agotado";
+  const statusLabel = isAvailable ? "Disponible" : "Agotado";
+
+  const buyBtn = isAvailable
+    ? `<button type="button" class="card__buy" aria-label="Comprar ${product.nombre} por WhatsApp">
+         <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+         <span class="card__buyLabel">Comprar</span>
+       </button>`
+    : `<span class="card__buy card__buy--disabled">Agotado</span>`;
+
   return `
-    <div class="card" data-index="${index}" data-pid="${product.__pid}">
+    <article class="card" data-index="${index}" data-pid="${product.__pid}" tabindex="0" role="button" aria-label="Ver ${product.nombre} en grande">
       <div class="card__mediaWrap">
-        <img src="${product.imagen}" alt="${product.nombre}" loading="lazy">
-        <span class="card__badge ${badgeClass}">${product.etiqueta}</span>
-        <span class="card__status ${statusClass}">${product.estado}</span>
+        ${badgeHtml}
+        <span class="card__status ${statusClass}">${statusLabel}</span>
+        <img src="${product.imagen}" alt="${product.nombre}" loading="lazy" class="lazy-fade" onload="this.classList.add('is-loaded')">
       </div>
       <div class="card__body">
         <span class="card__brand">${product.marca}</span>
         <h3 class="card__name">${product.nombre}</h3>
-        <span class="card__scale">${product.escala}</span>
+        <span class="card__scale">Escala ${product.escala}</span>
         <div class="card__priceRow">
-          <span class="card__price">L. ${formatPrice(product.precio)}</span>
+          <span class="card__price">${formatPrice(product.precio)}</span>
         </div>
-        <div class="card__actions">
-          <button class="card__action" onclick="addToCart(window.allProducts[${product.__pid}])" title="Agregar al carrito">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          </button>
-          <button class="card__action" onclick="addToWishlist(window.allProducts[${product.__pid}])" title="Agregar a lista de compra">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
-        </div>
+        ${buyBtn}
       </div>
+    </article>
+  `;
+}
+
+/**
+ * Genera el contenido interno del modal para un producto dado
+ */
+function renderModalBody(product) {
+  const isAvailable = product.estado === "Disponible";
+  const badgeClass = getBadgeClass(product.etiqueta);
+
+  const etiquetaChip = badgeClass
+    ? `<span class="modalContent__chip ${badgeClass.replace('card__badge', 'modalContent__chip')}">${product.etiqueta}</span>`
+    : "";
+
+  const statusChip = isAvailable
+    ? `<span class="modalContent__chip modalContent__chip--disponible">Disponible</span>`
+    : `<span class="modalContent__chip modalContent__chip--agotado">Agotado</span>`;
+
+  const buyBtn = isAvailable
+    ? `<button type="button" class="modalContent__buy">
+         <svg viewBox="0 0 32 32" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+         Comprar por WhatsApp
+       </button>`
+    : `<span class="modalContent__buy modalContent__buy--disabled">Agotado</span>`;
+
+  return `
+    <button class="modalContent__close" id="modalCloseBtn" aria-label="Cerrar vista previa">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modalContent__media">
+      <img src="${product.imagen}" alt="${product.nombre}">
+    </div>
+    <div class="modalContent__body">
+      <span class="modalContent__brand">${product.marca}</span>
+      <h2 class="modalContent__name" id="modalName">${product.nombre}</h2>
+      <div class="modalContent__meta">
+        <span class="modalContent__chip">Escala ${product.escala}</span>
+        <span class="modalContent__chip">${product.categoria}</span>
+        ${etiquetaChip}
+        ${statusChip}
+      </div>
+      <div class="modalContent__priceBlock">
+        <p class="modalContent__priceLabel">Precio</p>
+        <p class="modalContent__price">${formatPrice(product.precio)}</p>
+      </div>
+      ${buyBtn}
     </div>
   `;
 }
 
+/**
+ * Abre el modal de vista previa animando su crecimiento desde la
+ * posición y el tamaño exactos de la tarjeta en la que se hizo clic
+ * (técnica FLIP: First, Last, Invert, Play) — efecto tipo Canva.
+ */
+function openProductModal(product, cardEl) {
+  lastFocusedElement = document.activeElement;
+  activeModalProduct = product;
+
+  const firstRect = cardEl.getBoundingClientRect();
+
+  modalContent.innerHTML = renderModalBody(product);
+  modalOverlay.hidden = false;
+  document.body.classList.add("modal-open");
+
+  // "Last": posición/tamaño final una vez que el modal ya está centrado
+  const lastRect = modalContent.getBoundingClientRect();
+
+  const deltaX = firstRect.left - lastRect.left;
+  const deltaY = firstRect.top - lastRect.top;
+  const scaleX = firstRect.width / lastRect.width;
+  const scaleY = firstRect.height / lastRect.height;
+
+  // "Invert": colocamos el modal visualmente donde estaba la tarjeta
+  modalContent.style.transition = "none";
+  modalContent.style.transformOrigin = "top left";
+  modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+  modalContent.style.opacity = "0.5";
+  modalContent.style.borderRadius = "16px";
+
+  // Forzar reflow para que el navegador registre el estado inicial
+  void modalContent.offsetWidth;
+
+  // "Play": animamos hacia el estado final (tamaño completo, centrado)
+  requestAnimationFrame(() => {
+    modalContent.style.transition =
+      "transform 0.45s cubic-bezier(.22,.85,.3,1), opacity 0.28s ease";
+    modalContent.style.transform = "translate(0, 0) scale(1, 1)";
+    modalContent.style.opacity = "1";
+  });
+
+  requestAnimationFrame(() => {
+    modalOverlay.classList.add("is-visible");
+  });
+
+  document.getElementById("modalCloseBtn").addEventListener("click", closeProductModal);
+}
+
+/**
+ * Cierra el modal encogiéndolo de vuelta hacia la tarjeta original
+ * (si sigue visible en el grid) o con un simple fundido si ya no está.
+ */
+function closeProductModal() {
+  const activeIndex = modalContent.dataset.activeIndex;
+  const originCard = grid.querySelector(`.card[data-index="${activeIndex}"]`);
+
+  modalOverlay.classList.remove("is-visible");
+
+  if (originCard) {
+    const rect = originCard.getBoundingClientRect();
+    const modalRect = modalContent.getBoundingClientRect();
+    const deltaX = rect.left - modalRect.left;
+    const deltaY = rect.top - modalRect.top;
+    const scaleX = rect.width / modalRect.width;
+    const scaleY = rect.height / modalRect.height;
+
+    modalContent.style.transition =
+      "transform 0.32s cubic-bezier(.4,0,.6,1), opacity 0.25s ease";
+    modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+    modalContent.style.opacity = "0.4";
+  } else {
+    modalContent.style.transition = "transform 0.25s ease, opacity 0.25s ease";
+    modalContent.style.transform = "scale(0.94)";
+    modalContent.style.opacity = "0";
+  }
+
+  setTimeout(() => {
+    modalOverlay.hidden = true;
+    modalContent.style.transition = "none";
+    modalContent.style.transform = "none";
+    modalContent.style.opacity = "1";
+    modalContent.innerHTML = "";
+    document.body.classList.remove("modal-open");
+    activeModalProduct = null;
+    if (lastFocusedElement) lastFocusedElement.focus();
+  }, 320);
+}
+
+// Abrir el modal al hacer clic (o presionar Enter/Espacio) en una tarjeta,
+// siempre que el clic no haya sido sobre el botón "Comprar por WhatsApp"
+grid.addEventListener("click", (e) => {
+  if (e.target.closest(".card__buy")) return; // deja que el enlace de WhatsApp funcione normal
+  const cardEl = e.target.closest(".card");
+  if (!cardEl) return;
+
+  const product = renderedProducts[Number(cardEl.dataset.index)];
+  if (!product) return;
+
+  modalContent.dataset.activeIndex = cardEl.dataset.index;
+  openProductModal(product, cardEl);
+});
+
+grid.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const cardEl = e.target.closest(".card");
+  if (!cardEl) return;
+  e.preventDefault();
+  cardEl.click();
+});
+
+// Cerrar el modal al hacer clic fuera del contenido, con Escape, o con el botón X
+modalOverlay.addEventListener("click", (e) => {
+  if (e.target === modalOverlay) closeProductModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modalOverlay.hidden) closeProductModal();
+});
+
+/**
+ * Aplica los filtros de búsqueda + categoría actuales y vuelve a pintar el grid
+ */
 function applyFiltersAndRender() {
   const term = currentSearch.trim().toLowerCase();
   const cat = currentCategory.trim().toLowerCase();
 
   const filtered = allProducts.filter((p) => {
+    // Comparación insensible a mayúsculas/minúsculas: evita que productos
+    // guardados como "autos" (minúscula) desaparezcan al filtrar "Autos".
+    // "Ofertas" y "Novedades" no son categorías reales del producto, sino
+    // grupos derivados del campo "etiqueta" (Oferta / Novedad).
     let matchesCategory;
     if (cat === "todos") {
       matchesCategory = true;
@@ -459,13 +431,14 @@ function applyFiltersAndRender() {
   });
 
   renderedProducts = filtered;
-  const grid = document.getElementById("productsGrid");
-  const emptyMessage = document.getElementById("emptyMessage");
-  
   grid.innerHTML = filtered.map((p, i) => renderCard(p, i)).join("");
   emptyMessage.hidden = filtered.length !== 0;
 }
 
+/**
+ * Genera dinámicamente los botones de categoría a partir de las categorías
+ * realmente presentes en productos.json (respetando el orden preferido)
+ */
 function renderCategoryFilters() {
   const presentCategories = new Set(
     allProducts.map((p) => (p.categoria || "").trim().toLowerCase())
@@ -480,7 +453,6 @@ function renderCategoryFilters() {
     return presentCategories.has(cat.toLowerCase());
   });
 
-  const filtersContainer = document.getElementById("categoryFilters");
   filtersContainer.innerHTML = categoriesToShow
     .map((cat) => {
       const activeClass = cat === currentCategory ? "is-active" : "";
@@ -488,30 +460,58 @@ function renderCategoryFilters() {
     })
     .join("");
 
+  // Delegación de eventos para los botones de filtro
   filtersContainer.querySelectorAll(".filter-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       currentCategory = btn.dataset.category;
+      // Limpia cualquier búsqueda activa (p. ej. "RC" del botón Control
+      // Remoto) para que un filtro de categoría no quede oculto por un
+      // término de búsqueda que el usuario ya no ve en el input.
       currentSearch = "";
-      document.getElementById("searchInput").value = "";
+      searchInput.value = "";
       renderCategoryFilters();
       applyFiltersAndRender();
     });
   });
 }
 
+/**
+ * Carga el catálogo desde la lista de productos embebida en index.html
+ * (window.PRODUCTOS, definida en un <script> justo antes de script.js)
+ */
 function loadProducts() {
   if (!Array.isArray(window.PRODUCTOS)) {
-    console.error("No se encontró window.PRODUCTOS");
+    console.error("No se encontró window.PRODUCTOS. Revisa el bloque <script> en index.html");
+    grid.innerHTML = `<p class="products__empty">No se pudo cargar el catálogo. Revisa la lista de productos en index.html.</p>`;
     return;
   }
 
   allProducts = window.PRODUCTOS;
+  // Asigna a cada producto un identificador estable (posición en el catálogo).
+  // Se usa para reconocer el producto exacto sin importar en qué grid
+  // (catálogo, ofertas, novedades) o modal se haya presionado "Comprar".
   allProducts.forEach((p, i) => { p.__pid = i; });
   renderCategoryFilters();
   applyFiltersAndRender();
   renderOffersPreview();
+  renderNoveltiesPreview();
 }
 
+// ---------- TARJETAS DE COLECCIÓN Y ENLACES "VER TODAS" ----------
+// Estos botones (Autos, Motocicletas, Rastras, Control remoto, Novedades,
+// Ofertas, "Ver todas las ofertas →") antes no tenían ningún listener y no
+// hacían nada al hacer clic. Ahora todos llevan al catálogo ya filtrado.
+document.querySelectorAll("[data-category-jump]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    goToCategory(el.dataset.categoryJump);
+  });
+});
+
+// ---------- PREVIEW DE PRODUCTOS REALES: OFERTAS Y NOVEDADES ----------
+// Solo muestran productos cuyo campo "etiqueta" en window.PRODUCTOS los
+// marca realmente como Oferta/Novedad. Si no hay ninguno, se oculta el
+// bloque de preview en vez de inventar productos.
 function renderProductPreview(containerId, badgeClass, limit = 4) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -533,188 +533,868 @@ function renderOffersPreview() {
   renderProductPreview("ofertasPreview", "card__badge--oferta");
 }
 
-function goToCategory(category) {
-  currentCategory = category;
-  currentSearch = "";
-  document.getElementById("searchInput").value = "";
-  renderCategoryFilters();
-  applyFiltersAndRender();
-  const catalogSection = document.getElementById("catalogo");
-  if (catalogSection) catalogSection.scrollIntoView({ behavior: "smooth" });
+function renderNoveltiesPreview() {
+  renderProductPreview("novedadesPreview", "card__badge--novedad");
 }
 
+// Los productos de las secciones de preview también deben abrir el modal.
+// Como usan tarjetas .card idénticas a las del grid principal, reutilizamos
+// la misma lógica de apertura buscando el producto por nombre+imagen.
+[["ofertasPreview", "card__badge--oferta"], ["novedadesPreview", "card__badge--novedad"]].forEach(
+  ([containerId, badgeClass]) => {
+    document.addEventListener("click", (e) => {
+      const container = document.getElementById(containerId);
+      if (!container || !container.contains(e.target)) return;
+      if (e.target.closest(".card__buy")) return;
+      const cardEl = e.target.closest(".card");
+      if (!cardEl) return;
+
+      const matches = allProducts.filter((p) => getBadgeClass(p.etiqueta) === badgeClass);
+      const product = matches[Number(cardEl.dataset.index)];
+      if (!product) return;
+
+      modalContent.dataset.activeIndex = "";
+      openProductModal(product, cardEl);
+    });
+  }
+);
+
 /* =========================================================
-   CARRUSEL HERO
+   MODAL DE COMPRA POR WHATSAPP
+   Funciona con TODOS los productos del catálogo (autos, motos,
+   rastras, RC, novedades, ofertas). Se abre siempre desde la
+   misma función reutilizable openPurchaseModal(product), tomando
+   automáticamente imagen, nombre, precio, categoría e identificador
+   del producto que se le pase — nunca datos inventados.
+
+   Flujo:
+   producto → cantidad → entrega → datos → resumen → confirmar
+   → mini factura → enviar por WhatsApp
    ========================================================= */
-function renderHeroSlides() {
-  const track = document.getElementById("heroTrack");
-  const dots = document.getElementById("heroDots");
-  
-  track.innerHTML = HERO_SLIDES.map((slide, i) => `
-    <div class="hero__slide hero__slide--${slide.variant}">
-      <div class="hero__content">
-        <div class="hero__eyebrow">${slide.eyebrow}</div>
-        <div class="hero__icon">${slide.icon}</div>
-        <h1 class="hero__title">${slide.title}</h1>
-        <p class="hero__text">${slide.text}</p>
-        <button class="hero__cta" onclick="goToCategory('${slide.filterCategory}')">Explorar</button>
+
+// ---------- ELEMENTOS DEL DOM ----------
+const purchaseOverlay = document.getElementById("purchaseOverlay");
+const purchaseModal = document.getElementById("purchaseModal");
+const purchaseScroll = document.getElementById("purchaseScroll");
+const purchaseFooter = document.getElementById("purchaseFooter");
+const purchaseCloseBtn = document.getElementById("purchaseCloseBtn");
+
+// ---------- DATOS DE ENTREGA / RECOGIDA ----------
+const PICKUP_LOCATIONS = {
+  carland: "Carland.1601 — Santa Bárbara",
+  mave: "Tiendas Mave — Santa Bárbara"
+};
+
+const HONDURAS_DEPARTMENTS = [
+  "Atlántida", "Choluteca", "Colón", "Comayagua", "Copán", "Cortés",
+  "El Paraíso", "Francisco Morazán", "Gracias a Dios", "Intibucá",
+  "Islas de la Bahía", "La Paz", "Lempira", "Ocotepeque", "Olancho",
+  "Santa Bárbara", "Valle", "Yoro"
+];
+
+// ---------- ESTADO DE LA COMPRA ACTUAL ----------
+// Se recrea desde cero cada vez que se abre el modal, para un producto
+// concreto. Nunca se comparte estado entre productos distintos.
+let purchaseState = null;
+let lastPurchaseFocusedElement = null;
+
+/**
+ * Evita que texto escrito por el cliente (nombre, referencia, etc.)
+ * rompa el HTML generado dinámicamente.
+ */
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+}
+
+function computePurchaseSubtotal() {
+  if (!purchaseState) return 0;
+  return (Number(purchaseState.product.precio) || 0) * purchaseState.quantity;
+}
+
+/**
+ * Abre el modal de compra para UN producto específico. Reutilizable:
+ * se llama exactamente igual sin importar de qué tarjeta, preview o
+ * modal de vista previa provenga el clic en "Comprar por WhatsApp".
+ */
+function openPurchaseModal(product) {
+  if (!product) return;
+  lastPurchaseFocusedElement = document.activeElement;
+
+  purchaseState = {
+    product,
+    quantity: 1,
+    deliveryMethod: null, // "domicilio" | "tienda"
+    pickupLocation: null, // "carland" | "mave"
+    customer: { nombre: "", telefono: "", departamento: "", ciudad: "", barrio: "", referencia: "" },
+    step: "form", // "form" | "invoice"
+    errors: {},
+    attemptedConfirm: false
+  };
+
+  renderPurchaseModal();
+  purchaseOverlay.hidden = false;
+  document.body.classList.add("modal-open");
+  requestAnimationFrame(() => purchaseOverlay.classList.add("is-visible"));
+}
+
+function closePurchaseModal() {
+  if (!purchaseOverlay || purchaseOverlay.hidden) return;
+  purchaseOverlay.classList.remove("is-visible");
+
+  setTimeout(() => {
+    purchaseOverlay.hidden = true;
+    purchaseScroll.innerHTML = "";
+    purchaseFooter.innerHTML = "";
+    document.body.classList.remove("modal-open");
+    purchaseState = null;
+    if (lastPurchaseFocusedElement) lastPurchaseFocusedElement.focus();
+  }, 260);
+}
+
+/**
+ * Vuelve a pintar el paso actual del modal (formulario o mini factura)
+ * y conecta todos sus listeners. Se usa cada vez que cambia algo que
+ * altera la ESTRUCTURA del modal (cantidad de secciones visibles,
+ * cambio de paso, etc.). Para actualizaciones en vivo mientras el
+ * cliente escribe se usan funciones más puntuales (ver más abajo) para
+ * no perder el foco del campo de texto.
+ */
+function renderPurchaseModal() {
+  if (!purchaseState) return;
+  if (purchaseState.step === "invoice") {
+    purchaseScroll.innerHTML = renderInvoiceScroll();
+    purchaseFooter.innerHTML = renderInvoiceFooter();
+  } else {
+    purchaseScroll.innerHTML = renderPurchaseFormScroll();
+    purchaseFooter.innerHTML = renderPurchaseFormFooter();
+  }
+  attachPurchaseListeners();
+}
+
+/**
+ * PASO 1: producto + cantidad + entrega + datos + resumen en vivo
+ */
+function renderPurchaseFormScroll() {
+  const s = purchaseState;
+  const p = s.product;
+  const errors = s.attemptedConfirm ? s.errors : {};
+
+  const generalError =
+    errors.delivery ? `<div class="purchaseError">${escapeHtml(errors.delivery)}</div>` :
+    errors.pickup ? `<div class="purchaseError">${escapeHtml(errors.pickup)}</div>` : "";
+
+  return `
+    <div class="purchaseProduct">
+      <img src="${p.imagen}" alt="${escapeHtml(p.nombre)}" class="purchaseProduct__img">
+      <div class="purchaseProduct__info">
+        <span class="purchaseProduct__brand">${escapeHtml(p.marca)}</span>
+        <h2 class="purchaseProduct__name" id="purchaseModalTitle">${escapeHtml(p.nombre)}</h2>
+        <span class="purchaseProduct__scale">Escala ${escapeHtml(p.escala)}</span>
+        <span class="purchaseProduct__price">${formatPrice(p.precio)}</span>
       </div>
     </div>
-  `).join("");
-  
-  dots.innerHTML = HERO_SLIDES.map((_, i) => 
-    `<button class="hero__dot ${i === 0 ? "is-active" : ""}" data-index="${i}"></button>`
-  ).join("");
-  
-  dots.querySelectorAll(".hero__dot").forEach(dot => {
-    dot.addEventListener("click", () => goToHeroSlide(parseInt(dot.dataset.index)));
-  });
+
+    <div class="purchaseSection">
+      <span class="purchaseSection__label">Cantidad</span>
+      <div class="qtyStepper">
+        <button type="button" class="qtyStepper__btn" id="qtyDecBtn" aria-label="Disminuir cantidad">−</button>
+        <span class="qtyStepper__value" id="qtyValue">${s.quantity}</span>
+        <button type="button" class="qtyStepper__btn" id="qtyIncBtn" aria-label="Aumentar cantidad">+</button>
+      </div>
+    </div>
+
+    <div class="purchaseSubtotalRow">
+      <span>Subtotal</span>
+      <strong id="purchaseSubtotalValue">${formatPrice(computePurchaseSubtotal())}</strong>
+    </div>
+
+    <div class="purchaseSection">
+      <span class="purchaseSection__label">¿Cómo deseas recibir tu pedido?</span>
+      <div class="deliveryChoice">
+        <button type="button" class="deliveryChoice__btn ${s.deliveryMethod === "domicilio" ? "is-active" : ""}" data-delivery="domicilio">
+          <span class="deliveryChoice__icon">🚚</span><span>Domicilio</span>
+        </button>
+        <button type="button" class="deliveryChoice__btn ${s.deliveryMethod === "tienda" ? "is-active" : ""}" data-delivery="tienda">
+          <span class="deliveryChoice__icon">🏪</span><span>Recoger en tienda</span>
+        </button>
+      </div>
+    </div>
+
+    ${s.deliveryMethod === "domicilio" ? renderDomicilioFields(errors) : ""}
+    ${s.deliveryMethod === "tienda" ? renderPickupFields(errors) : ""}
+
+    ${generalError}
+
+    <div class="purchaseSummary" id="purchaseSummary">
+      ${renderPurchaseSummaryHtml()}
+    </div>
+  `;
 }
 
-function goToHeroSlide(index) {
-  currentHeroIndex = index;
-  const track = document.getElementById("heroTrack");
-  track.style.transform = `translateX(${-index * 100}%)`;
-  
-  document.querySelectorAll(".hero__dot").forEach((dot, i) => {
-    dot.classList.toggle("is-active", i === index);
-  });
+function renderPurchaseFormFooter() {
+  return `<button type="button" class="purchaseConfirmBtn" id="purchaseConfirmBtn">CONFIRMAR ORDEN</button>`;
 }
 
-function autoRotateHeroSlide() {
-  currentHeroIndex = (currentHeroIndex + 1) % HERO_SLIDES.length;
-  goToHeroSlide(currentHeroIndex);
+function fieldErrorHtml(errors, key) {
+  return errors[key] ? `<small class="purchaseField__error">${escapeHtml(errors[key])}</small>` : "";
 }
 
-/* =========================================================
-   INICIALIZACIÓN
-   ========================================================= */
-document.addEventListener("DOMContentLoaded", function() {
-  // Cargar productos y UI
-  loadProducts();
-  loadCart();
-  loadWishlist();
-  
-  // Carrusel
-  renderHeroSlides();
-  setInterval(autoRotateHeroSlide, 4500);
-  
-  document.getElementById("heroPrev").addEventListener("click", () => {
-    currentHeroIndex = (currentHeroIndex - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
-    goToHeroSlide(currentHeroIndex);
-  });
-  
-  document.getElementById("heroNext").addEventListener("click", () => {
-    currentHeroIndex = (currentHeroIndex + 1) % HERO_SLIDES.length;
-    goToHeroSlide(currentHeroIndex);
-  });
-  
-  // Búsqueda y filtros
-  const searchInput = document.getElementById("searchInput");
-  searchInput.addEventListener("input", (e) => {
-    currentSearch = e.target.value;
-    applyFiltersAndRender();
-  });
-  
-  // Carrito
-  document.getElementById("cartBtn").addEventListener("click", toggleCart);
-  document.getElementById("cartOverlay").addEventListener("click", toggleCart);
-  document.getElementById("cartPanelClose").addEventListener("click", toggleCart);
-  document.addEventListener("click", (e) => {
-    if (e.target.closest(".cartPanel__close")) toggleCart();
-  });
-  
-  // Wishlist
-  document.getElementById("wishlistBtn").addEventListener("click", toggleWishlist);
-  document.getElementById("wishlistOverlay").addEventListener("click", toggleWishlist);
-  document.getElementById("wishlistPanelClose").addEventListener("click", toggleWishlist);
-  
-  // Botones de categoría
-  document.querySelectorAll("[data-category-jump]").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      goToCategory(el.dataset.categoryJump);
-    });
-  });
-  
-  // Incentivo de envío
-  document.getElementById("shipmentIncentiveClose").addEventListener("click", () => {
-    document.getElementById("shipmentIncentive").hidden = true;
-  });
-  
-  document.getElementById("shipmentIncentiveContinueShopping").addEventListener("click", () => {
-    document.getElementById("shipmentIncentive").hidden = true;
-    toggleCart();
-  });
-  
-  document.getElementById("shipmentIncentiveCheckout").addEventListener("click", () => {
-    document.getElementById("shipmentIncentive").hidden = true;
-    proceedToCheckout();
-  });
-  
-  // Recomendaciones
-  document.getElementById("recommendationBoxClose").addEventListener("click", () => {
-    document.getElementById("recommendationBox").hidden = true;
-  });
-  
-  // Mostrar recomendaciones aleatoriamente
-  if (Math.random() > 0.3) {
-    setTimeout(showRandomRecommendation, 5000);
-    setInterval(() => {
-      if (Math.random() > 0.4) showRandomRecommendation();
-    }, 15000);
+function renderDomicilioFields(errors) {
+  const c = purchaseState.customer;
+  return `
+    <div class="purchaseSection purchaseForm">
+      <span class="purchaseSection__label">Datos de entrega</span>
+
+      <label class="purchaseField ${errors.nombre ? "has-error" : ""}">
+        <span>Nombre completo</span>
+        <input type="text" id="fNombre" value="${escapeHtml(c.nombre)}" placeholder="Ej. Juan Pérez" autocomplete="name">
+        ${fieldErrorHtml(errors, "nombre")}
+      </label>
+
+      <label class="purchaseField ${errors.telefono ? "has-error" : ""}">
+        <span>Número de teléfono</span>
+        <input type="tel" id="fTelefono" value="${escapeHtml(c.telefono)}" placeholder="Ej. 9999-9999" autocomplete="tel" inputmode="tel">
+        ${fieldErrorHtml(errors, "telefono")}
+      </label>
+
+      <label class="purchaseField ${errors.departamento ? "has-error" : ""}">
+        <span>Departamento</span>
+        <select id="fDepartamento">
+          <option value="">Selecciona un departamento</option>
+          ${HONDURAS_DEPARTMENTS.map((d) => `<option value="${d}" ${c.departamento === d ? "selected" : ""}>${d}</option>`).join("")}
+        </select>
+        ${fieldErrorHtml(errors, "departamento")}
+      </label>
+
+      <label class="purchaseField ${errors.ciudad ? "has-error" : ""}">
+        <span>Ciudad</span>
+        <input type="text" id="fCiudad" value="${escapeHtml(c.ciudad)}" placeholder="Ej. Santa Bárbara">
+        ${fieldErrorHtml(errors, "ciudad")}
+      </label>
+
+      <label class="purchaseField ${errors.barrio ? "has-error" : ""}">
+        <span>Barrio / Aldea / Casa o Caserío</span>
+        <input type="text" id="fBarrio" value="${escapeHtml(c.barrio)}" placeholder="Ej. Barrio El Centro">
+        ${fieldErrorHtml(errors, "barrio")}
+      </label>
+
+      <label class="purchaseField ${errors.referencia ? "has-error" : ""}">
+        <span>Referencia de entrega</span>
+        <textarea id="fReferencia" rows="2" placeholder="Ej. Casa de esquina, frente a pulpería, portón negro.">${escapeHtml(c.referencia)}</textarea>
+        ${fieldErrorHtml(errors, "referencia")}
+      </label>
+    </div>
+  `;
+}
+
+function renderPickupFields() {
+  const s = purchaseState;
+  return `
+    <div class="purchaseSection">
+      <span class="purchaseSection__label">Selecciona dónde recoger</span>
+      <div class="pickupChoice">
+        <button type="button" class="pickupChoice__btn ${s.pickupLocation === "carland" ? "is-active" : ""}" data-pickup="carland">
+          <span class="pickupChoice__radio"></span><span>Carland.1601 — Santa Bárbara</span>
+        </button>
+        <button type="button" class="pickupChoice__btn ${s.pickupLocation === "mave" ? "is-active" : ""}" data-pickup="mave">
+          <span class="pickupChoice__radio"></span><span>Tiendas Mave — Santa Bárbara</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Genera el bloque "Resumen de orden" a partir del estado actual.
+ * Se llama tanto en el render completo como en cada actualización
+ * en vivo (cantidad, texto escrito, selección de entrega).
+ */
+function renderPurchaseSummaryHtml() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+
+  const rows = [
+    ["Producto", p.nombre],
+    ["Precio unitario", formatPrice(p.precio)],
+    ["Cantidad", String(s.quantity)],
+    ["Subtotal", formatPrice(subtotal)]
+  ];
+
+  if (s.deliveryMethod === "domicilio") {
+    rows.push(["Método de entrega", "🚚 Domicilio"]);
+    if (s.customer.nombre) rows.push(["Nombre", s.customer.nombre]);
+    if (s.customer.telefono) rows.push(["Teléfono", s.customer.telefono]);
+    if (s.customer.departamento) rows.push(["Departamento", s.customer.departamento]);
+    if (s.customer.ciudad) rows.push(["Ciudad", s.customer.ciudad]);
+    if (s.customer.barrio) rows.push(["Dirección", s.customer.barrio]);
+    if (s.customer.referencia) rows.push(["Referencia", s.customer.referencia]);
+  } else if (s.deliveryMethod === "tienda") {
+    rows.push(["Método de entrega", "🏪 Recoger en tienda"]);
+    if (s.pickupLocation) rows.push(["Punto de recogida", PICKUP_LOCATIONS[s.pickupLocation]]);
+  } else {
+    rows.push(["Método de entrega", "Sin seleccionar"]);
   }
-  
-  // Navbar toggle
-  document.getElementById("navToggle").addEventListener("click", () => {
-    document.getElementById("navInfoMobile").classList.toggle("is-open");
+
+  return `
+    <p class="purchaseSummary__title">Resumen de orden</p>
+    <div class="purchaseSummary__rows">
+      ${rows.map(([label, value]) => `
+        <div class="purchaseSummary__row"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function updatePurchaseSummary() {
+  const el = document.getElementById("purchaseSummary");
+  if (el) el.innerHTML = renderPurchaseSummaryHtml();
+}
+
+function refreshPurchaseQuantityUI() {
+  const qtyValueEl = document.getElementById("qtyValue");
+  const subtotalEl = document.getElementById("purchaseSubtotalValue");
+  if (qtyValueEl) qtyValueEl.textContent = purchaseState.quantity;
+  if (subtotalEl) subtotalEl.textContent = formatPrice(computePurchaseSubtotal());
+  updatePurchaseSummary();
+}
+
+/**
+ * PASO 2: mini factura / confirmación (después de "Confirmar orden")
+ */
+function renderInvoiceScroll() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+  const deliveryLabel = s.deliveryMethod === "domicilio" ? "🚚 Domicilio" : "🏪 Recoger en tienda";
+
+  const domicilioRows = s.deliveryMethod === "domicilio" ? `
+    <div class="invoice__row"><span>Nombre</span><strong>${escapeHtml(s.customer.nombre)}</strong></div>
+    <div class="invoice__row"><span>Teléfono</span><strong>${escapeHtml(s.customer.telefono)}</strong></div>
+    <div class="invoice__row"><span>Departamento</span><strong>${escapeHtml(s.customer.departamento)}</strong></div>
+    <div class="invoice__row"><span>Ciudad</span><strong>${escapeHtml(s.customer.ciudad)}</strong></div>
+    <div class="invoice__row"><span>Dirección</span><strong>${escapeHtml(s.customer.barrio)}</strong></div>
+    <div class="invoice__row"><span>Referencia</span><strong>${escapeHtml(s.customer.referencia)}</strong></div>
+  ` : "";
+
+  const pickupRow = s.deliveryMethod === "tienda" ? `
+    <div class="invoice__row"><span>Punto de recogida</span><strong>${escapeHtml(PICKUP_LOCATIONS[s.pickupLocation])}</strong></div>
+  ` : "";
+
+  return `
+    <div class="invoice">
+      <div class="invoice__header">
+        <span class="invoice__brand">CARLAND 1601</span>
+        <span class="invoice__type">ORDEN DE COMPRA</span>
+      </div>
+      <div class="invoice__body">
+        <div class="invoice__row"><span>Producto</span><strong>${escapeHtml(p.nombre)}</strong></div>
+        <div class="invoice__row"><span>Cantidad</span><strong>${s.quantity}</strong></div>
+        <div class="invoice__row"><span>Precio unitario</span><strong>${formatPrice(p.precio)}</strong></div>
+        <div class="invoice__row"><span>Subtotal</span><strong>${formatPrice(subtotal)}</strong></div>
+        <div class="invoice__divider"></div>
+        <div class="invoice__row"><span>Método de entrega</span><strong>${deliveryLabel}</strong></div>
+        ${domicilioRows}
+        ${pickupRow}
+        <div class="invoice__divider"></div>
+        <div class="invoice__row invoice__row--total"><span>TOTAL</span><strong>${formatPrice(subtotal)}</strong></div>
+      </div>
+      <p class="invoice__note">Tu pedido está listo para ser enviado a Carland.1601 por WhatsApp.</p>
+    </div>
+  `;
+}
+
+function renderInvoiceFooter() {
+  return `
+    <div class="purchaseActions">
+      <button type="button" class="invoiceSendBtn" id="invoiceSendBtn">📲 Enviar pedido por WhatsApp</button>
+      <button type="button" class="invoiceEditBtn" id="invoiceEditBtn">← Editar pedido</button>
+    </div>
+  `;
+}
+
+/**
+ * Valida los datos obligatorios antes de permitir confirmar la orden.
+ * Producto, cantidad y precio siempre son válidos por construcción
+ * (vienen del catálogo y el stepper nunca baja de 1); lo que sí debe
+ * validarse es el método de entrega y sus datos asociados.
+ */
+function validatePurchaseOrder() {
+  const s = purchaseState;
+  const errors = {};
+
+  if (!s.deliveryMethod) {
+    errors.delivery = "Selecciona un método de entrega.";
+  } else if (s.deliveryMethod === "domicilio") {
+    const c = s.customer;
+    if (!c.nombre.trim()) errors.nombre = "Ingresa el nombre completo.";
+    if (!c.telefono.trim()) errors.telefono = "Ingresa un número de teléfono.";
+    if (!c.departamento.trim()) errors.departamento = "Selecciona un departamento.";
+    if (!c.ciudad.trim()) errors.ciudad = "Ingresa la ciudad.";
+    if (!c.barrio.trim()) errors.barrio = "Ingresa el barrio, aldea, casa o caserío.";
+    if (!c.referencia.trim()) errors.referencia = "Ingresa una referencia de entrega.";
+  } else if (s.deliveryMethod === "tienda") {
+    if (!s.pickupLocation) errors.pickup = "Selecciona dónde deseas recoger tu pedido.";
+  }
+
+  s.errors = errors;
+  return Object.keys(errors).length === 0;
+}
+
+function handleConfirmOrderClick() {
+  purchaseState.attemptedConfirm = true;
+  if (!validatePurchaseOrder()) {
+    renderPurchaseModal();
+    const errEl = purchaseScroll.querySelector(".purchaseError, .purchaseField__error");
+    const scrollTarget = errEl ? errEl.closest(".purchaseSection, .purchaseError") : null;
+    if (scrollTarget && typeof scrollTarget.scrollIntoView === "function") {
+      scrollTarget.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    return;
+  }
+  purchaseState.step = "invoice";
+  renderPurchaseModal();
+  purchaseScroll.scrollTop = 0;
+}
+
+/**
+ * Construye el mensaje de WhatsApp con los datos REALES introducidos
+ * por el cliente para ESTE pedido — nunca datos ficticios.
+ */
+function buildOrderWhatsappMessage() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+  const lines = [];
+
+  lines.push("🛒 *NUEVA ORDEN — CARLAND.1601*");
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push("📦 *PRODUCTO*");
+  lines.push(p.nombre);
+  lines.push(`💰 Precio: ${formatPrice(p.precio)}`);
+  lines.push(`🔢 Cantidad: ${s.quantity}`);
+  lines.push(`💵 Subtotal: ${formatPrice(subtotal)}`);
+  lines.push("━━━━━━━━━━━━━━");
+
+  if (s.deliveryMethod === "domicilio") {
+    lines.push("🚚 *ENTREGA*");
+    lines.push("Domicilio");
+    lines.push(`👤 Nombre: ${s.customer.nombre}`);
+    lines.push(`📱 Teléfono: ${s.customer.telefono}`);
+    lines.push(`📍 Departamento: ${s.customer.departamento}`);
+    lines.push(`🏙️ Ciudad: ${s.customer.ciudad}`);
+    lines.push(`🏠 Dirección: ${s.customer.barrio}`);
+    lines.push(`📌 Referencia: ${s.customer.referencia}`);
+  } else {
+    lines.push("🏪 *ENTREGA*");
+    lines.push("Recoger en tienda");
+    lines.push(`📍 Punto de recogida: ${PICKUP_LOCATIONS[s.pickupLocation]}`);
+  }
+
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push(`💰 *TOTAL: ${formatPrice(subtotal)}*`);
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push("Gracias por comprar en *Carland 1601*.");
+
+  return lines.join("\n");
+}
+
+function sendOrderToWhatsapp() {
+  const message = buildOrderWhatsappMessage();
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener");
+}
+
+/**
+ * Conecta todos los listeners del contenido dinámico del modal.
+ * Se llama después de CADA renderPurchaseModal(), porque el HTML
+ * interno se reemplaza por completo en cada paso.
+ */
+function attachPurchaseListeners() {
+  const qtyDecBtn = document.getElementById("qtyDecBtn");
+  const qtyIncBtn = document.getElementById("qtyIncBtn");
+  if (qtyDecBtn) {
+    qtyDecBtn.addEventListener("click", () => {
+      if (purchaseState.quantity > 1) purchaseState.quantity -= 1;
+      refreshPurchaseQuantityUI();
+    });
+  }
+  if (qtyIncBtn) {
+    qtyIncBtn.addEventListener("click", () => {
+      purchaseState.quantity += 1;
+      refreshPurchaseQuantityUI();
+    });
+  }
+
+  purchaseScroll.querySelectorAll("[data-delivery]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      purchaseState.deliveryMethod = btn.dataset.delivery;
+      purchaseState.pickupLocation = null;
+      purchaseState.errors = {};
+      renderPurchaseModal();
+    });
   });
-  
-  // WhatsApp button
-  document.getElementById("navWhatsapp").href = `https://wa.me/${WHATSAPP_NUMBER}`;
-  
-  // Scroll reveal
-  const revealElements = document.querySelectorAll(".reveal");
-  const revealOnScroll = () => {
-    revealElements.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.85) {
-        el.classList.add("is-visible");
-      }
+
+  purchaseScroll.querySelectorAll("[data-pickup]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      purchaseState.pickupLocation = btn.dataset.pickup;
+      purchaseState.errors = {};
+      renderPurchaseModal();
+    });
+  });
+
+  // Los campos de texto solo refrescan el resumen (no todo el modal),
+  // para no perder el foco ni la posición del cursor mientras se escribe.
+  const bindField = (id, key) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", () => {
+      purchaseState.customer[key] = el.value;
+      updatePurchaseSummary();
     });
   };
-  
-  window.addEventListener("scroll", revealOnScroll);
-  revealOnScroll();
-  
-  // Benefit bar animation
-  const benefitCards = document.querySelectorAll(".benefitCard--featured");
-  const revealBenefits = () => {
-    benefitCards.forEach(card => {
-      const rect = card.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.8 && !card.classList.contains("is-visible")) {
-        card.classList.add("is-visible");
-      }
+  bindField("fNombre", "nombre");
+  bindField("fTelefono", "telefono");
+  bindField("fDepartamento", "departamento");
+  bindField("fCiudad", "ciudad");
+  bindField("fBarrio", "barrio");
+  bindField("fReferencia", "referencia");
+
+  const confirmBtn = document.getElementById("purchaseConfirmBtn");
+  if (confirmBtn) confirmBtn.addEventListener("click", handleConfirmOrderClick);
+
+  const editBtn = document.getElementById("invoiceEditBtn");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      purchaseState.step = "form";
+      renderPurchaseModal();
     });
-  };
-  
-  window.addEventListener("scroll", revealBenefits);
-  revealBenefits();
+  }
+
+  const sendBtn = document.getElementById("invoiceSendBtn");
+  if (sendBtn) sendBtn.addEventListener("click", sendOrderToWhatsapp);
+}
+
+// ---------- ABRIR EL MODAL DE COMPRA DESDE CUALQUIER "COMPRAR POR WHATSAPP" ----------
+// Un solo listener delegado cubre el catálogo completo, las previews de
+// Ofertas/Novedades y el modal de vista previa: todos usan la misma
+// función openPurchaseModal(product), por lo que no hay código duplicado
+// por producto y cualquier producto nuevo agregado a window.PRODUCTOS
+// queda cubierto automáticamente.
+document.addEventListener("click", (e) => {
+  const buyEl = e.target.closest(".card__buy, .modalContent__buy");
+  if (!buyEl) return;
+  if (buyEl.classList.contains("card__buy--disabled") || buyEl.classList.contains("modalContent__buy--disabled")) return;
+  e.preventDefault();
+
+  let product = null;
+  if (buyEl.classList.contains("modalContent__buy")) {
+    product = activeModalProduct;
+  } else {
+    const cardEl = buyEl.closest(".card");
+    const pid = cardEl ? Number(cardEl.dataset.pid) : NaN;
+    product = allProducts.find((p) => p.__pid === pid) || null;
+  }
+  if (!product) return;
+
+  // Si el modal de vista previa (FLIP) está abierto, se cierra al instante
+  // para dar paso al modal de compra, evitando dos modales apilados.
+  if (!modalOverlay.hidden) {
+    modalOverlay.hidden = true;
+    modalOverlay.classList.remove("is-visible");
+    document.body.classList.remove("modal-open");
+  }
+
+  openPurchaseModal(product);
 });
 
-// Exponer en global para botones inline
-window.addToCart = addToCart;
-window.addToWishlist = addToWishlist;
-window.removeFromCart = removeFromCart;
-window.updateCartItemQty = updateCartItemQty;
-window.toggleCart = toggleCart;
-window.toggleWishlist = toggleWishlist;
-window.proceedToCheckout = proceedToCheckout;
-window.goToCategory = goToCategory;
-window.moveWishlistToCart = moveWishlistToCart;
-window.addAllWishlistToCart = addAllWishlistToCart;
-window.removeFromWishlist = removeFromWishlist;
-window.addToCartFromIncentive = addToCartFromIncentive;
-window.addToCartFromRecommendation = addToCartFromRecommendation;
-window.formatPrice = formatPrice;
-window.allProducts = allProducts;
+purchaseCloseBtn.addEventListener("click", closePurchaseModal);
+
+purchaseOverlay.addEventListener("click", (e) => {
+  if (e.target === purchaseOverlay) closePurchaseModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !purchaseOverlay.hidden) closePurchaseModal();
+});
+
+// ---------- BUSCADOR EN TIEMPO REAL ----------
+searchInput.addEventListener("input", (e) => {
+  currentSearch = e.target.value;
+  applyFiltersAndRender();
+});
+
+// ---------- WHATSAPP: NAVBAR Y BOTÓN FLOTANTE (mensaje genérico) ----------
+function setGenericWhatsappLinks() {
+  const genericMsg = encodeURIComponent(
+    "Hola, quiero más información sobre el catálogo de Carland 1601."
+  );
+  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${genericMsg}`;
+  document.getElementById("navWhatsapp").href = link;
+  document.getElementById("floatWhatsapp").href = link;
+}
+
+// ---------- MENÚ DE INFORMACIÓN EN MÓVIL ----------
+navToggle.addEventListener("click", () => {
+  navInfoMobile.classList.toggle("is-open");
+});
+
+// ---------- BOTÓN VOLVER ARRIBA + NAVBAR ON SCROLL ----------
+window.addEventListener("scroll", () => {
+  const scrolled = window.scrollY > 400;
+  backToTop.hidden = !scrolled;
+});
+
+backToTop.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// ---------- AÑO DINÁMICO EN EL FOOTER ----------
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// ---------- WHATSAPP: BOTÓN DE MAYOREO ----------
+// Antes apuntaba a href="#" sin mensaje. Usa el mismo WHATSAPP_NUMBER que
+// el resto del sitio y el mensaje de mayoreo pedido en el brief.
+(function setWholesaleWhatsapp() {
+  const btn = document.getElementById("wholesaleWhatsapp");
+  if (!btn) return;
+  const mensaje = encodeURIComponent(
+    "Hola, Carland 1601. Estoy interesado en comprar al mayoreo 3 o más unidades del mismo modelo. Quisiera información sobre disponibilidad y beneficios."
+  );
+  btn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
+  btn.target = "_blank";
+  btn.rel = "noopener";
+})();
+
+// ---------- TICKER DEL TOPBAR ----------
+// Duplica el contenido de la barra superior una vez para que la animación
+// CSS (translateX(-50%)) haga un loop perfectamente continuo, sin salto.
+(function initTopbarTicker() {
+  const track = document.querySelector(".topbar__track");
+  if (!track) return;
+  track.innerHTML += track.innerHTML;
+})();
+
+// ---------- REVELADO AL HACER SCROLL (.reveal) ----------
+// Sin esto, .reveal quedaba como una clase sin ningún efecto real.
+(function initScrollReveal() {
+  const targets = document.querySelectorAll(".reveal");
+  if (!targets.length) return;
+
+  const prefersReducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    targets.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  targets.forEach((el) => observer.observe(el));
+})();
+
+/* =========================================================
+   CARRUSEL PRINCIPAL
+   Cambia de slide automáticamente cada 4.5s. También se puede
+   navegar con flechas, puntos, swipe (móvil) o teclado.
+   ========================================================= */
+let heroIndex = 0;
+let heroTimer = null;
+const HERO_INTERVAL = 4500;
+
+function goToCategory(categoryName) {
+  // "Control Remoto" no existe como categoría propia en window.PRODUCTOS hoy
+  // (los vehículos RC están guardados dentro de "Autos"). Para que el botón
+  // funcione de verdad en vez de mostrar 0 resultados, se resuelve como una
+  // búsqueda por "RC" en vez de un filtro de categoría exacto.
+  if (categoryName === "Control Remoto") {
+    currentCategory = "Todos";
+    currentSearch = "RC";
+    searchInput.value = "RC";
+  } else {
+    currentCategory = categoryName;
+    currentSearch = "";
+    searchInput.value = "";
+  }
+  renderCategoryFilters();
+  applyFiltersAndRender();
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+}
+
+function buildHeroSlides() {
+  heroTrack.innerHTML = HERO_SLIDES.map((slide, i) => `
+    <div class="hero__slide hero__slide--${slide.variant}" role="group" aria-roledescription="slide">
+      <div class="hero__content">
+        <span class="hero__eyebrow">${slide.icon} ${slide.eyebrow}</span>
+        <h1 class="hero__title">${slide.title}</h1>
+        <p class="hero__text">${slide.text}</p>
+        <div class="hero__actions">
+          <a href="#catalogo" class="hero__cta" data-hero-category="${slide.filterCategory}">Comprar ahora</a>
+          <a href="#catalogo" class="hero__cta hero__cta--ghost">Ver catálogo</a>
+        </div>
+      </div>
+      ${buildHeroCircleMarkup(i)}
+    </div>
+  `).join("");
+
+  heroDots.innerHTML = HERO_SLIDES.map((_, i) =>
+    `<button class="hero__dot" data-slide="${i}" aria-label="Ir al slide ${i + 1}"></button>`
+  ).join("");
+
+  heroTrack.querySelectorAll("[data-hero-category]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      goToCategory(btn.dataset.heroCategory);
+    });
+  });
+
+  heroDots.querySelectorAll(".hero__dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      setHeroSlide(Number(dot.dataset.slide));
+      restartHeroAutoplay();
+    });
+  });
+}
+
+/**
+ * Genera el markup de la galería circular de un slide: una foto que va
+ * cambiando entre varias imágenes aleatorias (autos, motos y envíos reales),
+ * rodeada de un aro de emojis (también aleatorios) que gira en círculo.
+ * Cada slide recibe su propia selección aleatoria de fotos, emojis,
+ * velocidad y sentido de giro para que se sienta dinámico y distinto.
+ */
+function buildHeroCircleMarkup(slideIndex) {
+  const pool = getCirclePoolImages();
+  if (!pool.length) return "";
+
+  const images = pickRandom(pool, Math.min(6, pool.length));
+  const emojis = pickRandom(HERO_CIRCLE_EMOJIS, 6);
+  const spinDuration = (12 + Math.random() * 10).toFixed(1); // entre 12s y 22s
+  const spinDirection = Math.random() < 0.5 ? "normal" : "reverse";
+
+  const emojiRing = emojis.map((emoji, i) => `
+    <div class="shipProof__orbit" style="--i:${i}">
+      <span class="shipProof__emoji">${emoji}</span>
+    </div>
+  `).join("");
+
+  return `
+    <div class="shipProof" data-slide-index="${slideIndex}"
+         data-images='${JSON.stringify(images)}'
+         style="--spin-duration:${spinDuration}s; --spin-direction:${spinDirection};">
+      <div class="shipProof__ring" aria-hidden="true">${emojiRing}</div>
+      <div class="shipProof__circle">
+        <img src="${images[0]}" alt="Autos, motos y envíos reales de Carland 1601" class="shipProof__img">
+      </div>
+      <span class="shipProof__badge">✅ 100% real</span>
+    </div>
+  `;
+}
+
+/**
+ * Activa la rotación aleatoria de fotos en CADA galería circular del
+ * carrusel (una por slide), cada una de forma independiente y con un
+ * pequeño desfase inicial para que no cambien todas al mismo tiempo.
+ * Si una imagen no carga, se salta automáticamente a la siguiente.
+ */
+function initHeroCircleRotation() {
+  document.querySelectorAll(".shipProof").forEach((container) => {
+    const img = container.querySelector(".shipProof__img");
+    if (!img) return;
+
+    let images = [];
+    try {
+      images = JSON.parse(container.dataset.images || "[]");
+    } catch (e) {
+      images = [];
+    }
+    if (images.length < 2) return; // nada que rotar
+
+    // Precarga silenciosa para evitar parpadeos al cambiar de foto
+    images.forEach((src) => { const preloader = new Image(); preloader.src = src; });
+
+    let idx = 0;
+    img.onerror = () => {
+      idx = (idx + 1) % images.length;
+      img.src = images[idx];
+    };
+
+    const startDelay = Math.floor(Math.random() * SHIP_PROOF_INTERVAL);
+    setTimeout(() => {
+      setInterval(() => {
+        idx = (idx + 1) % images.length;
+        img.classList.add("is-fading");
+        setTimeout(() => {
+          img.src = images[idx];
+          img.classList.remove("is-fading");
+        }, 220);
+      }, SHIP_PROOF_INTERVAL);
+    }, startDelay);
+  });
+}
+
+function setHeroSlide(index) {
+  heroIndex = (index + HERO_SLIDES.length) % HERO_SLIDES.length;
+  heroTrack.style.transform = `translateX(-${heroIndex * 100}%)`;
+  heroDots.querySelectorAll(".hero__dot").forEach((dot, i) => {
+    dot.classList.toggle("is-active", i === heroIndex);
+  });
+}
+
+function restartHeroAutoplay() {
+  clearInterval(heroTimer);
+  heroTimer = setInterval(() => setHeroSlide(heroIndex + 1), HERO_INTERVAL);
+}
+
+function initHeroCarousel() {
+  buildHeroSlides();
+  setHeroSlide(0);
+  restartHeroAutoplay();
+  initHeroCircleRotation();
+
+  heroPrevBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex - 1);
+    restartHeroAutoplay();
+  });
+  heroNextBtn.addEventListener("click", () => {
+    setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+
+  // Pausar mientras el cursor está encima (desktop)
+  const heroSection = document.getElementById("heroCarousel");
+  heroSection.addEventListener("mouseenter", () => clearInterval(heroTimer));
+  heroSection.addEventListener("mouseleave", restartHeroAutoplay);
+
+  // Swipe táctil (móvil)
+  let touchStartX = 0;
+  heroSection.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    clearInterval(heroTimer);
+  }, { passive: true });
+
+  heroSection.addEventListener("touchend", (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    if (deltaX > 40) setHeroSlide(heroIndex - 1);
+    else if (deltaX < -40) setHeroSlide(heroIndex + 1);
+    restartHeroAutoplay();
+  });
+}
+
+// ---------- INICIALIZACIÓN ----------
+setGenericWhatsappLinks();
+loadProducts();
+initHeroCarousel();
