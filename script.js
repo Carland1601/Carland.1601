@@ -327,105 +327,7 @@ function addToCartFromRecommendation(productId) {
   }
 }
 
-/* =========================================================
-   TUTORIAL "¿CÓMO COMPRAR?"
-   ========================================================= */
-const TUTORIAL_STEPS = [
-  {
-    icon: "🛍️",
-    title: "Paso 1: Elige tu producto",
-    description: "Explora nuestro catálogo y selecciona los vehículos que deseas. Busca por marca, categoría o escala."
-  },
-  {
-    icon: "🛒",
-    title: "Paso 2: Agrégalo al carrito",
-    description: "Presiona 'Agregar al carrito' o 'Agregar a lista de compra' si lo quieres para después."
-  },
-  {
-    icon: "📋",
-    title: "Paso 3: Revisa tus productos",
-    description: "Verifica la cantidad, precio y total de tu carrito. Puedes modificar cantidades cuando quieras."
-  },
-  {
-    icon: "💳",
-    title: "Paso 4: Completa tu compra",
-    description: "Ingresa tus datos de entrega y selecciona tu método de pago (depósito o transferencia)."
-  },
-  {
-    icon: "📲",
-    title: "Paso 5: Envía por WhatsApp",
-    description: "Confirma tu pedido y envíalo a nuestro WhatsApp. Recibirás confirmación en minutos."
-  },
-  {
-    icon: "📦",
-    title: "Paso 6: Recibe tu pedido",
-    description: "Tu compra llegará empacada profesionalmente y con fotos de entrega. Garantía de satisfacción."
-  }
-];
 
-let currentTutorialStep = 0;
-
-function openTutorial() {
-  currentTutorialStep = 0;
-  const overlay = document.getElementById("tutorialOverlay");
-  const modal = document.getElementById("tutorialModal");
-  overlay.hidden = false;
-  modal.hidden = false;
-  renderTutorialStep();
-}
-
-function closeTutorial() {
-  document.getElementById("tutorialOverlay").hidden = true;
-  document.getElementById("tutorialModal").hidden = true;
-}
-
-function renderTutorialStep() {
-  const step = TUTORIAL_STEPS[currentTutorialStep];
-  const modal = document.getElementById("tutorialModal");
-  
-  const progressPercent = ((currentTutorialStep + 1) / TUTORIAL_STEPS.length) * 100;
-  document.getElementById("tutorialModal__progressBar").style.width = progressPercent + "%";
-  
-  const body = document.getElementById("tutorialModalBody");
-  body.innerHTML = `
-    <div class="tutorialStep">
-      <div class="tutorialStep__icon">${step.icon}</div>
-      <h3>${step.title}</h3>
-      <p>${step.description}</p>
-    </div>
-  `;
-  
-  const prevBtn = document.getElementById("tutorialModalPrev");
-  const nextBtn = document.getElementById("tutorialModalNext");
-  
-  if (currentTutorialStep === 0) {
-    prevBtn.hidden = true;
-  } else {
-    prevBtn.hidden = false;
-  }
-  
-  if (currentTutorialStep === TUTORIAL_STEPS.length - 1) {
-    nextBtn.textContent = "Cerrar tutorial";
-  } else {
-    nextBtn.textContent = "Siguiente →";
-  }
-}
-
-function nextTutorialStep() {
-  if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
-    currentTutorialStep++;
-    renderTutorialStep();
-  } else {
-    closeTutorial();
-  }
-}
-
-function prevTutorialStep() {
-  if (currentTutorialStep > 0) {
-    currentTutorialStep--;
-    renderTutorialStep();
-  }
-}
 
 /* =========================================================
    ORDEN CON MÚLTIPLES PRODUCTOS
@@ -763,13 +665,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 15000);
   }
   
-  // Tutorial
-  document.getElementById("tutorialBtn").addEventListener("click", openTutorial);
-  document.getElementById("tutorialOverlay").addEventListener("click", closeTutorial);
-  document.getElementById("tutorialModalClose").addEventListener("click", closeTutorial);
-  document.getElementById("tutorialModalPrev").addEventListener("click", prevTutorialStep);
-  document.getElementById("tutorialModalNext").addEventListener("click", nextTutorialStep);
-  
   // Navbar toggle
   document.getElementById("navToggle").addEventListener("click", () => {
     document.getElementById("navInfoMobile").classList.toggle("is-open");
@@ -821,9 +716,5 @@ window.addAllWishlistToCart = addAllWishlistToCart;
 window.removeFromWishlist = removeFromWishlist;
 window.addToCartFromIncentive = addToCartFromIncentive;
 window.addToCartFromRecommendation = addToCartFromRecommendation;
-window.openTutorial = openTutorial;
-window.closeTutorial = closeTutorial;
-window.nextTutorialStep = nextTutorialStep;
-window.prevTutorialStep = prevTutorialStep;
 window.formatPrice = formatPrice;
 window.allProducts = allProducts;
