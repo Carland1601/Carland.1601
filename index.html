@@ -58,6 +58,17 @@
         <span class="navbar__pill">🚚 Envíos a toda Honduras</span>
       </nav>
 
+      <div class="navbar__actions">
+        <button class="navbar__cart" id="cartBtn" aria-label="Ver carrito de compras">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="navbar__cartBadge" id="cartBadge">0</span>
+        </button>
+        <button class="navbar__wishlist" id="wishlistBtn" aria-label="Ver lista de compra">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="navbar__wishlistBadge" id="wishlistBadge">0</span>
+        </button>
+      </div>
+
       <a href="#" class="navbar__whatsapp" id="navWhatsapp" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
         <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
         <span>Escríbenos</span>
@@ -175,705 +186,827 @@
       <span class="section__eyebrow">PARA COLECCIONISTAS Y REVENDEDORES</span>
       <h2>¿Compras varias unidades?</h2>
       <p>Desde <strong>3 productos del mismo modelo</strong>, activa nuestro beneficio para clientes mayoristas. Ideal para revendedores, negocios, coleccionistas y compras por volumen.</p>
-      <ul><li>✓ Envío gratis para pedidos que cumplan la condición</li><li>✓ Atención directa por WhatsApp</li><li>✓ Disponibilidad confirmada antes del pago</li></ul>
-      <a class="premiumCta" href="#" id="wholesaleWhatsapp">Quiero comprar al mayoreo</a>
-    </div>
-  </section>
-
-  <!-- ============ NOVEDADES ============ -->
-  <section class="section section--dark reveal" id="novedades">
-    <div class="section__head section__head--row">
-      <div><span class="section__eyebrow">RECIÉN LLEGADO</span><h2>Novedades</h2><p>Las últimas piezas que se sumaron al catálogo de Carland 1601.</p></div>
-      <button class="sectionLink" data-category-jump="Novedades">Ver todas las novedades →</button>
-    </div>
-    <div class="previewGrid" id="novedadesPreview" aria-live="polite">
-      <!-- Productos reales marcados con etiqueta "Novedad" — generado en script.js -->
+      <ul>
+        <li>✓ Precios especiales por volumen</li>
+        <li>✓ Envío negociado</li>
+        <li>✓ Asesoramiento personalizado</li>
+      </ul>
+      <a class="premiumCta" href="#navWhatsapp">Consultar mayoreo</a>
     </div>
   </section>
 
   <!-- ============ BENEFICIOS ============ -->
-  <section class="benefits reveal" id="beneficios">
-    <div class="benefits__inner">
-      <div class="section__head section__head--light">
-        <span class="section__eyebrow">CLUB CARLAND</span>
-        <h2>Comprar en Carland tiene beneficios</h2>
-        <p>Queremos premiar a quienes vuelven a elegirnos.</p>
+  <section class="section section--light reveal" id="beneficios">
+    <div class="section__head">
+      <span class="section__eyebrow">¿POR QUÉ ELEGIR CARLAND?</span>
+      <h2>Beneficios de comprar aquí</h2>
+      <p>Más que una tienda. Una experiencia completa de coleccionismo.</p>
+    </div>
+    <div class="benefitsGrid">
+      <div class="benefitCard">
+        <span>DISPONIBILIDAD</span>
+        <h3>Catálogo actualizado</h3>
+        <p>Más de 150+ productos en stock, disponibles para compra inmediata. Ves lo que compras, nada de sorpresas.</p>
+        <div class="benefitCard__bar"><span></span></div>
       </div>
-      <div class="benefitGrid">
-        <article class="benefitCard benefitCard--featured">
-          <div class="benefitCard__icon">🏆</div>
-          <span class="benefitCard__tag">CLIENTE FRECUENTE</span>
-          <h3>10 compras en un mismo mes</h3>
-          <p>Al alcanzar <strong>10 compras consecutivas durante el mes</strong>, accedes a un beneficio especial de cliente frecuente. Escríbenos para conocer tu beneficio.</p>
-          <div class="benefitCard__bar"><span></span></div>
-        </article>
-        <article class="benefitCard">
-          <div class="benefitCard__icon">🚚</div>
-          <span class="benefitCard__tag">MAYORISTAS</span>
-          <h3>Envío gratis</h3>
-          <p>Clientes mayoristas: <strong>3 productos del mismo modelo en adelante</strong> aplican para envío gratis, sujeto a cobertura y condiciones del pedido.</p>
-        </article>
-        <article class="benefitCard">
-          <div class="benefitCard__icon">📲</div>
-          <span class="benefitCard__tag">COMPRA DIRECTA</span>
-          <h3>Habla con Carland</h3>
-          <p>Selecciona tu pieza y envíanos el pedido directamente por WhatsApp. Sin procesos complicados.</p>
-        </article>
+      <div class="benefitCard">
+        <span>ENVÍOS</span>
+        <h3>A todo Honduras</h3>
+        <p>Cobertura en todos los departamentos. Envíos seguros, rastreables y con fotos de entrega real.</p>
+        <div class="benefitCard__bar"><span></span></div>
+      </div>
+      <div class="benefitCard">
+        <span>SERVICIO</span>
+        <h3>Atención directa</h3>
+        <p>Comunícate al WhatsApp. Resolvemos dudas, consultas y problemas al momento. Nunca estás solo.</p>
+        <div class="benefitCard__bar"><span></span></div>
+      </div>
+      <div class="benefitCard benefitCard--featured">
+        <span>GARANTÍA</span>
+        <h3>Productos verificados</h3>
+        <p>Cada pieza es <strong>auténtica y en perfecto estado</strong> al llegar. Garantía de satisfacción para el coleccionista exigente.</p>
+        <div class="benefitCard__bar"><span></span></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ EXPERIENCIA CARLAND ============ -->
-  <section class="process section section--light reveal">
+  <!-- ============ PROCESO ============ -->
+  <section class="section section--dark reveal">
     <div class="section__head">
-      <span class="section__eyebrow">COMPRA EN 3 PASOS</span>
-      <h2>Así funciona Carland 1601</h2>
+      <span class="section__eyebrow">SIMPLIFICADO</span>
+      <h2>Compra en 3 pasos</h2>
+      <p>No hay complicaciones. Rápido, seguro, confiable.</p>
     </div>
     <div class="processGrid">
-      <div class="processStep"><span>01</span><div>🔎</div><h3>Encuentra</h3><p>Explora colecciones, escalas, novedades y ofertas.</p></div>
-      <div class="processStep"><span>02</span><div>💬</div><h3>Escríbenos</h3><p>Presiona comprar y recibe un mensaje listo para WhatsApp.</p></div>
-      <div class="processStep"><span>03</span><div>📦</div><h3>Recibe</h3><p>Confirmamos tu pedido y gestionamos el envío a Honduras.</p></div>
+      <div class="processStep">
+        <span>PASO 1</span>
+        <div>🛍️</div>
+        <h3>Elige tus productos</h3>
+        <p>Explora el catálogo y añade lo que te gusta al carrito. Puedes usar la lista de compra para guardar para después.</p>
+      </div>
+      <div class="processStep">
+        <span>PASO 2</span>
+        <div>📲</div>
+        <h3>Confirma tu pedido</h3>
+        <p>Revisa el total, tus datos y método de entrega. Todo en una orden clara.</p>
+      </div>
+      <div class="processStep">
+        <span>PASO 3</span>
+        <div>📦</div>
+        <h3>Recibe en tu casa</h3>
+        <p>Pagos por depósito o transferencia. Empaques seguros. Fotos de entrega. Garantía de satisfacción.</p>
+      </div>
     </div>
   </section>
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
-    <div class="footer__inner">
+    <div class="footer__top">
       <div class="footer__brand">
-        <img src="assets/logo.png" alt="Logo Carland 1601" width="48" height="48">
+        <span>🏆</span>
         <div>
-          <p class="footer__title">CARLAND 1601</p>
-          <p class="footer__tag">Miniaturas y vehículos de colección</p>
+          <strong>CARLAND 1601</strong>
+          <p>La tienda #1 de vehículos de colección en Honduras.</p>
         </div>
       </div>
-
-      <div class="footer__col">
-        <h3>Información</h3>
-        <p>🚚 Envíos a toda Honduras</p>
-        <p>💳 Pago únicamente previo depósito o transferencia bancaria</p>
+      <div class="footer__links">
+        <h4>Compra</h4>
+        <a href="#catalogo">Catálogo completo</a>
+        <a href="#ofertas">Ofertas especiales</a>
+        <a href="#mayoreo">Mayoreo</a>
+      </div>
+      <div class="footer__links">
+        <h4>Conoce más</h4>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#colecciones">Colecciones</a>
+        <a href="#navWhatsapp">Comunícate con nosotros</a>
+      </div>
+      <div class="footer__contact">
+        <h4>Contacto</h4>
         <p>📍 Santa Bárbara, Honduras</p>
-        <p>🗂 Catálogo actualizado constantemente</p>
-      </div>
-
-      <div class="footer__col">
-        <h3>Síguenos</h3>
-        <div class="footer__social">
-          <a href="#" aria-label="Facebook">Facebook</a>
-          <a href="#" aria-label="Instagram">Instagram</a>
-          <a href="#" aria-label="TikTok">TikTok</a>
-        </div>
+        <p>📱 WhatsApp: Escríbenos</p>
+        <p>💳 Pagos por depósito o transferencia</p>
       </div>
     </div>
-
-    <p class="footer__rights">🏆 CARLAND 1601 — La tienda #1 de vehículos de colección en Honduras · © <span id="year"></span> Carland 1601. Todos los derechos reservados, El contenido comercial que se da en esta pagina web es de uso exclusiv de Carland.1601.</p>
+    <div class="footer__bottom">
+      <p>© 2024 Carland 1601. Todos los derechos reservados. 🇭🇳</p>
+    </div>
   </footer>
 
-  <!-- ============ BOTONES FLOTANTES ============ -->
-  <a href="#" class="floatBtn floatBtn--whatsapp" id="floatWhatsapp" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
-    <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-  </a>
+  <!-- ============ MODAL DE COMPRA (se mantiene igual) ============ -->
+  <div class="purchaseOverlay" id="purchaseOverlay">
+    <div class="purchaseModal" id="purchaseModal" role="dialog" aria-labelledby="purchaseModalTitle">
+      <button type="button" class="purchaseCloseBtn" id="purchaseCloseBtn" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="purchaseScroll" id="purchaseScroll"></div>
+      <div class="purchaseFooter" id="purchaseFooter"></div>
+    </div>
+  </div>
 
-  <button class="floatBtn floatBtn--top" id="backToTop" aria-label="Volver arriba" hidden>
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <!-- ============ CARRITO LATERAL ============ -->
+  <div class="cartOverlay" id="cartOverlay"></div>
+  <aside class="cartPanel" id="cartPanel">
+    <div class="cartPanel__header">
+      <h2>Mi carrito</h2>
+      <button class="cartPanel__close" id="cartPanelClose" aria-label="Cerrar carrito">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cartPanel__body" id="cartPanelBody">
+      <!-- Items del carrito se insertan aquí -->
+    </div>
+    <div class="cartPanel__footer" id="cartPanelFooter">
+      <!-- Total y botones se insertan aquí -->
+    </div>
+  </aside>
+
+  <!-- ============ LISTA DE COMPRA LATERAL ============ -->
+  <div class="wishlistOverlay" id="wishlistOverlay"></div>
+  <aside class="wishlistPanel" id="wishlistPanel">
+    <div class="wishlistPanel__header">
+      <h2>Mi lista de compra</h2>
+      <button class="wishlistPanel__close" id="wishlistPanelClose" aria-label="Cerrar lista">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="wishlistPanel__body" id="wishlistPanelBody">
+      <!-- Items de la lista se insertan aquí -->
+    </div>
+    <div class="wishlistPanel__footer" id="wishlistPanelFooter">
+      <!-- Botones se insertan aquí -->
+    </div>
+  </aside>
+
+  <!-- ============ INCENTIVO DE ENVÍO (1 producto) ============ -->
+  <div class="shipmentIncentive" id="shipmentIncentive" hidden>
+    <div class="shipmentIncentive__content">
+      <button class="shipmentIncentive__close" id="shipmentIncentiveClose" aria-label="Cerrar">×</button>
+      <h3>¡Espera! 👀</h3>
+      <p>Ya estás aprovechando tu envío de <strong>L.100</strong>. ¿Quieres agregar otro producto y aprovechar mejor el envío?</p>
+      <div class="shipmentIncentive__products" id="shipmentIncentiveProducts">
+        <!-- Productos recomendados se insertan aquí -->
+      </div>
+      <div class="shipmentIncentive__actions">
+        <button class="shipmentIncentive__btn shipmentIncentive__btn--primary" id="shipmentIncentiveContinueShopping">Seguir comprando</button>
+        <button class="shipmentIncentive__btn shipmentIncentive__btn--secondary" id="shipmentIncentiveCheckout">Continuar con 1 producto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RECOMENDACIONES FLOTANTES ============ -->
+  <div class="recommendationBox" id="recommendationBox" hidden>
+    <button class="recommendationBox__close" id="recommendationBoxClose" aria-label="Cerrar recomendación">×</button>
+    <div class="recommendationBox__content">
+      <p class="recommendationBox__tag">🔥 También te puede interesar</p>
+      <div class="recommendationBox__product" id="recommendationBoxProduct">
+        <!-- Producto recomendado se inserta aquí -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BOTÓN TUTORIAL FLOTANTE ============ -->
+  <button class="tutorialBtn" id="tutorialBtn" aria-label="Cómo comprar">
+    <span>❓</span>
+    <span class="tutorialBtn__text">¿Cómo comprar?</span>
   </button>
 
-  <!-- ============ MODAL DE VISTA PREVIA DE PRODUCTO ============ -->
-  <div class="modalOverlay" id="modalOverlay" hidden>
-    <div class="modalContent" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalName">
-      <!-- Contenido inyectado dinámicamente por script.js -->
-    </div>
-  </div>
-
-  <!-- ============ MODAL DE COMPRA POR WHATSAPP ============
-       Contenedor estático y reutilizable para TODOS los productos.
-       El contenido (producto, cantidad, entrega, formulario, resumen,
-       mini factura) se genera dinámicamente en script.js mediante
-       openPurchaseModal(product). No se debe duplicar este bloque. -->
-  <div class="purchaseOverlay" id="purchaseOverlay" hidden>
-    <div class="purchaseModal" id="purchaseModal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
-      <button class="purchaseModal__close" id="purchaseCloseBtn" aria-label="Cerrar ventana de compra">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  <!-- ============ MODAL TUTORIAL ============ -->
+  <div class="tutorialOverlay" id="tutorialOverlay" hidden></div>
+  <div class="tutorialModal" id="tutorialModal" hidden>
+    <div class="tutorialModal__header">
+      <h2>¿Cómo comprar en Carland 1601?</h2>
+      <button class="tutorialModal__close" id="tutorialModalClose" aria-label="Cerrar tutorial">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
-      <div class="purchaseModal__scroll" id="purchaseScroll">
-        <!-- Contenido del paso "formulario" o "mini factura" — inyectado por script.js -->
-      </div>
-      <div class="purchaseModal__footer" id="purchaseFooter">
-        <!-- Botón principal (Confirmar orden / Enviar por WhatsApp) — inyectado por script.js -->
-      </div>
+    </div>
+    <div class="tutorialModal__progress" id="tutorialModalProgress"></div>
+    <div class="tutorialModal__body" id="tutorialModalBody">
+      <!-- Pasos se insertan aquí -->
+    </div>
+    <div class="tutorialModal__footer">
+      <button class="tutorialModal__btn tutorialModal__btn--secondary" id="tutorialModalPrev" hidden>← Anterior</button>
+      <button class="tutorialModal__btn tutorialModal__btn--primary" id="tutorialModalNext">Siguiente →</button>
     </div>
   </div>
 
-  <!-- =========================================================
-       CATÁLOGO DE PRODUCTOS
-       Edita, agrega o elimina productos directamente aquí.
-       Cada producto es un bloque { ... } separado por coma.
-       ========================================================= -->
+  <!-- PRODUCTOS EMBEBIDOS (se mantienen igual) -->
   <script>
     window.PRODUCTOS = [
       {
-        "nombre": "Rolls-Royce Spectre",
-        "marca": "Rolls-Royce",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1550,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/roll.jpg"
-      },
-      {
-        "nombre": "Antorcha Minecraft decoracion de habitacion",
-        "marca": "Minecraft",
-        "categoria": "Otros",
-        "escala": "24cm alto",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/antorcha.png"
-      },
-      {
-        "nombre": "Rolls-Royce Spectre",
-        "marca": "Rolls-Royce",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1550,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rolld.jpg"
-      },
-      {
-        "nombre": "Auto Rc Drift",
+        "nombre": "Toyota Tacoma 1:24",
         "marca": "generic",
-        "categoria": "Autos Rc",
-        "escala": "1:24",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rcdrift.jpg"
-      },
-      {
-        "nombre": "Chiks Hiks 1/64",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:64",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/chiks.jpg"
-      },
-      {
-        "nombre": "Filmore 1/64",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:64",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/filmore.jpg"
-      },
-      {
-        "nombre": "Cabesal Transformer 1/24 Coleccionable",
-        "marca": "Jada",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/tc.jpg"
-      },
-      {
-        "nombre": "Cabesal Transformer 1/24 Coleccionable",
-        "marca": "Jada",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/trans.jpg"
-      },
-      {
-        "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
         "categoria": "Autos",
         "escala": "1:24",
         "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tacoma.jpg"
-      },
-      {
-        "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tacoma-negra.jpg"
-      },
-      {
-         "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/dorada.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/troja.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tblanca.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tverde.jpg"
-      },
-      {
-        "nombre": "Alfa Romero Giulia GTAm 2021 ",
-        "marca": "Alfa Romero",
-        "categoria": "Autos",
-        "escala": "1:18",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "",
-        "imagen": "assets/productos/alfa.jpg"
-      },
-      {
-        "nombre": "Cybertruck Gris 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cgris.jpg"
-      },
-      {
-        "nombre": "Cybertruck negra 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cnegra.jpg"
-      },
-      {
-        "nombre": "Cybertruck dorada 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cdorada.jpg"
-      },
-       {
-        "nombre": "Lamborghini STO",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/sto.jpg"
-      },
-      {
-        "nombre": "Toyota Prado 1/24 blanca",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/pradob.jpg"
-      },
-      {
-        "nombre": "Toyota Prado 1/24 Gris",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/pradog.jpg"
-      },
-      {
-        "nombre": "Plymouth taxi escala",
-        "marca": "Polstergit",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/taxi.jpg"
-      },
-      {
-        "nombre": "LC300 Blanca",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lcb.jpg"
-      },
-      {
-        "nombre": "LC300 Negra",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lcn.jpg"
-      },
-      {
-        "nombre": "Suzuki Jimny verde 1/24",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/zv.jpg"
-      },
-      {
-        "nombre": "Cabesal Clasico 1/32 blanco con luz y sonido",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:32",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cb.jpg"
-      },
-      {
-        "nombre": "Cabesal Clasico 1/32 negro con luz y sonido",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:32",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cn.jpg"
-      },
-      {
-        "nombre": "Land Cruiser Series 200",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lb.jpg"
-      },
-      {
-        "nombre": "Land Cruiser Series 200",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/ln.jpg"
-      },
-      {
-        "nombre": "Dodge charger srt escala 1969 azul",
-        "marca": "Maisto",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/srt.jpg"
-      },
-      {
-        "nombre": "Tundra 1/28 blanca 2da generacion",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:28",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tb.jpg"
-      },
-       {
-        "nombre": "Tundra 1/28 negra 2da generacion",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:28",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tn.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxb.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxn.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxa.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxr.jpg"
-      },
-      {
-        "nombre": "Toyota land cruiser 70 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/landb.png"
-      },
-      {
-        "nombre": "Toyota land cruiser 70 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/landbe.png"
-      },
-       {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rr.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rb.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22ra.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rg.png"
-      },
-      {
-        "nombre": "Lexus Lx570 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 195,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/lexus.png"
-      },
-       {
-        "nombre": "Chevy clasico 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 225,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/chevy.png"
-      },
-       {
-        "nombre": "Lamborghini Rapidos y Furiosos",
-        "marca": "Maisto",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1350,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/lambo.jpg"
-      },
-      {
-        "nombre": "Mototaxi Roja",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/mototaxi.jpg"
-      },
-       {
-        "nombre": "Porsche Dakar",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/por.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 750,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/fa.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/cr.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/ca.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/cab.jpg"
-      },
-      {
-        "nombre": "Cabezal con pipa escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/pipa.jpg"
-      },
-      {
-        "nombre": "Mack Y Mcqueen set de dos",
-        "marca": "Matel",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 1500,
         "estado": "Disponible",
         "etiqueta": "Ofertas",
-        "imagen": "assets/productos/mack.jpg"
+        "imagen": "assets/productos/tacoma.png"
       },
       {
-        "nombre": "Mcqueen Control remoto Cars",
+        "nombre": "Toyota Land Cruiser 1:24",
         "marca": "generic",
         "categoria": "Autos",
         "escala": "1:24",
-        "precio": 295,
+        "precio": 1250,
         "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/mcqueenrc.png"
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/landcruiser.png"
       },
       {
-        "nombre": "Camioncito control remoto",
+        "nombre": "Ford Bronco 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1095,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/bronco.png"
+      },
+      {
+        "nombre": "Chevrolet Silverado 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/silverado.png"
+      },
+      {
+        "nombre": "RAM 2500 Power Wagon 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1395,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/ram2500.png"
+      },
+      {
+        "nombre": "Jeep Wrangler 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/wrangler.png"
+      },
+      {
+        "nombre": "Nissan Navara 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/navara.png"
+      },
+      {
+        "nombre": "Hyundai Santa Fe 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/santafe.png"
+      },
+      {
+        "nombre": "Suzuki Jimny 1:24",
         "marca": "generic",
         "categoria": "Autos",
         "escala": "1:24",
         "precio": 795,
         "estado": "Disponible",
         "etiqueta": "Novedades",
-        "imagen": "assets/productos/rc1.png"
+        "imagen": "assets/productos/jimny.png"
       },
       {
-        "nombre": "Buldoser RC",
+        "nombre": "Isuzu D-Max 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1050,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/dmax.png"
+      },
+      {
+        "nombre": "Mitsubishi L200 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1025,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/l200.png"
+      },
+      {
+        "nombre": "Toyota Hilux 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1175,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/hilux.png"
+      },
+      {
+        "nombre": "Volkswagen Amarok 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1125,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/amarok.png"
+      },
+      {
+        "nombre": "Ford Ranger 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 975,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/ranger.png"
+      },
+      {
+        "nombre": "BMW X7 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1325,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/bmwx7.png"
+      },
+      {
+        "nombre": "Mercedes GLE 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1425,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/mercedesgle.png"
+      },
+      {
+        "nombre": "Audi Q7 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/audiq7.png"
+      },
+      {
+        "nombre": "Land Rover Range Rover 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1495,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/rangerover.png"
+      },
+      {
+        "nombre": "Porsche Cayenne 1:24",
         "marca": "generic",
         "categoria": "Autos",
         "escala": "1:24",
         "precio": 1595,
         "estado": "Disponible",
         "etiqueta": "Novedades",
-        "imagen": "assets/productos/bulrc.png"
+        "imagen": "assets/productos/cayenne.png"
       },
       {
-        "nombre": "4x4 RC",
+        "nombre": "Tesla Model X 1:24",
         "marca": "generic",
         "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1095,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/teslax.png"
+      },
+      {
+        "nombre": "Lamborghini LM002 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1625,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/lamborghini.png"
+      },
+      {
+        "nombre": "Ferrari FF 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1725,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/ferrariff.png"
+      },
+      {
+        "nombre": "Bugatti Veyron 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1895,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/bugatti.png"
+      },
+      {
+        "nombre": "Maserati MC20 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1585,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/maserati.png"
+      },
+      {
+        "nombre": "Corvette Stingray 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/corvette.png"
+      },
+      {
+        "nombre": "Dodge Charger 1970 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1195,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/charger.png"
+      },
+      {
+        "nombre": "Ford Mustang 1969 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/mustang69.png"
+      },
+      {
+        "nombre": "Chevrolet Camaro 1970 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1145,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/camaro70.png"
+      },
+      {
+        "nombre": "Pontiac GTO 1970 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1225,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/gto70.png"
+      },
+      {
+        "nombre": "Plymouth Road Runner 1970 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1165,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/roadrunner.png"
+      },
+      {
+        "nombre": "Jeep CJ-5 1975 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/cj5.png"
+      },
+      {
+        "nombre": "Chevrolet K5 Blazer 1970 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1075,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/blazer.png"
+      },
+      {
+        "nombre": "Ford Bronco 1966 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1145,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/bronco66.png"
+      },
+      {
+        "nombre": "Toyota FJ40 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/fj40.png"
+      },
+      {
+        "nombre": "International Harvester Scout 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 1175,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/scout.png"
+      },
+      {
+        "nombre": "VW Beetle Classic 1:24",
+        "marca": "generic",
+        "categoria": "Autos",
+        "escala": "1:24",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/beetle.png"
+      },
+      {
+        "nombre": "Kawasaki Ninja H2 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 1095,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/h2.jpg"
+      },
+      {
+        "nombre": "Suzuki Hayabusa 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/haya.jpg"
+      },
+      {
+        "nombre": "Honda Gold Wing 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 1095,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/goldwing.jpg"
+      },
+      {
+        "nombre": "Harley Davidson Street 750 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 1195,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/harley.jpg"
+      },
+      {
+        "nombre": "Ducati Panigale V4 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/ducati.jpg"
+      },
+      {
+        "nombre": "BMW S1000 RR 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 1195,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/bmws1000.jpg"
+      },
+      {
+        "nombre": "KTM 450 SX-F 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/ktm450.jpg"
+      },
+      {
+        "nombre": "Honda CRF450 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/crf450.jpg"
+      },
+      {
+        "nombre": "Yamaha YZ250F 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/yz250.jpg"
+      },
+      {
+        "nombre": "Kawasaki KX250 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/kx250.jpg"
+      },
+      {
+        "nombre": "Vespa Scooter 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 595,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/vespa.jpg"
+      },
+      {
+        "nombre": "Royal Enfield Classic 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 695,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/enfield.jpg"
+      },
+      {
+        "nombre": "Triumph Bonneville 1970 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 895,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/triumph.jpg"
+      },
+      {
+        "nombre": "Yamaha XS650 1:12",
+        "marca": "generic",
+        "categoria": "Motocicletas",
+        "escala": "1:12",
+        "precio": 795,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/xs650.jpg"
+      },
+      {
+        "nombre": "Volvo FH16 Tractor 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1495,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/volvo.jpg"
+      },
+      {
+        "nombre": "Scania R730 Tractor 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1595,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/scania.jpg"
+      },
+      {
+        "nombre": "MAN TGX Tractor 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1495,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/man.jpg"
+      },
+      {
+        "nombre": "Truck Flatbed Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 995,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/flatbed.jpg"
+      },
+      {
+        "nombre": "Truck Tanker Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1195,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/tanker.jpg"
+      },
+      {
+        "nombre": "Dump Truck Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/dump.jpg"
+      },
+      {
+        "nombre": "Container Truck Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1395,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/container.jpg"
+      },
+      {
+        "nombre": "Refrigerated Truck Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/refrigerated.jpg"
+      },
+      {
+        "nombre": "Livestock Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1095,
+        "estado": "Disponible",
+        "etiqueta": "Ofertas",
+        "imagen": "assets/productos/livestock.jpg"
+      },
+      {
+        "nombre": "Lowbed Trailer 1:24",
+        "marca": "generic",
+        "categoria": "Rastras",
+        "escala": "1:24",
+        "precio": 1495,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/lowbed.jpg"
+      },
+      {
+        "nombre": "Mercedes AMG GT RC 4x4",
+        "marca": "generic",
+        "categoria": "Control Remoto",
+        "escala": "1:24",
+        "precio": 1295,
+        "estado": "Disponible",
+        "etiqueta": "Novedades",
+        "imagen": "assets/productos/mercedesrc.png"
+      },
+      {
+        "nombre": "Toyota 4x4 RC",
+        "marca": "generic",
+        "categoria": "Control Remoto",
         "escala": "1:24",
         "precio": 1595,
         "estado": "Disponible",
@@ -883,7 +1016,7 @@
       {
         "nombre": "Land Cruiser RC 4x2",
         "marca": "generic",
-        "categoria": "Autos",
+        "categoria": "Control Remoto",
         "escala": "1:24",
         "precio": 395,
         "estado": "Disponible",
@@ -893,7 +1026,7 @@
       {
         "nombre": "Mario RC 4x2",
         "marca": "generic",
-        "categoria": "Autos",
+        "categoria": "Control Remoto",
         "escala": "1:24",
         "precio": 895,
         "estado": "Disponible",
@@ -903,7 +1036,7 @@
       {
         "nombre": "Bus escolar 4x2 RC",
         "marca": "generic",
-        "categoria": "Autos",
+        "categoria": "Control Remoto",
         "escala": "1:24",
         "precio": 795,
         "estado": "Disponible",
@@ -913,7 +1046,7 @@
       {
         "nombre": "Escabadora 4x4 RC",
         "marca": "generic",
-        "categoria": "Autos",
+        "categoria": "Control Remoto",
         "escala": "1:24",
         "precio": 795,
         "estado": "Disponible",
@@ -941,7 +1074,7 @@
         "imagen": "assets/productos/r1.jpg"
       },
       {
-        "nombre": "Yamaha R1",
+        "nombre": "Yamaha R1 rojo",
         "marca": "Maisto",
         "categoria": "Motocicletas",
         "escala": "1:12",
@@ -959,83 +1092,7 @@
         "estado": "Disponible",
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/minibiker.jpg"
-      },
-      {
-        "nombre": "Hayabusa escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/haya.jpg"
-      },
-      {
-        "nombre": "Kawasaki Croos 450 escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/kawa.jpg"
-      },
-      {
-        "nombre": "H2R escala 1/12",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/h2r.jpg"
-      },
-      {
-        "nombre": "H2R mini escala 1/18",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/h2rmini.jpg"
-      },
-      {
-        "nombre": "KTM croos 690 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/ktmcroos.jpg"
-      },
-      {
-        "nombre": "Vstrom escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/vstrom.jpg"
-      },
-      {
-        "nombre": "Honda CB400X escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/hondacb400x.jpg"
-      },
-      
-
-
-
-
-
+      }
     ];
 
     /* Productos ocultos por imagen para mantener el catálogo controlado */
