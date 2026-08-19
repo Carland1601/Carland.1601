@@ -2357,8 +2357,166 @@ body.modal-open {
 
 .invoiceEditBtn:hover { color: var(--red); }
 
+/* =========================================================
+   MODAL DE CONFIRMACIÓN DE COMPRA
+   ========================================================= */
+.confirmationContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.confirmationIcon {
+  font-size: 48px;
+  animation: confirmationBounce 0.6s ease-out;
+}
+
+@keyframes confirmationBounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.confirmationTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: 0.3px;
+}
+
+.confirmationText {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gray-600);
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.confirmationSummary {
+  width: 100%;
+  background: var(--gray-100);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.confirmationItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.confirmationItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.confirmationLabel {
+  display: block;
+  font-size: 12px;
+  color: var(--gray-600);
+  text-align: left;
+}
+
+.confirmationItem strong {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--charcoal);
+  font-weight: 700;
+}
+
+.confirmationTotal {
+  color: var(--red) !important;
+  font-size: 18px !important;
+  font-family: var(--font-mono) !important;
+}
+
+.confirmationDelivery {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.confirmationDelivery .confirmationLabel {
+  font-size: 11px;
+  color: var(--gray-600);
+}
+
+.confirmationDelivery strong {
+  font-size: 14px;
+  color: var(--charcoal);
+  font-weight: 600;
+}
+
+.confirmationSendBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: #25D366;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.confirmationSendBtn:hover {
+  background: #1ebc59;
+  transform: translateY(-1px);
+}
+
+.confirmationSendBtn:active {
+  transform: translateY(0);
+}
+
+.confirmationBackBtn {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px;
+  text-align: center;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.confirmationBackBtn:hover {
+  color: var(--red);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .purchaseModal { transition: none !important; }
+  .confirmationIcon { animation: none; }
 }
 
 /* =========================================================
