@@ -663,7 +663,10 @@ function closePurchaseModal() {
  */
 function renderPurchaseModal() {
   if (!purchaseState) return;
-  if (purchaseState.step === "invoice") {
+  if (purchaseState.step === "confirmation") {
+    purchaseScroll.innerHTML = renderConfirmationScroll();
+    purchaseFooter.innerHTML = renderConfirmationFooter();
+  } else if (purchaseState.step === "invoice") {
     purchaseScroll.innerHTML = renderInvoiceScroll();
     purchaseFooter.innerHTML = renderInvoiceFooter();
   } else {
@@ -909,8 +912,54 @@ function renderInvoiceScroll() {
 function renderInvoiceFooter() {
   return `
     <div class="purchaseActions">
-      <button type="button" class="invoiceSendBtn" id="invoiceSendBtn">📲 Enviar pedido por WhatsApp</button>
+      <button type="button" class="invoiceSendBtn" id="invoiceSendBtn">📲 Confirmar pedido</button>
       <button type="button" class="invoiceEditBtn" id="invoiceEditBtn">← Editar pedido</button>
+    </div>
+  `;
+}
+
+/**
+ * PASO 3: Modal de confirmación de compra
+ */
+function renderConfirmationScroll() {
+  const s = purchaseState;
+  const p = s.product;
+  const subtotal = computePurchaseSubtotal();
+
+  return `
+    <div class="confirmationContainer">
+      <div class="confirmationIcon">✅</div>
+      <h2 class="confirmationTitle">Confirma tu carrito de compra</h2>
+      <p class="confirmationText">Estás a un paso de completar tu pedido. Revisa los detalles y confirma para enviar tu orden por WhatsApp.</p>
+      
+      <div class="confirmationSummary">
+        <div class="confirmationItem">
+          <span class="confirmationLabel">Producto</span>
+          <strong>${escapeHtml(p.nombre)}</strong>
+        </div>
+        <div class="confirmationItem">
+          <span class="confirmationLabel">Cantidad</span>
+          <strong>${s.quantity}</strong>
+        </div>
+        <div class="confirmationItem">
+          <span class="confirmationLabel">Precio total</span>
+          <strong class="confirmationTotal">${formatPrice(subtotal)}</strong>
+        </div>
+      </div>
+
+      <div class="confirmationDelivery">
+        <span class="confirmationLabel">Entrega</span>
+        <strong>${s.deliveryMethod === "domicilio" ? "🚚 Domicilio a " + s.customer.ciudad : "🏪 Recoger en tienda"}</strong>
+      </div>
+    </div>
+  `;
+}
+
+function renderConfirmationFooter() {
+  return `
+    <div class="purchaseActions">
+      <button type="button" class="confirmationSendBtn" id="confirmationSendBtn">✅ Confirmar y enviar a WhatsApp</button>
+      <button type="button" class="confirmationBackBtn" id="confirmationBackBtn">← Volver a la factura</button>
     </div>
   `;
 }
@@ -1074,7 +1123,25 @@ function attachPurchaseListeners() {
   }
 
   const sendBtn = document.getElementById("invoiceSendBtn");
-  if (sendBtn) sendBtn.addEventListener("click", sendOrderToWhatsapp);
+  if (sendBtn) {
+    sendBtn.addEventListener("click", () => {
+      purchaseState.step = "confirmation";
+      renderPurchaseModal();
+      purchaseScroll.scrollTop = 0;
+    });
+  }
+
+  const confirmationSendBtn = document.getElementById("confirmationSendBtn");
+  if (confirmationSendBtn) confirmationSendBtn.addEventListener("click", sendOrderToWhatsapp);
+
+  const confirmationBackBtn = document.getElementById("confirmationBackBtn");
+  if (confirmationBackBtn) {
+    confirmationBackBtn.addEventListener("click", () => {
+      purchaseState.step = "invoice";
+      renderPurchaseModal();
+      purchaseScroll.scrollTop = 0;
+    });
+  }
 }
 
 // ---------- ABRIR EL MODAL DE COMPRA DESDE CUALQUIER "COMPRAR POR WHATSAPP" ----------
