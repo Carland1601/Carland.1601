@@ -8,6 +8,22 @@
 const WHATSAPP_NUMBER = "50489534880";
 const SHIPPING_COST = 100; // Costo de envío L.100 por C807
 
+// ========== ELEMENTOS DEL DOM ==========
+let grid, emptyMessage, filtersContainer, searchInput, heroTrack, heroPrevBtn, heroNextBtn, heroDots;
+let navToggle, navInfoMobile, navCartIcon, modalOverlay, modalContent;
+
+// ========== ESTADO GLOBAL ==========
+let allProducts = [];
+let cart = [];
+let renderedProducts = [];
+let currentCategory = "Todos";
+let currentSearch = "";
+let activeModalProduct = null;
+let lastFocusedElement = null;
+
+// ========== CATEGORÍAS ==========
+const CATEGORY_ORDER = ["Todos", "Autos", "Motocicletas", "Rastras", "Control Remoto", "Novedades", "Ofertas", "Otros"];
+
 // Slides del carrusel principal (rota automáticamente cada 4.5s)
 const HERO_SLIDES = [
   {
@@ -101,97 +117,41 @@ function shuffleArray(arr) {
   return copy;
 }
 
-// Toma `count` elementos aleatorios y distintos de un arreglo
-function pickRandom(arr, count) {
-  return shuffleArray(arr).slice(0, Math.min(count, arr.length));
-}
-
-// Pool combinado: fotos de productos (autos/motos) + pruebas de envío reales
-function getCirclePoolImages() {
-  const fromProducts = Array.isArray(window.PRODUCTOS)
-    ? window.PRODUCTOS.map((p) => p.imagen).filter(Boolean)
-    : [];
-  return [...new Set([...fromProducts, ...SHIP_PROOF_IMAGES])];
-}
-
-// Orden en que deben aparecer los botones de categoría
-const CATEGORY_ORDER = [
-  "Todos",
-  "Autos",
-  "Motocicletas",
-  "Otros",
-  "Rastras",
-  "Maquinaria",
-  "Control Remoto",
-  "Novedades",
-  "Ofertas"
-];
-
-// ---------- ESTADO ----------
-let allProducts = [];
-let currentCategory = "Todos";
-let currentSearch = "";
-let renderedProducts = []; // productos actualmente visibles en el grid (tras filtros/búsqueda)
-let lastFocusedElement = null; // para devolver el foco al cerrar el modal
-let activeModalProduct = null; // producto mostrado actualmente en el modal de vista previa
-
-// ESTADO DEL CARRITO
-let cart = [];
-
-// ---------- ELEMENTOS DEL DOM ----------
-const grid = document.getElementById("productsGrid");
-const emptyMessage = document.getElementById("emptyMessage");
-const searchInput = document.getElementById("searchInput");
-const filtersContainer = document.getElementById("categoryFilters");
-const navbar = document.getElementById("navbar");
-const navToggle = document.getElementById("navToggle");
-const navInfoMobile = document.getElementById("navInfoMobile");
-const backToTop = document.getElementById("backToTop");
-const modalOverlay = document.getElementById("modalOverlay");
-const modalContent = document.getElementById("modalContent");
-const heroTrack = document.getElementById("heroTrack");
-const heroDots = document.getElementById("heroDots");
-const heroPrevBtn = document.getElementById("heroPrev");
-const heroNextBtn = document.getElementById("heroNext");
-
 /**
- * Formatea un número como moneda en Lempiras (L.)
+ * Formatea un número como precio en formato local
  */
-function formatPrice(value) {
-  const num = Number(value) || 0;
-  return "L. " + num.toLocaleString("es-HN", { minimumFractionDigits: 0 });
+function formatPrice(price) {
+  return "L. " + price.toLocaleString("es-HN", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 }
 
 /**
- * Construye el enlace de WhatsApp con mensaje precargado para un producto
+ * Construye el enlace de WhatsApp para un producto individual
  */
 function buildWhatsappLink(product) {
-  const mensaje = `Hola, me interesa el ${product.nombre} escala ${product.escala} con precio de ${formatPrice(product.precio)}.`;
+  let mensaje = `Hola, Carland 1601. Me interesa comprar:\n\n`;
+  mensaje += `*${product.nombre}*\n`;
+  mensaje += `Escala: ${product.escala}\n`;
+  mensaje += `Marca: ${product.marca}\n`;
+  mensaje += `Precio: ${formatPrice(product.precio)}\n\n`;
+  mensaje += `Quedo atento a los datos para realizar el pago.`;
+  
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
 }
 
 /**
- * Determina qué "chip" de estado / etiqueta especial mostrar sobre la tarjeta,
- * a partir del campo "etiqueta" del producto (acepta singular y plural)
+ * Obtiene la clase CSS del badge según la etiqueta del producto
  */
 function getBadgeClass(etiqueta) {
-  const map = {
-    "Nuevo": "card__badge--nuevo",
-    "Nuevos": "card__badge--nuevo",
-    "Oferta": "card__badge--oferta",
-    "Ofertas": "card__badge--oferta",
-    "Novedad": "card__badge--novedad",
-    "Novedades": "card__badge--novedad"
+  const badges = {
+    "Ofertas": "card__badge--offer",
+    "Novedades": "card__badge--new",
+    "Agotado": "card__badge--sold"
   };
-  return map[etiqueta] || null;
+  return badges[etiqueta] || null;
 }
-
-/**
- * NOTA: Este catálogo NO asigna etiquetas automáticas/falsas a los productos.
- * Un producto solo muestra un badge ("Nuevo", "Oferta", "Novedad") cuando el
- * campo "etiqueta" en window.PRODUCTOS realmente lo define. Para marcar un
- * producto como oferta o novedad, edita su campo "etiqueta" en index.html.
- */
 
 /**
  * Genera el HTML de una tarjeta de producto
@@ -600,6 +560,7 @@ function updateCartQuantity(index, change) {
       cart.splice(index, 1);
     }
     saveCart();
+    renderCartModal();
   }
 }
 
@@ -609,6 +570,7 @@ function updateCartQuantity(index, change) {
 function removeFromCart(index) {
   cart.splice(index, 1);
   saveCart();
+  renderCartModal();
 }
 
 /**
@@ -737,7 +699,6 @@ function sendCartToWhatsapp() {
   }, 500);
 }
 
-// Resto del código del catálogo continúa igual...
 /**
  * Procesa los filtros y la búsqueda
  */
@@ -956,6 +917,41 @@ function attachHeroEvents() {
 
 // ---------- INICIALIZACIÓN ----------
 document.addEventListener("DOMContentLoaded", () => {
+  // Obtener referencias a elementos del DOM
+  grid = document.getElementById("productsGrid");
+  emptyMessage = document.getElementById("emptyMessage");
+  filtersContainer = document.getElementById("categoryFilters");
+  searchInput = document.getElementById("searchInput");
+  
+  heroTrack = document.getElementById("heroTrack");
+  heroPrevBtn = document.getElementById("heroPrev");
+  heroNextBtn = document.getElementById("heroNext");
+  heroDots = document.getElementById("heroDots");
+  
+  navToggle = document.getElementById("navToggle");
+  navInfoMobile = document.getElementById("navInfoMobile");
+  navCartIcon = document.getElementById("navCartIcon");
+  
+  modalOverlay = document.getElementById("modalOverlay");
+  modalContent = document.getElementById("modalContent");
+  
+  // Si modalContent no existe, crearlo
+  if (!modalContent) {
+    const overlay = document.createElement("div");
+    overlay.id = "modalOverlay";
+    overlay.className = "modalOverlay";
+    overlay.hidden = true;
+    document.body.appendChild(overlay);
+    
+    const content = document.createElement("div");
+    content.id = "modalContent";
+    content.className = "modalContent";
+    overlay.appendChild(content);
+    
+    modalOverlay = overlay;
+    modalContent = content;
+  }
+  
   allProducts = window.PRODUCTOS || [];
   if (!Array.isArray(allProducts)) allProducts = [];
 
@@ -977,18 +973,21 @@ document.addEventListener("DOMContentLoaded", () => {
   renderHeroCarousel();
 
   // Eventos del buscador
-  searchInput.addEventListener("input", (e) => {
-    currentSearch = e.target.value;
-    updateProductsView();
-  });
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      currentSearch = e.target.value;
+      updateProductsView();
+    });
+  }
 
   // Toggle del menú móvil
-  navToggle.addEventListener("click", () => {
-    navInfoMobile.classList.toggle("is-visible");
-  });
+  if (navToggle) {
+    navToggle.addEventListener("click", () => {
+      navInfoMobile.classList.toggle("is-open");
+    });
+  }
 
   // Botón del carrito en navbar
-  const navCartIcon = document.getElementById("navCartIcon");
   if (navCartIcon) {
     navCartIcon.addEventListener("click", openCart);
   }
