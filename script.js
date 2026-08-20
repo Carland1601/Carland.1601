@@ -956,7 +956,7 @@ function attachHeroEvents() {
 
 // ---------- INICIALIZACIÓN ----------
 document.addEventListener("DOMContentLoaded", () => {
-  allProducts = window.PRODUTOS || [];
+  allProducts = window.PRODUCTOS || [];
   if (!Array.isArray(allProducts)) allProducts = [];
 
   // Asignar IDs únicas a productos
