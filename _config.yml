@@ -1,0 +1,20 @@
+# GitHub Pages configuration for Carland 1601
+# Disable Jekyll processing since we're using vanilla HTML/CSS/JS
+
+theme: null
+plugins: []
+
+# Exclude from processing
+exclude:
+  - .git
+  - .gitignore
+  - node_modules
+  - README.md
+
+# Keep all files
+keep_files:
+  - .nojekyll
+  - index.html
+  - style.css
+  - script.js
+  - assets
