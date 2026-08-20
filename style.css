@@ -211,7 +211,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .navbar__cart {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 6px;
   background: none;
@@ -231,7 +231,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 .navbar__whatsapp {
-  display: none;
+  display: flex;
   align-items: center;
   gap: 8px;
   background: var(--red);
@@ -276,9 +276,11 @@ button { font-family: inherit; cursor: pointer; }
 
 @media (min-width: 860px) {
   .navbar__info { display: flex; }
-  .navbar__cart { display: flex; }
-  .navbar__whatsapp { display: flex; }
   .navbar__toggle { display: none; }
+}
+
+@media (max-width: 859px) {
+  .navbar__info { display: none; }
 }
 
 /* =========================================================
