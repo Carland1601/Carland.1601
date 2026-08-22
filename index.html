@@ -24,7 +24,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- Iconos (solo SVG inline, sin dependencias externas pesadas) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,8 +36,7 @@
   </div>
 </div>
 
-
-  <!-- ============ NAVBAR FIJA ============ -->
+  <!-- ============ NAVBAR FIJA CON CARRITO ============ -->
   <header class="navbar" id="navbar">
     <div class="navbar__inner">
       <a href="#top" class="navbar__brand">
@@ -58,10 +56,17 @@
         <span class="navbar__pill">🚚 Envíos a toda Honduras</span>
       </nav>
 
-      <a href="#" class="navbar__whatsapp" id="navWhatsapp" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
-        <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-        <span>Escríbenos</span>
-      </a>
+      <div class="navbar__actions">
+        <button class="navbar__cart" id="cartToggle" aria-label="Abrir carrito de compras">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="navbar__cartBadge" id="cartBadge">0</span>
+        </button>
+        
+        <a href="#" class="navbar__whatsapp" id="navWhatsapp" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+          <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+          <span>Escríbenos</span>
+        </a>
+      </div>
 
       <button class="navbar__toggle" id="navToggle" aria-label="Abrir menú de información">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -75,22 +80,103 @@
     </div>
   </header>
 
+  <!-- ============ MODAL DEL CARRITO ============ -->
+  <div class="cart-modal" id="cartModal" aria-labelledby="cartTitle" role="dialog" aria-hidden="true">
+    <div class="cart-modal__overlay" id="cartOverlay"></div>
+    <div class="cart-modal__content">
+      <div class="cart-modal__header">
+        <h2 id="cartTitle">Mi Carrito</h2>
+        <button class="cart-modal__close" id="cartClose" aria-label="Cerrar carrito">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      
+      <div class="cart-modal__body">
+        <div class="cart-items" id="cartItems">
+          <!-- Los items se generan con JavaScript -->
+        </div>
+        <div class="cart-empty" id="cartEmpty" hidden>
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <p>Tu carrito está vacío</p>
+          <p class="cart-empty__hint">Explora nuestro catálogo y agrega productos que te gusten</p>
+        </div>
+      </div>
+
+      <div class="cart-modal__footer">
+        <div class="cart-summary">
+          <div class="cart-summary__row">
+            <span>Subtotal:</span>
+            <span id="cartSubtotal">L. 0.00</span>
+          </div>
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>Total:</span>
+            <span id="cartTotal">L. 0.00</span>
+          </div>
+        </div>
+        
+        <button class="cart-checkout-btn" id="cartCheckout">
+          Enviar compra por WhatsApp
+        </button>
+        <button class="cart-clear-btn" id="cartClear">
+          Vaciar carrito
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL DE PREVIEW DE PRODUCTO ============ -->
+  <div class="product-preview-modal" id="productPreviewModal">
+    <div class="product-preview-modal__overlay" id="previewOverlay"></div>
+    <div class="product-preview-modal__content">
+      <button class="product-preview-modal__close" id="previewClose" aria-label="Cerrar preview">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="product-preview-modal__inner">
+        <div class="product-preview-modal__image">
+          <img id="previewImage" src="" alt="Producto">
+        </div>
+        <div class="product-preview-modal__info">
+          <h3 id="previewName"></h3>
+          <p id="previewBrand" class="product-preview-modal__brand"></p>
+          <div class="product-preview-modal__specs">
+            <span id="previewScale"></span>
+            <span id="previewStatus"></span>
+          </div>
+          <p id="previewCategory" class="product-preview-modal__category"></p>
+          <div class="product-preview-modal__price">
+            <span id="previewPrice"></span>
+          </div>
+          <div class="product-preview-modal__actions">
+            <button class="product-preview-modal__orderBtn" id="previewOrderBtn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
+              Ordenar por WhatsApp
+            </button>
+            <button class="product-preview-modal__addBtn" id="previewAddBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              Añadir al carrito
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <a id="top"></a>
 
-  <!-- ============ CARRUSEL PRINCIPAL ============ -->
-  <section class="hero" id="heroCarousel" aria-roledescription="carrusel" aria-label="Destacados Carland 1601">
-    <div class="hero__track" id="heroTrack">
-      <!-- Los slides se generan dinámicamente en script.js (ver HERO_SLIDES) -->
+  <!-- ============ CARRUSEL DE ENVÍOS ============ -->
+  <section class="hero hero--shipment-only" id="heroSection">
+    <div class="hero__shipment">
+      <h3 class="hero__shipmentTitle">Nuestros Envíos</h3>
+      <div class="hero__shipmentTrack" id="shipmentTrack">
+        <!-- Los slides de envíos se generan dinámicamente -->
+      </div>
+      <button class="hero__shipmentArrow hero__shipmentArrow--prev" id="shipmentPrev" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button class="hero__shipmentArrow hero__shipmentArrow--next" id="shipmentNext" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
     </div>
-
-    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Anterior">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
-    </button>
-    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Siguiente">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
-    </button>
-
-    <div class="hero__dots" id="heroDots"></div>
   </section>
 
   <!-- ============ AUTORIDAD DE MARCA ============ -->
@@ -137,177 +223,92 @@
     </div>
 
     <div class="controls__filters" id="categoryFilters">
-      <!-- Los botones de categoría se generan dinámicamente en script.js -->
+      <!-- Los botones de categoría se generan dinámicamente -->
     </div>
   </section>
 
-  <!-- ============ GRID DE PRODUCTOS (primero, como pediste) ============ -->
-  <main>
-    <section class="products" id="productsGrid" aria-live="polite">
-      <!-- Las tarjetas de producto se insertan aquí vía JavaScript, desde productos.json -->
-    </section>
-
-    <p class="products__empty" id="emptyMessage" hidden>
-      No encontramos productos con esa búsqueda. Prueba con otro nombre, marca o categoría.
-    </p>
-  </main>
-
-  <!-- ============ OFERTAS ============ -->
-  <section class="section section--light reveal" id="ofertas">
-    <div class="section__head section__head--row">
-      <div><span class="section__eyebrow">OPORTUNIDADES CARLAND</span><h2>Ofertas especiales</h2><p>Modelos seleccionados con precio especial. Si te gusta, no lo dejes para después.</p></div>
-      <button class="sectionLink" data-category-jump="Ofertas">Ver todas las ofertas →</button>
+  <!-- ============ GRID DE PRODUCTOS ============ -->
+  <section class="products">
+    <div class="products__grid" id="productsGrid">
+      <!-- Los productos se generan dinámicamente -->
     </div>
-    <div class="offerStrip">
-      <div class="offerCard"><span>💥</span><div><strong>Ofertas activas</strong><p>Encuentra modelos marcados como <b>Oferta</b> dentro del catálogo.</p></div></div>
-      <div class="offerCard"><span>⚡</span><div><strong>Nuevos ingresos</strong><p>Las piezas nuevas llegan primero a nuestro catálogo digital.</p></div></div>
-      <div class="offerCard"><span>🔥</span><div><strong>Alta demanda</strong><p>Algunas piezas se agotan rápido. Consulta disponibilidad antes de pagar.</p></div></div>
-    </div>
-    <div class="previewGrid" id="ofertasPreview" aria-live="polite">
-      <!-- Productos reales marcados con etiqueta "Oferta" — generado en script.js -->
-    </div>
-  </section>
-
-  <!-- ============ MAYOREO (publicidad de mayoristas, al centro) ============ -->
-  <section class="wholesale reveal" id="mayoreo">
-    <div class="wholesale__visual"><span>📦</span><i>×3</i><b>MAYOREO</b></div>
-    <div class="wholesale__content">
-      <span class="section__eyebrow">PARA COLECCIONISTAS Y REVENDEDORES</span>
-      <h2>¿Compras varias unidades?</h2>
-      <p>Desde <strong>3 productos del mismo modelo</strong>, activa nuestro beneficio para clientes mayoristas. Ideal para revendedores, negocios, coleccionistas y compras por volumen.</p>
-      <ul><li>✓ Envío gratis para pedidos que cumplan la condición</li><li>✓ Atención directa por WhatsApp</li><li>✓ Disponibilidad confirmada antes del pago</li></ul>
-      <a class="premiumCta" href="#" id="wholesaleWhatsapp">Quiero comprar al mayoreo</a>
-    </div>
-  </section>
-
-  <!-- ============ NOVEDADES ============ -->
-  <section class="section section--dark reveal" id="novedades">
-    <div class="section__head section__head--row">
-      <div><span class="section__eyebrow">RECIÉN LLEGADO</span><h2>Novedades</h2><p>Las últimas piezas que se sumaron al catálogo de Carland 1601.</p></div>
-      <button class="sectionLink" data-category-jump="Novedades">Ver todas las novedades →</button>
-    </div>
-    <div class="previewGrid" id="novedadesPreview" aria-live="polite">
-      <!-- Productos reales marcados con etiqueta "Novedad" — generado en script.js -->
+    <div class="emptyMessage" id="emptyMessage" hidden>
+      <p><strong>Sin resultados</strong></p>
+      <p>No encontramos productos que coincidan con tu búsqueda. Intenta con otras palabras o categorías.</p>
     </div>
   </section>
 
   <!-- ============ BENEFICIOS ============ -->
-  <section class="benefits reveal" id="beneficios">
-    <div class="benefits__inner">
-      <div class="section__head section__head--light">
-        <span class="section__eyebrow">CLUB CARLAND</span>
-        <h2>Comprar en Carland tiene beneficios</h2>
-        <p>Queremos premiar a quienes vuelven a elegirnos.</p>
+  <section class="section section--light reveal" id="beneficios">
+    <div class="section__head">
+      <span class="section__eyebrow">CARLAND DIFERENTE</span>
+      <h2>Beneficios exclusivos</h2>
+    </div>
+    <div class="benefitsGrid">
+      <div class="benefitCard">
+        <div class="benefitCard__icon">🚚</div>
+        <h3>Envíos a todo Honduras</h3>
+        <p>Llega a tu puerta seguro y en perfecto estado. Depósito o transferencia previa.</p>
       </div>
-      <div class="benefitGrid">
-        <article class="benefitCard benefitCard--featured">
-          <div class="benefitCard__icon">🏆</div>
-          <span class="benefitCard__tag">CLIENTE FRECUENTE</span>
-          <h3>10 compras en un mismo mes</h3>
-          <p>Al alcanzar <strong>10 compras consecutivas durante el mes</strong>, accedes a un beneficio especial de cliente frecuente. Escríbenos para conocer tu beneficio.</p>
-          <div class="benefitCard__bar"><span></span></div>
-        </article>
-        <article class="benefitCard">
-          <div class="benefitCard__icon">🚚</div>
-          <span class="benefitCard__tag">MAYORISTAS</span>
-          <h3>Envío gratis</h3>
-          <p>Clientes mayoristas: <strong>3 productos del mismo modelo en adelante</strong> aplican para envío gratis, sujeto a cobertura y condiciones del pedido.</p>
-        </article>
-        <article class="benefitCard">
-          <div class="benefitCard__icon">📲</div>
-          <span class="benefitCard__tag">COMPRA DIRECTA</span>
-          <h3>Habla con Carland</h3>
-          <p>Selecciona tu pieza y envíanos el pedido directamente por WhatsApp. Sin procesos complicados.</p>
-        </article>
+      <div class="benefitCard">
+        <div class="benefitCard__icon">🏆</div>
+        <h3>Garantía de autenticidad</h3>
+        <p>Cada pieza es original y verificada. Certificado incluido en compras mayores.</p>
+      </div>
+      <div class="benefitCard">
+        <div class="benefitCard__icon">⭐</div>
+        <h3>Atención personalizada</h3>
+        <p>Escríbenos por WhatsApp. Respondemos en minutos. Consultoría sin costo.</p>
+      </div>
+      <div class="benefitCard">
+        <div class="benefitCard__icon">💳</div>
+        <h3>Mayoreo desde 3 unidades</h3>
+        <p>Descuentos progresivos. Negocia directamente con nuestro equipo.</p>
       </div>
     </div>
   </section>
 
-  <!-- ============ EXPERIENCIA CARLAND ============ -->
-  <section class="process section section--light reveal">
+  <!-- ============ MAYOREO ============ -->
+  <section class="section section--dark reveal" id="mayoreo">
     <div class="section__head">
-      <span class="section__eyebrow">COMPRA EN 3 PASOS</span>
-      <h2>Así funciona Carland 1601</h2>
+      <span class="section__eyebrow">PARA NEGOCIOS</span>
+      <h2>Programa de mayoreo</h2>
+      <p>Compra en volumen y obtén precios especiales. Ideal para tiendas, bazares y distribuidores.</p>
     </div>
-    <div class="processGrid">
-      <div class="processStep"><span>01</span><div>🔎</div><h3>Encuentra</h3><p>Explora colecciones, escalas, novedades y ofertas.</p></div>
-      <div class="processStep"><span>02</span><div>💬</div><h3>Escríbenos</h3><p>Presiona comprar y recibe un mensaje listo para WhatsApp.</p></div>
-      <div class="processStep"><span>03</span><div>📦</div><h3>Recibe</h3><p>Confirmamos tu pedido y gestionamos el envío a Honduras.</p></div>
+    <div class="mayoreoCard">
+      <div><strong>Desde 3 unidades</strong> del mismo modelo</div>
+      <div><strong>Desde 10 unidades</strong> descuentos progresivos</div>
+      <div><strong>Desde 50 unidades</strong> consultar precios especiales</div>
+      <button class="mayoreoBtn" id="mayoreoBtn">Solicitar cotización</button>
     </div>
   </section>
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
     <div class="footer__inner">
-      <div class="footer__brand">
-        <img src="assets/logo.png" alt="Logo Carland 1601" width="48" height="48">
-        <div>
-          <p class="footer__title">CARLAND 1601</p>
-          <p class="footer__tag">Miniaturas y vehículos de colección</p>
-        </div>
+      <div class="footer__info">
+        <h4>Carland 1601</h4>
+        <p>Especialistas en vehículos de colección, miniaturas y piezas premium.</p>
+        <p><strong>Ubicación:</strong> Santa Bárbara, Honduras</p>
       </div>
-
-      <div class="footer__col">
-        <h3>Información</h3>
-        <p>🚚 Envíos a toda Honduras</p>
-        <p>💳 Pago únicamente previo depósito o transferencia bancaria</p>
-        <p>📍 Santa Bárbara, Honduras</p>
-        <p>🗂 Catálogo actualizado constantemente</p>
-      </div>
-
-      <div class="footer__col">
-        <h3>Síguenos</h3>
-        <div class="footer__social">
-          <a href="#" aria-label="Facebook">Facebook</a>
-          <a href="#" aria-label="Instagram">Instagram</a>
-          <a href="#" aria-label="TikTok">TikTok</a>
-        </div>
+      <nav class="footer__nav">
+        <strong>Catálogo</strong>
+        <a href="#colecciones">Colecciones</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#mayoreo">Mayoreo</a>
+      </nav>
+      <div class="footer__contact">
+        <strong>Contacto</strong>
+        <a href="https://wa.me/50489534880" target="_blank" rel="noopener">📲 WhatsApp: +504 8953 4880</a>
+        <p><strong>Horario:</strong> Lunes - Domingo<br>8 AM - 8 PM Honduras</p>
       </div>
     </div>
-
-    <p class="footer__rights">🏆 CARLAND 1601 — La tienda #1 de vehículos de colección en Honduras · © <span id="year"></span> Carland 1601. Todos los derechos reservados, El contenido comercial que se da en esta pagina web es de uso exclusiv de Carland.1601.</p>
+    <div class="footer__bottom">
+      <p>&copy; 2024 Carland 1601. Todos los derechos reservados.</p>
+    </div>
   </footer>
 
-  <!-- ============ BOTONES FLOTANTES ============ -->
-  <a href="#" class="floatBtn floatBtn--whatsapp" id="floatWhatsapp" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
-    <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-  </a>
-
-  <button class="floatBtn floatBtn--top" id="backToTop" aria-label="Volver arriba" hidden>
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-  </button>
-
-  <!-- ============ MODAL DE VISTA PREVIA DE PRODUCTO ============ -->
-  <div class="modalOverlay" id="modalOverlay" hidden>
-    <div class="modalContent" id="modalContent" role="dialog" aria-modal="true" aria-labelledby="modalName">
-      <!-- Contenido inyectado dinámicamente por script.js -->
-    </div>
-  </div>
-
-  <!-- ============ MODAL DE COMPRA POR WHATSAPP ============
-       Contenedor estático y reutilizable para TODOS los productos.
-       El contenido (producto, cantidad, entrega, formulario, resumen,
-       mini factura) se genera dinámicamente en script.js mediante
-       openPurchaseModal(product). No se debe duplicar este bloque. -->
-  <div class="purchaseOverlay" id="purchaseOverlay" hidden>
-    <div class="purchaseModal" id="purchaseModal" role="dialog" aria-modal="true" aria-labelledby="purchaseModalTitle">
-      <button class="purchaseModal__close" id="purchaseCloseBtn" aria-label="Cerrar ventana de compra">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <div class="purchaseModal__scroll" id="purchaseScroll">
-        <!-- Contenido del paso "formulario" o "mini factura" — inyectado por script.js -->
-      </div>
-      <div class="purchaseModal__footer" id="purchaseFooter">
-        <!-- Botón principal (Confirmar orden / Enviar por WhatsApp) — inyectado por script.js -->
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================
-       CATÁLOGO DE PRODUCTOS
-       Edita, agrega o elimina productos directamente aquí.
-       Cada producto es un bloque { ... } separado por coma.
-       ========================================================= -->
+  <!-- ============ SCRIPTS ============ -->
   <script>
     window.PRODUCTOS = [
       {
@@ -1030,22 +1031,22 @@
         "etiqueta": "Ofertas",
         "imagen": "assets/productos/hondacb400x.jpg"
       },
-      
 
 
-
-
-
+    // Imágenes de envíos disponibles
+    window.SHIPMENT_IMAGES = [
+      "assets/envios/envios1.jpg",
+      "assets/envios/envios2.jpg",
+      "assets/envios/envios3.jpg",
+      "assets/envios/envios4.jpg",
+      "assets/envios/envios5.jpg",
+      "assets/envios/envios6.jpg",
+      "assets/envios/envios7.jpg",
+      "assets/envios/envios8.jpg"
     ];
-
-    /* Productos ocultos por imagen para mantener el catálogo controlado */
-    window.PRODUCTOS = window.PRODUCTOS.filter(p => ![
-      "assets/productos/tacoma-negra.jpg",
-      "assets/productos/22rr.png",
-      "assets/productos/h2rmini.jpg"
-    ].includes(p.imagen));
   </script>
 
+  <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </body>
 </html>
