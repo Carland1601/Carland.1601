@@ -1296,7 +1296,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .products {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 180px 20px 60px 20px;
 }
 
 .products__grid {
@@ -1469,7 +1469,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .catalogIntro {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 80px 20px;
+  padding: 80px 20px 40px 20px;
   text-align: center;
 }
 
@@ -1485,17 +1485,19 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .controls {
-  max-width: 1440px;
-  margin: 0 auto;
+  position: fixed;
+  top: var(--navbar-h);
+  left: 0;
+  right: 0;
+  width: 100%;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  position: sticky;
-  top: var(--navbar-h);
+  gap: 16px;
   background: var(--white);
-  z-index: 500;
+  z-index: 900;
   border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .controls__search {
@@ -1856,6 +1858,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 @media (max-width: 768px) {
+  .products {
+    padding: 200px 16px 40px 16px;
+  }
+
   .products__grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 16px;
@@ -1892,5 +1898,23 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .footer__inner {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+
+  .controls {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .controls__search {
+    padding: 10px 14px;
+  }
+
+  .controls__filters {
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 12px;
   }
 }
