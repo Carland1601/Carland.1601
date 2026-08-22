@@ -1487,10 +1487,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .controls {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 8px 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   position: sticky;
   top: var(--navbar-h);
   background: var(--white);
@@ -1500,24 +1500,24 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .controls.expanded {
-  padding: 20px;
-  gap: 16px;
+  padding: 16px 20px;
+  gap: 12px;
   box-shadow: var(--shadow-soft);
 }
 
 .controls__search {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
+  gap: 8px;
+  padding: 6px 10px;
   background: var(--gray-100);
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid var(--gray-200);
   transition: all var(--transition-fast);
 }
 
 .controls__search:focus-within {
-  padding: 14px 18px;
+  padding: 10px 14px;
   border-color: var(--red);
   box-shadow: 0 0 0 3px rgba(214, 0, 0, 0.1);
 }
@@ -1525,15 +1525,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .controls__search svg {
   color: var(--gray-600);
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .controls__search input {
   flex: 1;
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--charcoal);
   font-family: var(--font-body);
 }
@@ -1919,26 +1919,32 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
 
   .controls {
-    padding: 10px 16px;
-    gap: 8px;
+    padding: 7px 16px;
+    gap: 7px;
   }
 
   .controls.expanded {
-    padding: 16px;
-    gap: 12px;
+    padding: 14px 16px;
+    gap: 10px;
   }
 
   .controls__search {
-    padding: 9px 12px;
-    font-size: 13px;
+    padding: 5px 9px;
+    font-size: 11px;
+    gap: 6px;
   }
 
   .controls__search:focus-within {
-    padding: 12px 14px;
+    padding: 8px 11px;
+  }
+
+  .controls__search svg {
+    width: 14px;
+    height: 14px;
   }
 
   .filter-btn {
-    padding: 8px 12px;
-    font-size: 12px;
+    padding: 7px 11px;
+    font-size: 11px;
   }
 }
