@@ -524,6 +524,17 @@ function setupEventListeners() {
     }
   });
 
+  // Buscador - Expandir controles
+  searchInput.addEventListener('focus', () => {
+    document.querySelector('.controls').classList.add('expanded');
+  });
+
+  searchInput.addEventListener('blur', () => {
+    if (searchInput.value === '') {
+      document.querySelector('.controls').classList.remove('expanded');
+    }
+  });
+
   // Shipment Carousel
   shipmentPrevBtn.addEventListener('click', () => {
     prevShipmentSlide();
