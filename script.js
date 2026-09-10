@@ -1,5 +1,5 @@
 /* =========================================================
-   CARLAND 1601 — Lógica MEJORADA con Carrito + Preview Modal
+   CARLAND 1601 — Lógica MEJORADA con Carrito
    ========================================================= */
 
 // ---------- CONFIGURACIÓN ----------
@@ -76,9 +76,8 @@ let currentCategory = "Todos";
 let currentSearch = "";
 let renderedProducts = [];
 let cart = JSON.parse(localStorage.getItem('carland_cart')) || [];
-let currentShipmentSlide = 0;
-let shipmentAutoplayInterval = null;
-let currentPreviewProduct = null;
+let currentHeroSlide = 0;
+let heroAutoplayInterval = null;
 
 // ---------- ELEMENTOS DEL DOM ----------
 const grid = document.getElementById("productsGrid");
@@ -97,80 +96,24 @@ const cartCheckout = document.getElementById("cartCheckout");
 const cartClear = document.getElementById("cartClear");
 const cartSubtotal = document.getElementById("cartSubtotal");
 const cartTotal = document.getElementById("cartTotal");
+const heroTrack = document.getElementById("heroTrack");
+const heroDots = document.getElementById("heroDots");
+const heroPrevBtn = document.getElementById("heroPrev");
+const heroNextBtn = document.getElementById("heroNext");
 const navWhatsapp = document.getElementById("navWhatsapp");
 const navToggle = document.getElementById("navToggle");
 const navInfoMobile = document.getElementById("navInfoMobile");
 
-// Product Preview Modal
-const productPreviewModal = document.getElementById("productPreviewModal");
-const previewOverlay = document.getElementById("previewOverlay");
-const previewClose = document.getElementById("previewClose");
-const previewImage = document.getElementById("previewImage");
-const previewName = document.getElementById("previewName");
-const previewBrand = document.getElementById("previewBrand");
-const previewScale = document.getElementById("previewScale");
-const previewStatus = document.getElementById("previewStatus");
-const previewCategory = document.getElementById("previewCategory");
-const previewPrice = document.getElementById("previewPrice");
-const previewOrderBtn = document.getElementById("previewOrderBtn");
-const previewAddBtn = document.getElementById("previewAddBtn");
-
-// Shipment Carousel
-const shipmentTrack = document.getElementById("shipmentTrack");
-const shipmentPrevBtn = document.getElementById("shipmentPrev");
-const shipmentNextBtn = document.getElementById("shipmentNext");
-
 // ---------- INICIALIZACIÓN ----------
 document.addEventListener('DOMContentLoaded', () => {
-  initShipmentCarousel();
-  renderShipmentSlides();
+  initHeroCarousel();
+  renderHeroSlides();
   renderFilterButtons();
   renderProducts();
   updateCartUI();
   setupEventListeners();
   animateOnScroll();
 });
-
-// =========================================================
-// PRODUCT PREVIEW MODAL
-// =========================================================
-
-function openProductPreview(product) {
-  currentPreviewProduct = product;
-  
-  previewImage.src = product.imagen;
-  previewImage.alt = product.nombre;
-  previewName.textContent = product.nombre;
-  previewBrand.textContent = `Marca: ${product.marca}`;
-  previewScale.textContent = product.escala;
-  previewStatus.textContent = product.estado;
-  previewCategory.textContent = `Categoría: ${product.categoria}`;
-  previewPrice.textContent = `L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}`;
-  
-  // Actualizar onclick del botón OrderNow
-  previewOrderBtn.onclick = () => orderProductViaWhatsApp(product);
-  
-  productPreviewModal.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeProductPreview() {
-  productPreviewModal.classList.remove('active');
-  document.body.style.overflow = '';
-  currentPreviewProduct = null;
-}
-
-function orderProductViaWhatsApp(product) {
-  const message = `¡Hola! Me gustaría ordenar el siguiente producto:\n\n` +
-                  `*${product.nombre}*\n` +
-                  `Marca: ${product.marca}\n` +
-                  `Escala: ${product.escala}\n` +
-                  `Precio: L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}\n\n` +
-                  `Por favor, confirma disponibilidad y envío.`;
-  
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-  closeProductPreview();
-}
 
 // =========================================================
 // CARRITO
@@ -226,6 +169,7 @@ function renderCartItems() {
 }
 
 function addToCart(product) {
+  // Verificar si el producto ya está en el carrito
   const existingItem = cart.find(item => item.nombre === product.nombre);
   
   if (existingItem) {
@@ -238,6 +182,15 @@ function addToCart(product) {
   }
   
   updateCartUI();
+  
+  // Animar el botón
+  const button = event.target;
+  button.style.animation = 'pulse 0.5s ease-out';
+  setTimeout(() => {
+    button.style.animation = '';
+  }, 500);
+  
+  // Mostrar mini notificación
   showNotification(`${product.nombre} agregado al carrito`);
 }
 
@@ -277,6 +230,7 @@ function checkoutCart() {
     return;
   }
 
+  // Construir mensaje de WhatsApp
   let message = '🛒 *Quiero comprar los siguientes productos:*\n\n';
   
   cart.forEach((item, index) => {
@@ -293,85 +247,133 @@ function checkoutCart() {
   message += '📍 Por favor, confirma disponibilidad y envío.\n';
   message += '💳 Acepto depósito o transferencia bancaria.';
 
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+  
   closeCart();
+  showNotification('¡Abriendo WhatsApp!');
+}
+
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: linear-gradient(135deg, #d60000, #a10000);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    z-index: 9999;
+    animation: slideInRight 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    box-shadow: 0 8px 20px rgba(214, 0, 0, 0.3);
+  `;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = 'slideInRight 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse';
+    setTimeout(() => notification.remove(), 300);
+  }, 2500);
 }
 
 function openCart() {
   cartModal.classList.add('active');
-  cartOverlay.setAttribute('aria-hidden', 'false');
+  cartModal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 }
 
 function closeCart() {
   cartModal.classList.remove('active');
-  cartOverlay.setAttribute('aria-hidden', 'true');
+  cartModal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 }
 
-function showNotification(text) {
-  const notification = document.createElement('div');
-  notification.className = 'notification';
-  notification.textContent = text;
-  document.body.appendChild(notification);
-  
-  setTimeout(() => notification.remove(), 3000);
-}
-
 // =========================================================
-// CARRUSEL DE ENVÍOS
+// HERO CAROUSEL
 // =========================================================
 
-function initShipmentCarousel() {
-  startShipmentAutoplay();
-}
+function renderHeroSlides() {
+  heroTrack.innerHTML = '';
+  heroDots.innerHTML = '';
 
-function renderShipmentSlides() {
-  shipmentTrack.innerHTML = '';
-  
-  if (!window.SHIPMENT_IMAGES || window.SHIPMENT_IMAGES.length === 0) {
-    return;
-  }
-
-  window.SHIPMENT_IMAGES.forEach((image, index) => {
+  HERO_SLIDES.forEach((slide, index) => {
+    // Crear slide
     const slideEl = document.createElement('div');
-    slideEl.className = `hero__shipmentSlide ${index === 0 ? 'active' : ''}`;
-    slideEl.innerHTML = `<img src="${image}" alt="Envío ${index + 1}" loading="lazy">`;
-    shipmentTrack.appendChild(slideEl);
+    slideEl.className = `hero__slide ${index === 0 ? 'active' : ''}`;
+    slideEl.innerHTML = `
+      <div class="hero__content">
+        <div class="hero__icon">${slide.icon}</div>
+        <div class="hero__eyebrow">${slide.eyebrow}</div>
+        <h1 class="hero__title">${slide.title}</h1>
+        <p class="hero__text">${slide.text}</p>
+      </div>
+    `;
+    heroTrack.appendChild(slideEl);
+
+    // Crear dot
+    const dot = document.createElement('button');
+    dot.className = `hero__dot ${index === 0 ? 'active' : ''}`;
+    dot.onclick = () => goToSlide(index);
+    dot.setAttribute('aria-label', `Ir al slide ${index + 1}`);
+    heroDots.appendChild(dot);
   });
+
+  startHeroAutoplay();
 }
 
-function nextShipmentSlide() {
-  if (!window.SHIPMENT_IMAGES || window.SHIPMENT_IMAGES.length === 0) return;
-  
-  currentShipmentSlide = (currentShipmentSlide + 1) % window.SHIPMENT_IMAGES.length;
-  updateShipmentSlide();
+function initHeroCarousel() {
+  heroPrevBtn.onclick = () => previousSlide();
+  heroNextBtn.onclick = () => nextSlide();
 }
 
-function prevShipmentSlide() {
-  if (!window.SHIPMENT_IMAGES || window.SHIPMENT_IMAGES.length === 0) return;
-  
-  currentShipmentSlide = (currentShipmentSlide - 1 + window.SHIPMENT_IMAGES.length) % window.SHIPMENT_IMAGES.length;
-  updateShipmentSlide();
+function previousSlide() {
+  currentHeroSlide = (currentHeroSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
+  updateHeroSlide();
+  resetHeroAutoplay();
 }
 
-function updateShipmentSlide() {
-  const slides = document.querySelectorAll('.hero__shipmentSlide');
-  
+function nextSlide() {
+  currentHeroSlide = (currentHeroSlide + 1) % HERO_SLIDES.length;
+  updateHeroSlide();
+  resetHeroAutoplay();
+}
+
+function goToSlide(index) {
+  currentHeroSlide = index;
+  updateHeroSlide();
+  resetHeroAutoplay();
+}
+
+function updateHeroSlide() {
+  const slides = document.querySelectorAll('.hero__slide');
+  const dots = document.querySelectorAll('.hero__dot');
+
   slides.forEach((slide, index) => {
-    slide.classList.toggle('active', index === currentShipmentSlide);
+    slide.classList.remove('active', 'prev');
+    if (index === currentHeroSlide) {
+      slide.classList.add('active');
+    } else if (index < currentHeroSlide) {
+      slide.classList.add('prev');
+    }
+  });
+
+  dots.forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentHeroSlide);
   });
 }
 
-function startShipmentAutoplay() {
-  shipmentAutoplayInterval = setInterval(() => {
-    nextShipmentSlide();
-  }, 4000);
+function startHeroAutoplay() {
+  heroAutoplayInterval = setInterval(() => {
+    nextSlide();
+  }, 5000);
 }
 
-function resetShipmentAutoplay() {
-  clearInterval(shipmentAutoplayInterval);
-  startShipmentAutoplay();
+function resetHeroAutoplay() {
+  clearInterval(heroAutoplayInterval);
+  startHeroAutoplay();
 }
 
 // =========================================================
@@ -441,6 +443,7 @@ function renderProducts() {
     return;
   }
 
+  // Reordenar productos para que aparezcan en posiciones variadas
   const shuffled = shuffleProducts(renderedProducts);
 
   shuffled.forEach((product, index) => {
@@ -464,7 +467,7 @@ function createProductCard(product, index) {
   card.style.animationDelay = `${50 + index * 30}ms`;
   
   card.innerHTML = `
-    <div class="product__image" role="button" tabindex="0">
+    <div class="product__image">
       <div class="product__imageInner">
         <img src="${product.imagen}" alt="${product.nombre}" loading="lazy">
       </div>
@@ -487,18 +490,6 @@ function createProductCard(product, index) {
     </div>
   `;
 
-  // Click en la imagen para preview
-  card.querySelector('.product__image').addEventListener('click', () => {
-    openProductPreview(product);
-  });
-
-  // Soporte para teclado
-  card.querySelector('.product__image').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      openProductPreview(product);
-    }
-  });
-
   return card;
 }
 
@@ -514,37 +505,6 @@ function setupEventListeners() {
   cartCheckout.addEventListener('click', checkoutCart);
   cartClear.addEventListener('click', clearCart);
 
-  // Product Preview Modal
-  previewClose.addEventListener('click', closeProductPreview);
-  previewOverlay.addEventListener('click', closeProductPreview);
-  previewAddBtn.addEventListener('click', () => {
-    if (currentPreviewProduct) {
-      addToCart(currentPreviewProduct);
-      closeProductPreview();
-    }
-  });
-
-  // Buscador - Expandir controles
-  searchInput.addEventListener('focus', () => {
-    document.querySelector('.controls').classList.add('expanded');
-  });
-
-  searchInput.addEventListener('blur', () => {
-    if (searchInput.value === '') {
-      document.querySelector('.controls').classList.remove('expanded');
-    }
-  });
-
-  // Shipment Carousel
-  shipmentPrevBtn.addEventListener('click', () => {
-    prevShipmentSlide();
-    resetShipmentAutoplay();
-  });
-  shipmentNextBtn.addEventListener('click', () => {
-    nextShipmentSlide();
-    resetShipmentAutoplay();
-  });
-
   // Búsqueda
   searchInput.addEventListener('input', (e) => {
     currentSearch = e.target.value;
@@ -557,6 +517,7 @@ function setupEventListeners() {
       const category = e.currentTarget.dataset.categoryJump;
       filterByCategory(category);
       
+      // Scroll al catálogo
       const catalogSection = document.getElementById('catalogo');
       setTimeout(() => {
         catalogSection?.scrollIntoView({ behavior: 'smooth' });
@@ -581,15 +542,10 @@ function setupEventListeners() {
     navInfoMobile.style.display = navInfoMobile.style.display === 'flex' ? 'none' : 'flex';
   });
 
-  // Cerrar modales con ESC
+  // Cerrar carrito con ESC
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (cartModal.classList.contains('active')) {
-        closeCart();
-      }
-      if (productPreviewModal.classList.contains('active')) {
-        closeProductPreview();
-      }
+    if (e.key === 'Escape' && cartModal.classList.contains('active')) {
+      closeCart();
     }
   });
 }
@@ -625,10 +581,12 @@ function animateOnScroll() {
 // UTILIDADES
 // =========================================================
 
+// Prevenir que el script falle si PRODUCTOS no está definido
 if (typeof window.PRODUCTOS === 'undefined') {
   window.PRODUCTOS = [];
 }
 
+// Mezcla un arreglo sin modificar el original (Fisher-Yates)
 function shuffleArray(arr) {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -638,6 +596,7 @@ function shuffleArray(arr) {
   return copy;
 }
 
+// Inicializar productos si existen
 if (Array.isArray(window.PRODUCTOS) && window.PRODUCTOS.length > 0) {
   allProducts = [...window.PRODUCTOS];
   renderedProducts = [...window.PRODUCTOS];
