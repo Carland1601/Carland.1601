@@ -79,6 +79,8 @@ let cart = JSON.parse(localStorage.getItem('carland_cart')) || [];
 let currentShipmentSlide = 0;
 let shipmentAutoplayInterval = null;
 let currentPreviewProduct = null;
+let currentHeroSlide = 0;
+let heroAutoplayInterval = null;
 
 // ---------- ELEMENTOS DEL DOM ----------
 const grid = document.getElementById("productsGrid");
@@ -120,8 +122,15 @@ const shipmentTrack = document.getElementById("shipmentTrack");
 const shipmentPrevBtn = document.getElementById("shipmentPrev");
 const shipmentNextBtn = document.getElementById("shipmentNext");
 
+// Hero Carousel
+const heroTrack = document.getElementById("heroTrack");
+const heroDotsContainer = document.getElementById("heroDots");
+const heroPrevBtn = document.getElementById("heroPrev");
+const heroNextBtn = document.getElementById("heroNext");
+
 // ---------- INICIALIZACIÓN ----------
 document.addEventListener('DOMContentLoaded', () => {
+  renderHeroSlides();
   initShipmentCarousel();
   renderShipmentSlides();
   renderFilterButtons();
@@ -130,6 +139,84 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   animateOnScroll();
 });
+
+// =========================================================
+// HERO CAROUSEL
+// =========================================================
+
+function renderHeroSlides() {
+  heroTrack.innerHTML = '';
+  heroDotsContainer.innerHTML = '';
+  
+  HERO_SLIDES.forEach((slide, index) => {
+    // Crear slide
+    const slideEl = document.createElement('div');
+    slideEl.className = `hero__slide ${index === 0 ? 'active' : ''}`;
+    slideEl.innerHTML = `
+      <div class="hero__content">
+        <span class="hero__eyebrow">${slide.eyebrow}</span>
+        <div style="font-size: 40px; display: block;">${slide.icon}</div>
+        <h2 class="hero__title">${slide.title}</h2>
+        <p class="hero__text">${slide.text}</p>
+      </div>
+    `;
+    heroTrack.appendChild(slideEl);
+    
+    // Crear dot
+    const dot = document.createElement('button');
+    dot.className = `hero__dot ${index === 0 ? 'active' : ''}`;
+    dot.setAttribute('aria-label', `Slide ${index + 1}`);
+    dot.onclick = () => goToHeroSlide(index);
+    heroDotsContainer.appendChild(dot);
+  });
+  
+  startHeroAutoplay();
+}
+
+function goToHeroSlide(index) {
+  currentHeroSlide = index;
+  updateHeroSlide();
+  resetHeroAutoplay();
+}
+
+function nextHeroSlide() {
+  currentHeroSlide = (currentHeroSlide + 1) % HERO_SLIDES.length;
+  updateHeroSlide();
+}
+
+function prevHeroSlide() {
+  currentHeroSlide = (currentHeroSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
+  updateHeroSlide();
+}
+
+function updateHeroSlide() {
+  const slides = document.querySelectorAll('.hero__slide');
+  const dots = document.querySelectorAll('.hero__dot');
+  
+  slides.forEach((slide, index) => {
+    slide.classList.remove('active', 'prev');
+    if (index === currentHeroSlide) {
+      slide.classList.add('active');
+    } else if (index < currentHeroSlide) {
+      slide.classList.add('prev');
+    }
+  });
+  
+  dots.forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentHeroSlide);
+  });
+}
+
+function startHeroAutoplay() {
+  heroAutoplayInterval = setInterval(() => {
+    nextHeroSlide();
+  }, 5000);
+}
+
+function resetHeroAutoplay() {
+  clearInterval(heroAutoplayInterval);
+  startHeroAutoplay();
+}
 
 // =========================================================
 // PRODUCT PREVIEW MODAL
@@ -149,6 +236,10 @@ function openProductPreview(product) {
   
   // Actualizar onclick del botón OrderNow
   previewOrderBtn.onclick = () => orderProductViaWhatsApp(product);
+  previewAddBtn.onclick = () => {
+    addToCart(product);
+    closeProductPreview();
+  };
   
   productPreviewModal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -161,11 +252,11 @@ function closeProductPreview() {
 }
 
 function orderProductViaWhatsApp(product) {
-  const message = `¡Hola! Me gustaría ordenar el siguiente producto:\n\n` +
-                  `*${product.nombre}*\n` +
-                  `Marca: ${product.marca}\n` +
-                  `Escala: ${product.escala}\n` +
-                  `Precio: L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}\n\n` +
+  const message = `¡Hola! Me gustaría ordenar el siguiente producto:\\n\\n` +
+                  `*${product.nombre}*\\n` +
+                  `Marca: ${product.marca}\\n` +
+                  `Escala: ${product.escala}\\n` +
+                  `Precio: L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}\\n\\n` +
                   `Por favor, confirma disponibilidad y envío.`;
   
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
@@ -277,20 +368,20 @@ function checkoutCart() {
     return;
   }
 
-  let message = '🛒 *Quiero comprar los siguientes productos:*\n\n';
+  let message = '🛒 *Quiero comprar los siguientes productos:*\\n\\n';
   
   cart.forEach((item, index) => {
-    message += `${index + 1}. *${item.nombre}*\n`;
-    message += `   Marca: ${item.marca}\n`;
-    message += `   Escala: ${item.escala}\n`;
-    message += `   Cantidad: ${item.quantity}\n`;
-    message += `   Precio unitario: L. ${item.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}\n`;
-    message += `   Subtotal: L. ${(item.precio * item.quantity).toLocaleString('es-HN', { minimumFractionDigits: 0 })}\n\n`;
+    message += `${index + 1}. *${item.nombre}*\\n`;
+    message += `   Marca: ${item.marca}\\n`;
+    message += `   Escala: ${item.escala}\\n`;
+    message += `   Cantidad: ${item.quantity}\\n`;
+    message += `   Precio unitario: L. ${item.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}\\n`;
+    message += `   Subtotal: L. ${(item.precio * item.quantity).toLocaleString('es-HN', { minimumFractionDigits: 0 })}\\n\\n`;
   });
 
   const subtotal = cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
-  message += `*TOTAL: L. ${subtotal.toLocaleString('es-HN', { minimumFractionDigits: 0 })}*\n\n`;
-  message += '📍 Por favor, confirma disponibilidad y envío.\n';
+  message += `*TOTAL: L. ${subtotal.toLocaleString('es-HN', { minimumFractionDigits: 0 })}*\\n\\n`;
+  message += '📍 Por favor, confirma disponibilidad y envío.\\n';
   message += '💳 Acepto depósito o transferencia bancaria.';
 
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
@@ -479,7 +570,7 @@ function createProductCard(product, index) {
       </div>
       <div class="product__footer">
         <span class="product__price">L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}</span>
-        <button class="product__addBtn" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+        <button class="product__addBtn" onclick="addToCart(${JSON.stringify(product).replace(/\"/g, '&quot;')})">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           Añadir
         </button>
@@ -514,26 +605,13 @@ function setupEventListeners() {
   cartCheckout.addEventListener('click', checkoutCart);
   cartClear.addEventListener('click', clearCart);
 
-  // Product Preview Modal
+  // Preview Modal
   previewClose.addEventListener('click', closeProductPreview);
   previewOverlay.addEventListener('click', closeProductPreview);
-  previewAddBtn.addEventListener('click', () => {
-    if (currentPreviewProduct) {
-      addToCart(currentPreviewProduct);
-      closeProductPreview();
-    }
-  });
 
-  // Buscador - Expandir controles
-  searchInput.addEventListener('focus', () => {
-    document.querySelector('.controls').classList.add('expanded');
-  });
-
-  searchInput.addEventListener('blur', () => {
-    if (searchInput.value === '') {
-      document.querySelector('.controls').classList.remove('expanded');
-    }
-  });
+  // Hero Carousel
+  heroPrevBtn.addEventListener('click', prevHeroSlide);
+  heroNextBtn.addEventListener('click', nextHeroSlide);
 
   // Shipment Carousel
   shipmentPrevBtn.addEventListener('click', () => {
@@ -548,97 +626,88 @@ function setupEventListeners() {
   // Búsqueda
   searchInput.addEventListener('input', (e) => {
     currentSearch = e.target.value;
+    currentCategory = 'Todos';
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === 'Todos');
+      btn.setAttribute('aria-pressed', btn.textContent === 'Todos');
+    });
     filterAndRenderProducts();
   });
 
-  // Botones de categoría
-  document.querySelectorAll('[data-category-jump]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const category = e.currentTarget.dataset.categoryJump;
-      filterByCategory(category);
-      
-      const catalogSection = document.getElementById('catalogo');
-      setTimeout(() => {
-        catalogSection?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    });
-  });
-
-  // WhatsApp
-  navWhatsapp.href = `https://wa.me/${WHATSAPP_NUMBER}`;
-
-  // Mayoreo
-  const mayoreoBtn = document.getElementById('mayoreoBtn');
-  if (mayoreoBtn) {
-    mayoreoBtn.onclick = () => {
-      const message = '¡Hola! Me gustaría solicitar una cotización de mayoreo. Tengo interés en comprar 3 o más unidades del mismo modelo.';
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-    };
-  }
-
-  // Navbar móvil
+  // Botón toggle menú móvil
   navToggle.addEventListener('click', () => {
     navInfoMobile.style.display = navInfoMobile.style.display === 'flex' ? 'none' : 'flex';
   });
 
-  // Cerrar modales con ESC
+  // WhatsApp directo
+  navWhatsapp.href = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20me%20gustaría%20saber%20más%20sobre%20Carland%201601`;
+
+  // Cerrar modal con ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (cartModal.classList.contains('active')) {
-        closeCart();
-      }
-      if (productPreviewModal.classList.contains('active')) {
-        closeProductPreview();
-      }
+      if (cartModal.classList.contains('active')) closeCart();
+      if (productPreviewModal.classList.contains('active')) closeProductPreview();
     }
+  });
+
+  // Colecciones (category jump)
+  document.querySelectorAll('[data-category-jump]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.getAttribute('data-category-jump');
+      filterByCategory(category);
+      document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+    });
   });
 }
 
 // =========================================================
-// SCROLL & ANIMACIONES
+// SCROLL ANIMATIONS
 // =========================================================
 
 function animateOnScroll() {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
+  const reveals = document.querySelectorAll('.reveal');
+  
+  const revealScroll = () => {
+    reveals.forEach(element => {
+      const windowHeight = window.innerHeight;
+      const elementTop = element.getBoundingClientRect().top;
+      const elementVisible = 150;
+      
+      if (elementTop < windowHeight - elementVisible) {
+        element.style.animation = 'slideInUp 600ms var(--transition-smooth) forwards';
       }
     });
-  }, observerOptions);
-
-  document.querySelectorAll('.reveal').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = '600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    observer.observe(el);
-  });
+  };
+  
+  window.addEventListener('scroll', revealScroll);
+  revealScroll();
 }
 
 // =========================================================
-// UTILIDADES
+// CARGA DE PRODUCTOS DESDE HTML DATA
 // =========================================================
 
-if (typeof window.PRODUCTOS === 'undefined') {
+// Si hay un elemento con id 'productosData' con JSON, lo parsea
+const productosDataEl = document.getElementById('productosData');
+if (productosDataEl) {
+  try {
+    window.PRODUCTOS = JSON.parse(productosDataEl.textContent);
+  } catch (e) {
+    console.warn('No se pudieron cargar los productos:', e);
+    window.PRODUCTOS = [];
+  }
+} else if (!window.PRODUCTOS) {
   window.PRODUCTOS = [];
 }
 
-function shuffleArray(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+// Si hay un elemento con id 'shipmentImagesData', lo parsea
+const shipmentDataEl = document.getElementById('shipmentImagesData');
+if (shipmentDataEl) {
+  try {
+    window.SHIPMENT_IMAGES = JSON.parse(shipmentDataEl.textContent);
+  } catch (e) {
+    console.warn('No se pudieron cargar las imágenes de envío:', e);
+    window.SHIPMENT_IMAGES = [];
   }
-  return copy;
-}
-
-if (Array.isArray(window.PRODUCTOS) && window.PRODUCTOS.length > 0) {
-  allProducts = [...window.PRODUCTOS];
-  renderedProducts = [...window.PRODUCTOS];
 }
