@@ -1,1142 +1,1950 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* =========================================================
+   CARLAND 1601 — Hoja de estilos MEJORADA
+   Paleta: Rojo carrera (#d60000), Negro, Blanco, Grises
+   Tipografía: Rajdhani (display / técnica) + Inter (texto)
+               JetBrains Mono (precios / datos)
+   Animaciones: Profesionales y fluidas
+   ========================================================= */
 
-  <!-- ===== SEO ===== -->
-  <title>Carland 1601 | La tienda #1 de vehículos de colección en Honduras</title>
-  <meta name="description" content="Carland 1601: la tienda #1 de vehículos de colección en Honduras. Autos, motocicletas, rastras, control remoto, novedades y ofertas. Envíos a todo Honduras.">
-  <meta name="keywords" content="miniaturas honduras, carros a escala, coleccionismo, diecast honduras, carland 1601, hot wheels honduras, camiones a escala">
-  <meta name="author" content="Carland 1601">
-  <meta name="robots" content="index, follow">
+:root {
+  --red: #d60000;
+  --red-dark: #a10000;
+  --black: #0a0a0a;
+  --charcoal: #1c1c1e;
+  --charcoal-soft: #2a2a2d;
+  --white: #ffffff;
+  --gray-100: #f4f4f5;
+  --gray-200: #e7e7e9;
+  --gray-400: #b8b8bc;
+  --gray-600: #8a8a8e;
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Carland 1601 | La tienda #1 de vehículos de colección en Honduras">
-  <meta property="og:description" content="Explora nuestro catálogo de vehículos a escala. Compra fácil y directa por WhatsApp.">
-  <meta property="og:image" content="assets/banner.jpg">
-  <meta property="og:type" content="website">
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  <link rel="icon" href="assets/logo.png" type="image/png">
+  --radius: 14px;
+  --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+  --shadow-hover: 0 18px 40px rgba(0,0,0,0.16);
+  --shadow-deep: 0 25px 50px rgba(0,0,0,0.25);
+  --navbar-h: 78px;
 
-  <!-- Tipografías -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  /* Nuevas variables para animaciones */
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-slow: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="topbar">
-  <div class="topbar__track">
-    <span>🏆 <strong>CARLAND 1601</strong> — LA TIENDA #1 DE VEHÍCULOS DE COLECCIÓN EN HONDURAS</span>
-    <span>🚚 Envíos a toda Honduras</span>
-    <span>⭐ Beneficios exclusivos para clientes frecuentes</span>
-    <span>📦 Mayoreo desde 3 unidades del mismo modelo</span>
-  </div>
-</div>
+* { box-sizing: border-box; }
 
-  <!-- ============ NAVBAR FIJA CON CARRITO ============ -->
-  <header class="navbar" id="navbar">
-    <div class="navbar__inner">
-      <a href="#top" class="navbar__brand">
-        <img src="assets/logo.png" alt="Logo Carland 1601" class="navbar__logo" width="42" height="42">
-        <div class="navbar__brandtext">
-          <span class="navbar__title">CARLAND <em>1601</em></span>
-          <span class="navbar__subtitle">Miniaturas y vehículos de colección</span>
-        </div>
-      </a>
+html {
+  scroll-behavior: smooth;
+}
 
-      <nav class="navbar__info">
-        <a class="navbar__navlink" href="#colecciones">Colecciones</a>
-        <a class="navbar__navlink" href="#catalogo">Catálogo</a>
-        <a class="navbar__navlink" href="#ofertas">Ofertas</a>
-        <a class="navbar__navlink" href="#beneficios">Beneficios</a>
-        <a class="navbar__navlink" href="#mayoreo">Mayoreo</a>
-        <span class="navbar__pill">🚚 Envíos a toda Honduras</span>
-      </nav>
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
 
-      <div class="navbar__actions">
-        <button class="navbar__cart" id="cartToggle" aria-label="Abrir carrito de compras">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <span class="navbar__cartBadge" id="cartBadge">0</span>
-        </button>
-        
-        <a href="#" class="navbar__whatsapp" id="navWhatsapp" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
-          <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-          <span>Escríbenos</span>
-        </a>
-      </div>
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--charcoal);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-      <button class="navbar__toggle" id="navToggle" aria-label="Abrir menú de información">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-    <div class="navbar__infoMobile" id="navInfoMobile">
-      <span>🚚 Envíos a toda Honduras</span>
-      <span>💳 Pago previo depósito o transferencia bancaria</span>
-      <span>📍 Santa Bárbara, Honduras</span>
-    </div>
-  </header>
+:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 2px;
+}
 
-  <!-- ============ MODAL DEL CARRITO ============ -->
-  <div class="cart-modal" id="cartModal" aria-labelledby="cartTitle" role="dialog" aria-hidden="true">
-    <div class="cart-modal__overlay" id="cartOverlay"></div>
-    <div class="cart-modal__content">
-      <div class="cart-modal__header">
-        <h2 id="cartTitle">Mi Carrito</h2>
-        <button class="cart-modal__close" id="cartClose" aria-label="Cerrar carrito">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      
-      <div class="cart-modal__body">
-        <div class="cart-items" id="cartItems">
-          <!-- Los items se generan con JavaScript -->
-        </div>
-        <div class="cart-empty" id="cartEmpty" hidden>
-          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          <p>Tu carrito está vacío</p>
-          <p class="cart-empty__hint">Explora nuestro catálogo y agrega productos que te gusten</p>
-        </div>
-      </div>
+/* =========================================================
+   ANIMACIONES GLOBALES
+   ========================================================= */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-      <div class="cart-modal__footer">
-        <div class="cart-summary">
-          <div class="cart-summary__row">
-            <span>Subtotal:</span>
-            <span id="cartSubtotal">L. 0.00</span>
-          </div>
-          <div class="cart-summary__row cart-summary__row--total">
-            <span>Total:</span>
-            <span id="cartTotal">L. 0.00</span>
-          </div>
-        </div>
-        
-        <button class="cart-checkout-btn" id="cartCheckout">
-          Enviar compra por WhatsApp
-        </button>
-        <button class="cart-clear-btn" id="cartClear">
-          Vaciar carrito
-        </button>
-      </div>
-    </div>
-  </div>
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  <!-- ============ MODAL DE PREVIEW DE PRODUCTO ============ -->
-  <div class="product-preview-modal" id="productPreviewModal">
-    <div class="product-preview-modal__overlay" id="previewOverlay"></div>
-    <div class="product-preview-modal__content">
-      <button class="product-preview-modal__close" id="previewClose" aria-label="Cerrar preview">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <div class="product-preview-modal__inner">
-        <div class="product-preview-modal__image">
-          <img id="previewImage" src="" alt="Producto">
-        </div>
-        <div class="product-preview-modal__info">
-          <h3 id="previewName"></h3>
-          <p id="previewBrand" class="product-preview-modal__brand"></p>
-          <div class="product-preview-modal__specs">
-            <span id="previewScale"></span>
-            <span id="previewStatus"></span>
-          </div>
-          <p id="previewCategory" class="product-preview-modal__category"></p>
-          <div class="product-preview-modal__price">
-            <span id="previewPrice"></span>
-          </div>
-          <div class="product-preview-modal__actions">
-            <button class="product-preview-modal__orderBtn" id="previewOrderBtn">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M16.02 2.6C8.6 2.6 2.6 8.6 2.6 16c0 2.5.68 4.85 1.86 6.87L2.7 29.4l6.7-1.75A13.35 13.35 0 0 0 16.02 29.4c7.42 0 13.42-6 13.42-13.4S23.44 2.6 16.02 2.6zm0 24.4c-2.2 0-4.24-.6-6-1.65l-.43-.25-4 1.05 1.07-3.9-.28-.4a10.9 10.9 0 0 1-1.7-5.8c0-6.04 4.9-10.94 10.94-10.94 6.03 0 10.93 4.9 10.93 10.94 0 6.03-4.9 10.95-10.93 10.95zm6-8.18c-.33-.16-1.94-.96-2.24-1.07-.3-.11-.52-.16-.74.17-.22.32-.85 1.06-1.04 1.28-.19.22-.38.24-.71.08-.33-.16-1.4-.52-2.66-1.65-.98-.87-1.65-1.95-1.84-2.28-.19-.32-.02-.5.14-.66.15-.15.33-.38.5-.58.16-.19.22-.33.33-.55.11-.22.05-.41-.03-.58-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56-.19-.01-.41-.01-.63-.01-.22 0-.58.08-.88.41-.3.32-1.15 1.13-1.15 2.75s1.18 3.19 1.34 3.41c.16.22 2.32 3.55 5.63 4.98.79.34 1.4.54 1.88.7.79.25 1.5.21 2.07.13.63-.1 1.94-.79 2.21-1.55.27-.76.27-1.42.19-1.55-.08-.14-.3-.22-.63-.38z"/></svg>
-              Ordenar por WhatsApp
-            </button>
-            <button class="product-preview-modal__addBtn" id="previewAddBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              Añadir al carrito
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-  <a id="top"></a>
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-  <!-- ============ CARRUSEL DE ENVÍOS ============ -->
-  <section class="hero hero--shipment-only" id="heroSection">
-    <div class="hero__shipment">
-      <h3 class="hero__shipmentTitle">Nuestros Envíos</h3>
-      <div class="hero__shipmentTrack" id="shipmentTrack">
-        <!-- Los slides de envíos se generan dinámicamente -->
-      </div>
-      <button class="hero__shipmentArrow hero__shipmentArrow--prev" id="shipmentPrev" aria-label="Anterior">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 6l-6 6 6 6"/></svg>
-      </button>
-      <button class="hero__shipmentArrow hero__shipmentArrow--next" id="shipmentNext" aria-label="Siguiente">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 6l6 6-6 6"/></svg>
-      </button>
-    </div>
-  </section>
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
-  <!-- ============ AUTORIDAD DE MARCA ============ -->
-  <section class="brandStatement reveal">
-    <div class="brandStatement__inner">
-      <div class="brandStatement__eyebrow">CARLAND 1601 · HONDURAS</div>
-      <h2>NO BUSCAMOS COMPETENCIA.<br><span>NOSOTROS MARCAMOS EL ESTÁNDAR.</span></h2>
-      <p>Somos especialistas en vehículos de colección, miniaturas y piezas para verdaderos coleccionistas. Seleccionamos modelos que destacan por diseño, detalle y presencia.</p>
-      <div class="brandStatement__stats">
-        <div><strong data-count="100">100%</strong><span>Pasión por el coleccionismo</span></div>
-        <div><strong>🇭🇳</strong><span>Envíos a todo Honduras</span></div>
-        <div><strong>🏆 #1</strong><span>Experiencia Carland</span></div>
-      </div>
-    </div>
-  </section>
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
 
-  <!-- ============ COLECCIONES (se mantiene arriba) ============ -->
-  <section class="section section--dark reveal" id="colecciones">
-    <div class="section__head">
-      <span class="section__eyebrow">EXPLORA CARLAND</span>
-      <h2>Encuentra tu próxima pieza</h2>
-      <p>Desde una miniatura para empezar tu colección hasta piezas que se convierten en protagonistas.</p>
-    </div>
-    <div class="collectionGrid">
-      <button class="collectionCard collectionCard--autos" data-category-jump="Autos"><span>🚗</span><strong>Autos</strong><small>Escalas, clásicos y deportivos</small></button>
-      <button class="collectionCard collectionCard--motos" data-category-jump="Motocicletas"><span>🏍️</span><strong>Motocicletas</strong><small>Modelos de colección y competición</small></button>
-      <button class="collectionCard collectionCard--rastras" data-category-jump="Rastras"><span>🚛</span><strong>Rastras</strong><small>Cabezales y unidades especiales</small></button>
-      <button class="collectionCard collectionCard--rc" data-category-jump="Control Remoto"><span>🎮</span><strong>Control remoto</strong><small>Diversión y vehículos RC</small></button>
-      <button class="collectionCard collectionCard--new" data-category-jump="Novedades"><span>⚡</span><strong>Novedades</strong><small>Lo último que llegó a Carland</small></button>
-      <button class="collectionCard collectionCard--offer" data-category-jump="Ofertas"><span>💥</span><strong>Ofertas</strong><small>Precios especiales por tiempo limitado</small></button>
-    </div>
-  </section>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
 
-  <!-- ============ BUSCADOR + FILTROS (justo antes del catálogo) ============ -->
-  <section class="catalogIntro reveal">
-    <div><span class="section__eyebrow">CATÁLOGO DIGITAL</span><h2>Todo Carland 1601, en un solo lugar</h2><p>Busca por nombre, marca, categoría o escala.</p></div>
-    <div class="catalogIntro__trust">✓ Disponibilidad visible<br>✓ Compra directa por WhatsApp</div>
-  </section>
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(214, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(214, 0, 0, 0);
+  }
+}
 
-  <section class="controls" id="catalogo">
-    <div class="controls__search">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="text" id="searchInput" placeholder="Buscar por nombre, marca, categoría o escala..." aria-label="Buscar productos">
-    </div>
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
 
-    <div class="controls__filters" id="categoryFilters">
-      <!-- Los botones de categoría se generan dinámicamente -->
-    </div>
-  </section>
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 
-  <!-- ============ GRID DE PRODUCTOS ============ -->
-  <section class="products">
-    <div class="products__grid" id="productsGrid">
-      <!-- Los productos se generan dinámicamente -->
-    </div>
-    <div class="emptyMessage" id="emptyMessage" hidden>
-      <p><strong>Sin resultados</strong></p>
-      <p>No encontramos productos que coincidan con tu búsqueda. Intenta con otras palabras o categorías.</p>
-    </div>
-  </section>
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-  <!-- ============ BENEFICIOS ============ -->
-  <section class="section section--light reveal" id="beneficios">
-    <div class="section__head">
-      <span class="section__eyebrow">CARLAND DIFERENTE</span>
-      <h2>Beneficios exclusivos</h2>
-    </div>
-    <div class="benefitsGrid">
-      <div class="benefitCard">
-        <div class="benefitCard__icon">🚚</div>
-        <h3>Envíos a todo Honduras</h3>
-        <p>Llega a tu puerta seguro y en perfecto estado. Depósito o transferencia previa.</p>
-      </div>
-      <div class="benefitCard">
-        <div class="benefitCard__icon">🏆</div>
-        <h3>Garantía de autenticidad</h3>
-        <p>Cada pieza es original y verificada. Certificado incluido en compras mayores.</p>
-      </div>
-      <div class="benefitCard">
-        <div class="benefitCard__icon">⭐</div>
-        <h3>Atención personalizada</h3>
-        <p>Escríbenos por WhatsApp. Respondemos en minutos. Consultoría sin costo.</p>
-      </div>
-      <div class="benefitCard">
-        <div class="benefitCard__icon">💳</div>
-        <h3>Mayoreo desde 3 unidades</h3>
-        <p>Descuentos progresivos. Negocia directamente con nuestro equipo.</p>
-      </div>
-    </div>
-  </section>
+/* =========================================================
+   TOPBAR (ticker superior)
+   ========================================================= */
+.topbar {
+  background: var(--black);
+  border-bottom: 1px solid var(--charcoal-soft);
+  overflow: hidden;
+  position: relative;
+}
 
-  <!-- ============ MAYOREO ============ -->
-  <section class="section section--dark reveal" id="mayoreo">
-    <div class="section__head">
-      <span class="section__eyebrow">PARA NEGOCIOS</span>
-      <h2>Programa de mayoreo</h2>
-      <p>Compra en volumen y obtén precios especiales. Ideal para tiendas, bazares y distribuidores.</p>
-    </div>
-    <div class="mayoreoCard">
-      <div><strong>Desde 3 unidades</strong> del mismo modelo</div>
-      <div><strong>Desde 10 unidades</strong> descuentos progresivos</div>
-      <div><strong>Desde 50 unidades</strong> consultar precios especiales</div>
-      <button class="mayoreoBtn" id="mayoreoBtn">Solicitar cotización</button>
-    </div>
-  </section>
+.topbar::before,
+.topbar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  z-index: 2;
+  pointer-events: none;
+}
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="footer__inner">
-      <div class="footer__info">
-        <h4>Carland 1601</h4>
-        <p>Especialistas en vehículos de colección, miniaturas y piezas premium.</p>
-        <p><strong>Ubicación:</strong> Santa Bárbara, Honduras</p>
-      </div>
-      <nav class="footer__nav">
-        <strong>Catálogo</strong>
-        <a href="#colecciones">Colecciones</a>
-        <a href="#catalogo">Catálogo</a>
-        <a href="#mayoreo">Mayoreo</a>
-      </nav>
-      <div class="footer__contact">
-        <strong>Contacto</strong>
-        <a href="https://wa.me/50489534880" target="_blank" rel="noopener">📲 WhatsApp: +504 8953 4880</a>
-        <p><strong>Horario:</strong> Lunes - Domingo<br>8 AM - 8 PM Honduras</p>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      <p>&copy; 2024 Carland 1601. Todos los derechos reservados.</p>
-    </div>
-  </footer>
+.topbar::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--black), transparent);
+}
 
-  <!-- ============ SCRIPTS ============ -->
-  <script>
-    window.PRODUCTOS = [
-      {
-        "nombre": "Rolls-Royce Spectre",
-        "marca": "Rolls-Royce",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1550,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/roll.jpg"
-      },
-      {
-        "nombre": "Mcqueen set de tres rescue",
-        "marca": "Mattel",
-        "categoria": "Novedades",
-        "escala": "1/86",
-        "precio": 450,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rescue.jpg"
-      },
-      {
-        "nombre": "Mcqueen set de tres New",
-        "marca": "Mattel",
-        "categoria": "Novedades",
-        "escala": "1/86",
-        "precio": 450,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/set3.jpg"
-      },
-      {
-        "nombre": "Mcqueen 20 Aniversario",
-        "marca": "Mattel",
-        "categoria": "Novedades",
-        "escala": "1/64",
-        "precio": 385,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/mc.jpg"
-      },
-       {
-        "nombre": "Mcqueen que se mueve solo con luz y sonido",
-        "marca": "generic",
-        "categoria": "Novedades",
-        "escala": "1/24",
-        "precio": 299,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/mc.png"
-      },
-      {
-        "nombre": "sally de cars",
-        "marca": "Mattel",
-        "categoria": "Novedades",
-        "escala": "1/64",
-        "precio": 385,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/sally.jpg"
-      },
-      {
-        "nombre": "Cactus hablante y bailarin",
-        "marca": "generic",
-        "categoria": "Novedades",
-        "escala": "25 cm alto",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cactus.jpg"
-      },
-      {
-        "nombre": "Antorcha Minecraft decoracion de habitacion",
-        "marca": "Minecraft",
-        "categoria": "Otros",
-        "escala": "24cm alto",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/antorcha.png"
-      },
-      {
-        "nombre": "Rolls-Royce Spectre",
-        "marca": "Rolls-Royce",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1550,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rolld.jpg"
-      },
-      {
-        "nombre": "Auto Rc Drift",
-        "marca": "generic",
-        "categoria": "Autos Rc",
-        "escala": "1:24",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/rcdrift.jpg"
-      },
-      {
-        "nombre": "Chiks Hiks 1/64",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:64",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/chiks.jpg"
-      },
-      {
-        "nombre": "Filmore 1/64",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:64",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/filmore.jpg"
-      },
-      {
-        "nombre": "Cabesal Transformer 1/24 Coleccionable",
-        "marca": "Jada",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/tc.jpg"
-      },
-      {
-        "nombre": "Cabesal Transformer 1/24 Coleccionable",
-        "marca": "Jada",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/trans.jpg"
-      },
-      {
-        "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tacoma.jpg"
-      },
-      {
-        "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tacoma-negra.jpg"
-      },
-      {
-         "nombre": "Toyota Tacoma 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/dorada.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/troja.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tblanca.jpg"
-      },
-      {
-        "nombre": "Toyota Tundra 2025",
-        "marca": "Toyota",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1150,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tverde.jpg"
-      },
-      {
-        "nombre": "Alfa Romero Giulia GTAm 2021 ",
-        "marca": "Alfa Romero",
-        "categoria": "Autos",
-        "escala": "1:18",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "",
-        "imagen": "assets/productos/alfa.jpg"
-      },
-      {
-        "nombre": "Cybertruck Gris 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cgris.jpg"
-      },
-      {
-        "nombre": "Clasico cucarachita 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 195,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/clas.jpeg"
-      },
-       {
-        "nombre": "Clasico con luces y sonido",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 195,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/cla.jpg"
-      },
-       {
-        "nombre": "Huevo sorpresa de lego mcqueen 1/64",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:64",
-        "precio": 95,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/huevo.jpg"
-      },
-      {
-        "nombre": "Cybertruck negra 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cnegra.jpg"
-      },
-      {
-        "nombre": "Cybertruck dorada 1/32",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:32",
-        "precio": 495,
-        "estado": "Disponible",
-        "etiqueta": "Novedad",
-        "imagen": "assets/productos/cdorada.jpg"
-      },
-       {
-        "nombre": "Lamborghini STO",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/sto.jpg"
-      },
-      {
-        "nombre": "Toyota Prado 1/24 blanca",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/pradob.jpg"
-      },
-      {
-        "nombre": "Toyota Prado 1/24 Gris",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/pradog.jpg"
-      },
-      {
-        "nombre": "Plymouth taxi escala",
-        "marca": "Polstergit",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/taxi.jpg"
-      },
-      {
-        "nombre": "LC300 Blanca",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lcb.jpg"
-      },
-      {
-        "nombre": "LC300 Negra",
-        "marca": "generic",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lcn.jpg"
-      },
-      {
-        "nombre": "Suzuki Jimny verde 1/24",
-        "marca": "CCA",
-        "categoria": "autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/zv.jpg"
-      },
-      {
-        "nombre": "Cabesal Clasico 1/32 blanco con luz y sonido",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:32",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cb.jpg"
-      },
-      {
-        "nombre": "Cabesal Clasico 1/32 negro con luz y sonido",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:32",
-        "precio": 1250,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/cn.jpg"
-      },
-      {
-        "nombre": "Land Cruiser Series 200",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/lb.jpg"
-      },
-      {
-        "nombre": "Land Cruiser Series 200",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/ln.jpg"
-      },
-      {
-        "nombre": "Dodge charger srt escala 1969 azul",
-        "marca": "Maisto",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/srt.jpg"
-      },
-      {
-        "nombre": "Tundra 1/28 blanca 2da generacion",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:28",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tb.jpg"
-      },
-       {
-        "nombre": "Tundra 1/28 negra 2da generacion",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:28",
-        "precio": 595,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/tn.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxb.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxn.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxa.jpg"
-      },
-      {
-        "nombre": "Toyota Hilux 1/32 con luz",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/hiluxr.jpg"
-      },
-      {
-        "nombre": "Toyota land cruiser 70 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/landb.png"
-      },
-      {
-        "nombre": "Toyota land cruiser 70 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Nuevo",
-        "imagen": "assets/productos/landbe.png"
-      },
-       {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rr.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rb.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22ra.png"
-      },
-      {
-        "nombre": "Toyota 22r 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 325,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/22rg.png"
-      },
-      {
-        "nombre": "Lexus Lx570 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 195,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/lexus.png"
-      },
-       {
-        "nombre": "Chevy clasico 1/32",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 225,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/chevy.png"
-      },
-       {
-        "nombre": "Lamborghini Rapidos y Furiosos",
-        "marca": "Maisto",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1350,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/lambo.jpg"
-      },
-      {
-        "nombre": "Mototaxi Roja",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:32",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/mototaxi.jpg"
-      },
-       {
-        "nombre": "Porsche Dakar",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Oferta",
-        "imagen": "assets/productos/por.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 750,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/fa.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/cr.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/ca.jpg"
-      },
-      {
-        "nombre": "Cabezal Freightliner escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/cab.jpg"
-      },
-      {
-        "nombre": "Cabezal con pipa escala",
-        "marca": "generic",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/pipa.jpg"
-      },
-      {
-        "nombre": "Mack Y Mcqueen set de dos",
-        "marca": "Matel",
-        "categoria": "Rastras",
-        "escala": "1:64",
-        "precio": 1500,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/mack.jpg"
-      },
-      {
-        "nombre": "Mcqueen Control remoto Cars",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/mcqueenrc.png"
-      },
-      {
-        "nombre": "Camioncito control remoto",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 795,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/rc1.png"
-      },
-      {
-        "nombre": "Buldoser RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/bulrc.png"
-      },
-      {
-        "nombre": "4x4 RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 1595,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/4x4.png"
-      },
-      {
-        "nombre": "Land Cruiser RC 4x2",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/landrc.png"
-      },
-      {
-        "nombre": "Mario RC 4x2",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 895,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/mariorc.png"
-      },
-      {
-        "nombre": "Bus escolar 4x2 RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 795,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/busrc.png"
-      },
-      {
-        "nombre": "Escabadora 4x4 RC",
-        "marca": "generic",
-        "categoria": "Autos",
-        "escala": "1:24",
-        "precio": 795,
-        "estado": "Disponible",
-        "etiqueta": "Novedades",
-        "imagen": "assets/productos/escavador.jpg"
-      },
-      {
-        "nombre": "KTM Duke 1290",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/duke1290.jpg"
-      },
-      {
-        "nombre": "Yamaha R1",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/r1.jpg"
-      },
-      {
-        "nombre": "Yamaha R1",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/r1a.jpg"
-      },
-      {
-        "nombre": "Mini Biker",
-        "marca": "generic",
-        "categoria": "Otros",
-        "escala": "1:12",
-        "precio": 295,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/minibiker.jpg"
-      },
-      {
-        "nombre": "Hayabusa escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/haya.jpg"
-      },
-      {
-        "nombre": "Kawasaki Croos 450 escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/kawa.jpg"
-      },
-      {
-        "nombre": "H2R escala 1/12",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/h2r.jpg"
-      },
-      {
-        "nombre": "H2R mini escala 1/18",
-        "marca": "CCA",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 395,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/h2rmini.jpg"
-      },
-      {
-        "nombre": "KTM croos 690 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/ktmcroos.jpg"
-      },
-      {
-        "nombre": "Vstrom escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/vstrom.jpg"
-      },
-      {
-        "nombre": "Honda CB400X escala 1/12",
-        "marca": "Maisto",
-        "categoria": "Motocicletas",
-        "escala": "1:12",
-        "precio": 995,
-        "estado": "Disponible",
-        "etiqueta": "Ofertas",
-        "imagen": "assets/productos/hondacb400x.jpg"
-      },
+.topbar::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--black), transparent);
+}
 
-      ];
-    // Imágenes de envíos disponibles
-    window.SHIPMENT_IMAGES = [
-      "assets/envios/envios1.jpg",
-      "assets/envios/envios2.jpg",
-      "assets/envios/envios3.jpg",
-      "assets/envios/envios4.jpg",
-      "assets/envios/envios5.jpg",
-      "assets/envios/envios6.jpg",
-      "assets/envios/envios7.jpg",
-      "assets/envios/envios8.jpg"
-    ];
-  </script>
+.topbar__track {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: max-content;
+  padding: 8px 20px;
+  animation: topbarScroll 28s linear infinite;
+}
 
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
-</body>
-</html>
+.topbar:hover .topbar__track {
+  animation-play-state: paused;
+}
+
+@keyframes topbarScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.topbar__track span {
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--gray-400);
+  font-weight: 500;
+}
+
+/* =========================================================
+   NAVBAR FIJA
+   ========================================================= */
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow-soft);
+  animation: slideInDown 400ms var(--transition-smooth);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  gap: 20px;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  transition: transform var(--transition-fast);
+}
+
+.navbar__brand:hover {
+  transform: scale(1.02);
+}
+
+.navbar__logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.navbar__brandtext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.navbar__title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--black);
+}
+
+.navbar__title em {
+  font-style: normal;
+  color: var(--red);
+  margin-left: 3px;
+}
+
+.navbar__subtitle {
+  font-size: 11px;
+  color: var(--gray-600);
+  white-space: nowrap;
+}
+
+.navbar__info {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar__navlink {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal);
+  transition: color var(--transition-fast);
+}
+
+.navbar__navlink:hover {
+  color: var(--red);
+}
+
+.navbar__pill {
+  font-size: 11px;
+  background: var(--gray-100);
+  color: var(--charcoal);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar__cart,
+.navbar__whatsapp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal);
+  transition: color var(--transition-fast);
+  position: relative;
+}
+
+.navbar__cart:hover,
+.navbar__whatsapp:hover {
+  color: var(--red);
+}
+
+.navbar__cartBadge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 300ms var(--transition-smooth);
+}
+
+.navbar__toggle {
+  display: none;
+  width: 32px;
+  height: 32px;
+  color: var(--charcoal);
+}
+
+.navbar__infoMobile {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--gray-100);
+  border-top: 1px solid var(--gray-200);
+  padding: 12px 20px;
+  font-size: 12px;
+  color: var(--gray-600);
+}
+
+@media (max-width: 960px) {
+  .navbar__info {
+    display: none;
+  }
+
+  .navbar__toggle {
+    display: flex;
+  }
+}
+
+/* =========================================================
+   CARRITO MODAL
+   ========================================================= */
+.cart-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  z-index: 2000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+.cart-modal.active {
+  pointer-events: all;
+  opacity: 1;
+}
+
+.cart-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.cart-modal__content {
+  position: relative;
+  background: var(--white);
+  width: 100%;
+  max-width: 420px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px 28px 0 0;
+  animation: slideInUp 400ms var(--transition-smooth);
+}
+
+.cart-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.cart-modal__header h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.cart-modal__close {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-600);
+  transition: color var(--transition-fast);
+  border-radius: 8px;
+}
+
+.cart-modal__close:hover {
+  color: var(--red);
+}
+
+.cart-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.cart-modal__footer {
+  padding: 20px;
+  border-top: 1px solid var(--gray-200);
+  background: var(--gray-100);
+  border-radius: 0 0 28px 28px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-item {
+  display: flex;
+  gap: 12px;
+  background: var(--gray-100);
+  padding: 12px;
+  border-radius: 12px;
+  animation: slideInLeft 300ms var(--transition-smooth);
+}
+
+.cart-item__image {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cart-item__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cart-item__name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.cart-item__brand {
+  font-size: 12px;
+  color: var(--gray-600);
+}
+
+.cart-item__price {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.cart-item__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cart-item__btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all var(--transition-fast);
+}
+
+.cart-item__btn:hover {
+  background: var(--red);
+  color: var(--white);
+}
+
+.cart-item__quantity {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+.cart-item__remove {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-200);
+  border-radius: 6px;
+  font-size: 16px;
+  margin-left: auto;
+  transition: all var(--transition-fast);
+}
+
+.cart-item__remove:hover {
+  background: var(--red);
+  color: var(--white);
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray-600);
+}
+
+.cart-empty svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.cart-empty__hint {
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+
+.cart-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.cart-summary__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--charcoal);
+}
+
+.cart-summary__row--total {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--black);
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.cart-checkout-btn,
+.cart-clear-btn {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.cart-checkout-btn {
+  background: var(--red);
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.cart-checkout-btn:hover {
+  background: var(--red-dark);
+  box-shadow: var(--shadow-hover);
+}
+
+.cart-clear-btn {
+  background: var(--white);
+  color: var(--charcoal);
+  border: 1px solid var(--gray-200);
+}
+
+.cart-clear-btn:hover {
+  background: var(--gray-100);
+}
+
+/* =========================================================
+   PRODUCT PREVIEW MODAL - NUEVO
+   ========================================================= */
+.product-preview-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2500;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+  padding: 20px;
+}
+
+.product-preview-modal.active {
+  pointer-events: all;
+  opacity: 1;
+}
+
+.product-preview-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.product-preview-modal__content {
+  position: relative;
+  background: var(--white);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  overflow-y: auto;
+  box-shadow: var(--shadow-deep);
+  animation: modalSlideIn 400ms var(--transition-smooth);
+}
+
+.product-preview-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  color: var(--charcoal);
+  border-radius: 12px;
+  z-index: 10;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.product-preview-modal__close:hover {
+  background: var(--red);
+  color: var(--white);
+  transform: rotate(90deg);
+}
+
+.product-preview-modal__inner {
+  display: flex;
+  width: 100%;
+  gap: 48px;
+  padding: 40px;
+}
+
+.product-preview-modal__image {
+  flex: 0 0 50%;
+  min-height: 400px;
+  background: var(--gray-100);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-preview-modal__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 24px;
+}
+
+.product-preview-modal__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-preview-modal__info h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.2;
+}
+
+.product-preview-modal__brand {
+  font-size: 16px;
+  color: var(--gray-600);
+  margin-bottom: 20px;
+}
+
+.product-preview-modal__specs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.product-preview-modal__specs span {
+  font-size: 13px;
+  background: var(--gray-100);
+  color: var(--charcoal);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.product-preview-modal__category {
+  font-size: 14px;
+  color: var(--gray-600);
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.product-preview-modal__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.product-preview-modal__price span {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.product-preview-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-preview-modal__orderBtn,
+.product-preview-modal__addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-preview-modal__orderBtn {
+  background: #10b981;
+  color: var(--white);
+}
+
+.product-preview-modal__orderBtn:hover {
+  background: #059669;
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.product-preview-modal__orderBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.product-preview-modal__addBtn {
+  background: var(--red);
+  color: var(--white);
+}
+
+.product-preview-modal__addBtn:hover {
+  background: var(--red-dark);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.product-preview-modal__addBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 900px) {
+  .product-preview-modal__content {
+    max-width: 95vw;
+  }
+
+  .product-preview-modal__inner {
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+  }
+
+  .product-preview-modal__image {
+    flex: 0 0 auto;
+    min-height: 320px;
+  }
+
+  .product-preview-modal__info h3 {
+    font-size: 28px;
+  }
+
+  .product-preview-modal__price span {
+    font-size: 32px;
+  }
+
+  .product-preview-modal__orderBtn,
+  .product-preview-modal__addBtn {
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+}
+
+/* =========================================================
+   HERO / CARRUSEL PRINCIPAL
+   ========================================================= */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--charcoal), var(--black));
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 48px 20px;
+}
+
+.hero--shipment-only {
+  min-height: 600px;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+.hero__container {
+  position: relative;
+}
+
+.hero__track {
+  display: flex;
+  position: relative;
+  height: 340px;
+}
+
+.hero__slide {
+  flex: 0 0 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: all 600ms var(--transition-smooth);
+  pointer-events: none;
+}
+
+.hero__slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.hero__slide.prev {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  border-radius: var(--radius);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.05;
+}
+
+.hero__slide--a .hero__content {
+  background: linear-gradient(135deg, #ff6b35, #d60000);
+}
+
+.hero__slide--b .hero__content {
+  background: linear-gradient(135deg, #d60000, #a10000);
+}
+
+.hero__slide--c .hero__content {
+  background: linear-gradient(135deg, #005f9f, #003d5c);
+}
+
+.hero__slide--d .hero__content {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+}
+
+.hero__slide--e .hero__content {
+  background: linear-gradient(135deg, #f39c12, #d68910);
+}
+
+.hero__slide--f .hero__content {
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+}
+
+.hero__slide--g .hero__content {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.hero__eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.hero__title {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.hero__text {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.95;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.hero__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  border-radius: 50%;
+  z-index: 20;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+.hero__arrow:hover {
+  background: var(--red);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.hero__arrow--prev {
+  left: 20px;
+}
+
+.hero__arrow--next {
+  right: 20px;
+}
+
+.hero__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.hero__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+}
+
+.hero__dot.active {
+  background: var(--red);
+  width: 28px;
+  border-radius: 5px;
+}
+
+.hero__dot:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* =========================================================
+   CARRUSEL DE ENVÍOS - NUEVO
+   ========================================================= */
+.hero__shipment {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 48px 40px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.hero__shipmentTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero__shipmentTrack {
+  position: relative;
+  height: 450px;
+  background: var(--charcoal-soft);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.hero__shipmentSlide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 500ms var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__shipmentSlide.active {
+  opacity: 1;
+}
+
+.hero__shipmentSlide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fadeIn 500ms ease-in;
+}
+
+.hero__shipmentArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  border-radius: 50%;
+  z-index: 30;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero__shipmentArrow:hover {
+  background: var(--red);
+  border-color: var(--red);
+  transform: translateY(-50%) scale(1.12);
+}
+
+.hero__shipmentArrow--prev {
+  left: 20px;
+}
+
+.hero__shipmentArrow--next {
+  right: 20px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    gap: 32px;
+    padding: 32px 16px;
+  }
+
+  .hero--shipment-only {
+    min-height: auto;
+    padding: 40px 16px;
+  }
+
+  .hero__shipment {
+    padding: 32px 20px;
+    gap: 16px;
+  }
+
+  .hero__shipmentTitle {
+    font-size: 24px;
+  }
+
+  .hero__shipmentTrack {
+    height: 320px;
+  }
+
+  .hero__shipmentArrow {
+    width: 48px;
+    height: 48px;
+  }
+
+  .hero__shipmentArrow--prev {
+    left: 12px;
+  }
+
+  .hero__shipmentArrow--next {
+    right: 12px;
+  }
+}
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+.section--dark {
+  background: var(--charcoal);
+  color: var(--white);
+}
+
+.section--light {
+  background: var(--gray-100);
+}
+
+.section__head {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section__eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+
+.section--dark .section__eyebrow {
+  color: var(--red);
+}
+
+.section h2 {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.section p {
+  margin: 0;
+  font-size: 16px;
+  color: var(--gray-600);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.section--dark p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* =========================================================
+   PRODUCT GRID Y CARDS
+   ========================================================= */
+.products {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.products__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.product {
+  animation: slideInUp 400ms var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-smooth);
+  cursor: pointer;
+}
+
+.product:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+  border-color: var(--red);
+}
+
+.product__image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: var(--gray-100);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+}
+
+.product__imageInner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product__imageInner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 16px;
+  transition: transform var(--transition-smooth);
+}
+
+.product:hover .product__imageInner img {
+  transform: scale(1.08);
+}
+
+.product__label {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--red);
+  color: var(--white);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 5;
+}
+
+.product__content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
+
+.product__name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.2;
+  min-height: 32px;
+}
+
+.product__brand {
+  font-size: 12px;
+  color: var(--gray-600);
+}
+
+.product__specs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.product__spec {
+  font-size: 11px;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.product__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--gray-200);
+}
+
+.product__price {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.product__addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--red);
+  color: var(--white);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.product__addBtn:hover {
+  background: var(--red-dark);
+  transform: scale(1.05);
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--gray-600);
+}
+
+.emptyMessage p {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.emptyMessage p:first-child {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+
+/* =========================================================
+   FILTROS Y BÚSQUEDA
+   ========================================================= */
+.catalogIntro {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.catalogIntro__trust {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+
+.controls {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: sticky;
+  top: var(--navbar-h);
+  background: var(--white);
+  z-index: 500;
+  border-bottom: 1px solid var(--gray-200);
+  transition: all var(--transition-smooth);
+}
+
+.controls.expanded {
+  padding: 16px 20px;
+  gap: 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.controls__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--gray-100);
+  border-radius: 8px;
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-fast);
+}
+
+.controls__search:focus-within {
+  padding: 10px 14px;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(214, 0, 0, 0.1);
+}
+
+.controls__search svg {
+  color: var(--gray-600);
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.controls__search input {
+  flex: 1;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--charcoal);
+  font-family: var(--font-body);
+}
+
+.controls__search input::placeholder {
+  color: var(--gray-600);
+}
+
+.controls__filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all var(--transition-smooth);
+}
+
+.controls.expanded .controls__filters {
+  max-height: 200px;
+  opacity: 1;
+  gap: 12px;
+}
+
+.filter-btn {
+  padding: 10px 18px;
+  background: var(--gray-100);
+  color: var(--charcoal);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.filter-btn.active {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+  box-shadow: var(--shadow-soft);
+}
+
+/* =========================================================
+   COLECCIONES
+   ========================================================= */
+.collectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.collectionCard {
+  padding: 24px;
+  background: var(--charcoal-soft);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  color: var(--white);
+  text-align: center;
+  transition: all var(--transition-smooth);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.collectionCard:hover {
+  background: var(--charcoal);
+  border-color: var(--red);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(214, 0, 0, 0.2);
+}
+
+.collectionCard span {
+  font-size: 32px;
+}
+
+.collectionCard strong {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.collectionCard small {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* =========================================================
+   BENEFICIOS
+   ========================================================= */
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.benefitCard {
+  padding: 32px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  text-align: center;
+  transition: all var(--transition-smooth);
+}
+
+.benefitCard:hover {
+  border-color: var(--red);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+}
+
+.benefitCard__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.benefitCard h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.benefitCard p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+/* =========================================================
+   MAYOREO
+   ========================================================= */
+.mayoreoCard {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  background: var(--charcoal-soft);
+  border-radius: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--white);
+}
+
+.mayoreoCard div {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.mayoreoCard strong {
+  color: var(--red);
+}
+
+.mayoreoBtn {
+  align-self: center;
+  padding: 14px 32px;
+  background: var(--red);
+  color: var(--white);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.mayoreoBtn:hover {
+  background: var(--red-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 60px 20px 20px;
+}
+
+.footer__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer__info,
+.footer__nav,
+.footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer__info h4,
+.footer__nav strong,
+.footer__contact strong {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.footer__info p,
+.footer__nav a,
+.footer__contact a,
+.footer__contact p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color var(--transition-fast);
+}
+
+.footer__nav a:hover,
+.footer__contact a:hover {
+  color: var(--red);
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* =========================================================
+   NOTIFICACIÓN
+   ========================================================= */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--red);
+  color: var(--white);
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-deep);
+  animation: slideInUp 300ms var(--transition-smooth);
+  z-index: 9999;
+}
+
+/* =========================================================
+   BRAND STATEMENT
+   ========================================================= */
+.brandStatement {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.brandStatement__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.brandStatement__eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--red);
+}
+
+.brandStatement h2 {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--black);
+  max-width: 800px;
+}
+
+.brandStatement h2 span {
+  color: var(--red);
+}
+
+.brandStatement p {
+  font-size: 16px;
+  color: var(--gray-600);
+  max-width: 600px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.brandStatement__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 32px;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.brandStatement__stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brandStatement__stats strong {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.brandStatement__stats span {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@media (max-width: 768px) {
+  .products {
+    padding: 60px 16px;
+  }
+
+  .products__grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .collectionGrid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .benefitsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 60px 16px;
+  }
+
+  .section h2 {
+    font-size: 28px;
+  }
+
+  .brandStatement {
+    padding: 60px 16px;
+  }
+
+  .brandStatement h2 {
+    font-size: 28px;
+  }
+
+  .brandStatement__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .controls {
+    padding: 7px 16px;
+    gap: 7px;
+  }
+
+  .controls.expanded {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .controls__search {
+    padding: 5px 9px;
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .controls__search:focus-within {
+    padding: 8px 11px;
+  }
+
+  .controls__search svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .filter-btn {
+    padding: 7px 11px;
+    font-size: 11px;
+  }
+}
