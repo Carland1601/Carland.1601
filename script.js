@@ -1,59 +1,64 @@
 /* =========================================================
-   CARLAND 1601 — Lógica MEJORADA con Carrito
+   CARLAND 1601 — Lógica MEJORADA con Carrito + Modal de Productos
    ========================================================= */
 
 // ---------- CONFIGURACIÓN ----------
 const WHATSAPP_NUMBER = "50489534880";
 
-// Slides del carrusel principal
+// ✨ NUEVOS SLIDES DEL CARRUSEL EN ORDEN ESPECIFICADO
 const HERO_SLIDES = [
+  // PRIMERO: ENVÍOS
   {
-    variant: "a", icon: "🔥",
-    eyebrow: "Lo más pedido",
-    title: "Más vendidos",
-    text: "Las piezas que más se llevan nuestros clientes esta semana.",
+    variant: "a", icon: "🚚",
+    eyebrow: "Cobertura nacional",
+    title: "Envíos a todo Honduras",
+    text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.",
     filterCategory: "Todos"
   },
+  // SEGUNDO: AUTOS (MCQUEEN, CARS, MACK)
   {
-    variant: "b", icon: "💥",
+    variant: "b", icon: "🏎️",
+    eyebrow: "Colección Premium",
+    title: "Cars & McQueen",
+    text: "Toda la colección de personajes de Cars: Rayo McQueen, Mack, Sally y más.",
+    filterCategory: "Autos"
+  },
+  // TERCERO: TACOMAS, TUNDRAS, HILUX
+  {
+    variant: "c", icon: "🚙",
+    eyebrow: "Colección",
+    title: "Toyota Trucks",
+    text: "Tacoma, Tundra, Hilux y toda la línea Toyota lista para coleccionar.",
+    filterCategory: "Autos"
+  },
+  // CUARTO: RASTRAS, CABESALES, CAMIONES
+  {
+    variant: "d", icon: "🚛",
+    eyebrow: "Colección",
+    title: "Rastras & Camiones",
+    text: "Cabezales, pipas, rastras y camiones especiales de carga.",
+    filterCategory: "Rastras"
+  },
+  // EXTRAS (MANTENER VARIEDAD)
+  {
+    variant: "e", icon: "💥",
     eyebrow: "Por tiempo limitado",
     title: "Ofertas de la semana",
     text: "Precios especiales en modelos seleccionados. No duran mucho.",
     filterCategory: "Ofertas"
   },
   {
-    variant: "c", icon: "🚚",
-    eyebrow: "Cobertura nacional",
-    title: "Envíos a todo Honduras",
-    text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.",
-    filterCategory: "Todos"
-  },
-  {
-    variant: "d", icon: "⭐",
+    variant: "f", icon: "⭐",
     eyebrow: "Recién llegados",
     title: "Nuevos ingresos",
     text: "Las últimas piezas que se sumaron al catálogo.",
     filterCategory: "Novedades"
   },
   {
-    variant: "e", icon: "🚗",
-    eyebrow: "Colección",
-    title: "Tacoma Collection",
-    text: "Toda la línea Toyota Tacoma a escala, lista para coleccionar.",
-    filterCategory: "Autos"
-  },
-  {
-    variant: "f", icon: "🚙",
-    eyebrow: "Colección",
-    title: "Toyota Collection",
-    text: "Prado, Land Cruiser, Hilux y más, en un solo lugar.",
-    filterCategory: "Autos"
-  },
-  {
-    variant: "g", icon: "🎁",
-    eyebrow: "Sorpresa",
-    title: "Mystery Box",
-    text: "No sabes cuál te toca, pero seguro te va a encantar.",
+    variant: "g", icon: "🔥",
+    eyebrow: "Lo más pedido",
+    title: "Más vendidos",
+    text: "Las piezas que más se llevan nuestros clientes esta semana.",
     filterCategory: "Todos"
   }
 ];
@@ -62,12 +67,20 @@ const CATEGORY_ORDER = [
   "Todos",
   "Autos",
   "Motocicletas",
-  "Otros",
   "Rastras",
   "Maquinaria",
   "Control Remoto",
+  "Otros",
   "Novedades",
   "Ofertas"
+];
+
+// Categorías especiales para rastras
+const RASTA_SUBCATEGORIES = [
+  "Rastras",
+  "Cabezales",
+  "Pipas",
+  "Camiones"
 ];
 
 // ---------- ESTADO ----------
@@ -78,6 +91,7 @@ let renderedProducts = [];
 let cart = JSON.parse(localStorage.getItem('carland_cart')) || [];
 let currentHeroSlide = 0;
 let heroAutoplayInterval = null;
+let selectedProduct = null; // Para el modal
 
 // ---------- ELEMENTOS DEL DOM ----------
 const grid = document.getElementById("productsGrid");
@@ -113,18 +127,141 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartUI();
   setupEventListeners();
   animateOnScroll();
+  createProductModal(); // ✨ CREAR MODAL DE PRODUCTOS
 });
+
+// =========================================================
+// ✨ MODAL DE PRODUCTOS (NUEVO)
+// =========================================================
+
+function createProductModal() {
+  // Verificar si ya existe
+  if (document.getElementById('productModal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'productModal';
+  modal.className = 'product-modal';
+  modal.setAttribute('aria-hidden', 'true');
+  modal.setAttribute('role', 'dialog');
+  
+  modal.innerHTML = `
+    <div class="product-modal__overlay" id="productModalOverlay"></div>
+    <div class="product-modal__content">
+      <button class="product-modal__close" id="productModalClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      
+      <div class="product-modal__body">
+        <div class="product-modal__image" id="productModalImage">
+          <img src="" alt="" id="productModalImg">
+        </div>
+        
+        <div class="product-modal__details">
+          <div class="product-modal__label" id="productModalLabel"></div>
+          <h2 class="product-modal__name" id="productModalName"></h2>
+          <p class="product-modal__brand" id="productModalBrand"></p>
+          
+          <div class="product-modal__specs">
+            <div class="spec-item">
+              <span class="spec-label">Categoría</span>
+              <span class="spec-value" id="productModalCategory"></span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Escala</span>
+              <span class="spec-value" id="productModalScale"></span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Estado</span>
+              <span class="spec-value" id="productModalStatus"></span>
+            </div>
+          </div>
+          
+          <div class="product-modal__price">
+            <span class="price-label">Precio</span>
+            <span class="price-value" id="productModalPrice">L. 0</span>
+          </div>
+          
+          <button class="product-modal__addBtn" id="productModalAddBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Event listeners del modal
+  const productModalClose = document.getElementById('productModalClose');
+  const productModalOverlay = document.getElementById('productModalOverlay');
+  const productModalAddBtn = document.getElementById('productModalAddBtn');
+  
+  productModalClose.addEventListener('click', closeProductModal);
+  productModalOverlay.addEventListener('click', closeProductModal);
+  
+  productModalAddBtn.addEventListener('click', () => {
+    if (selectedProduct) {
+      addToCart(selectedProduct);
+      // Cerrar modal después de agregar
+      setTimeout(closeProductModal, 600);
+    }
+  });
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeProductModal();
+    }
+  });
+}
+
+function openProductModal(product) {
+  selectedProduct = product;
+  const modal = document.getElementById('productModal');
+  
+  document.getElementById('productModalImg').src = product.imagen;
+  document.getElementById('productModalImg').alt = product.nombre;
+  document.getElementById('productModalName').textContent = product.nombre;
+  document.getElementById('productModalBrand').textContent = product.marca;
+  document.getElementById('productModalCategory').textContent = product.categoria;
+  document.getElementById('productModalScale').textContent = product.escala;
+  document.getElementById('productModalStatus').textContent = product.estado;
+  document.getElementById('productModalPrice').textContent = `L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}`;
+  
+  if (product.etiqueta) {
+    document.getElementById('productModalLabel').textContent = product.etiqueta;
+    document.getElementById('productModalLabel').style.display = 'inline-block';
+  } else {
+    document.getElementById('productModalLabel').style.display = 'none';
+  }
+  
+  modal.setAttribute('aria-hidden', 'false');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductModal() {
+  const modal = document.getElementById('productModal');
+  modal.setAttribute('aria-hidden', 'true');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+  selectedProduct = null;
+}
 
 // =========================================================
 // CARRITO
 // =========================================================
 
 function updateCartUI() {
-  // Actualizar badge
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   cartBadge.textContent = totalItems;
 
-  // Mostrar/ocultar mensaje vacío
   if (cart.length === 0) {
     cartItemsContainer.innerHTML = '';
     cartEmptyMsg.removeAttribute('hidden');
@@ -133,13 +270,11 @@ function updateCartUI() {
     renderCartItems();
   }
 
-  // Actualizar totales
   const subtotal = cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
   const total = subtotal;
   cartSubtotal.textContent = `L. ${subtotal.toLocaleString('es-HN', { minimumFractionDigits: 2 })}`;
   cartTotal.textContent = `L. ${total.toLocaleString('es-HN', { minimumFractionDigits: 2 })}`;
 
-  // Guardar en localStorage
   localStorage.setItem('carland_cart', JSON.stringify(cart));
 }
 
@@ -169,7 +304,6 @@ function renderCartItems() {
 }
 
 function addToCart(product) {
-  // Verificar si el producto ya está en el carrito
   const existingItem = cart.find(item => item.nombre === product.nombre);
   
   if (existingItem) {
@@ -183,14 +317,15 @@ function addToCart(product) {
   
   updateCartUI();
   
-  // Animar el botón
-  const button = event.target;
-  button.style.animation = 'pulse 0.5s ease-out';
-  setTimeout(() => {
-    button.style.animation = '';
-  }, 500);
+  // Animar botón
+  const button = event?.target;
+  if (button) {
+    button.style.animation = 'pulse 0.5s ease-out';
+    setTimeout(() => {
+      button.style.animation = '';
+    }, 500);
+  }
   
-  // Mostrar mini notificación
   showNotification(`${product.nombre} agregado al carrito`);
 }
 
@@ -230,7 +365,6 @@ function checkoutCart() {
     return;
   }
 
-  // Construir mensaje de WhatsApp
   let message = '🛒 *Quiero comprar los siguientes productos:*\n\n';
   
   cart.forEach((item, index) => {
@@ -242,124 +376,113 @@ function checkoutCart() {
     message += `   Subtotal: L. ${(item.precio * item.quantity).toLocaleString('es-HN', { minimumFractionDigits: 0 })}\n\n`;
   });
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
-  message += `*TOTAL: L. ${subtotal.toLocaleString('es-HN', { minimumFractionDigits: 0 })}*\n\n`;
-  message += '📍 Por favor, confirma disponibilidad y envío.\n';
-  message += '💳 Acepto depósito o transferencia bancaria.';
+  const total = cart.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
+  message += `*TOTAL: L. ${total.toLocaleString('es-HN', { minimumFractionDigits: 0 })}*\n\n`;
+  message += '📍 Mi dirección es: [El cliente completará]\n🏦 Listo para hacer el pago por depósito o transferencia.';
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(whatsappUrl, '_blank');
+  const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, '_blank');
   
-  closeCart();
   showNotification('¡Abriendo WhatsApp!');
 }
 
-function showNotification(message) {
+function showNotification(text) {
   const notification = document.createElement('div');
-  notification.style.cssText = `
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    background: linear-gradient(135deg, #d60000, #a10000);
-    color: white;
-    padding: 14px 20px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 13px;
-    z-index: 9999;
-    animation: slideInRight 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    box-shadow: 0 8px 20px rgba(214, 0, 0, 0.3);
-  `;
-  notification.textContent = message;
+  notification.className = 'notification';
+  notification.textContent = text;
   document.body.appendChild(notification);
-
+  
+  setTimeout(() => notification.classList.add('active'), 10);
   setTimeout(() => {
-    notification.style.animation = 'slideInRight 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse';
+    notification.classList.remove('active');
     setTimeout(() => notification.remove(), 300);
-  }, 2500);
+  }, 3000);
 }
 
 function openCart() {
   cartModal.classList.add('active');
-  cartModal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 }
 
 function closeCart() {
   cartModal.classList.remove('active');
-  cartModal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 }
 
 // =========================================================
-// HERO CAROUSEL
+// CARRUSEL PRINCIPAL
 // =========================================================
 
-function renderHeroSlides() {
-  heroTrack.innerHTML = '';
-  heroDots.innerHTML = '';
-
-  HERO_SLIDES.forEach((slide, index) => {
-    // Crear slide
-    const slideEl = document.createElement('div');
-    slideEl.className = `hero__slide ${index === 0 ? 'active' : ''}`;
-    slideEl.innerHTML = `
-      <div class="hero__content">
-        <div class="hero__icon">${slide.icon}</div>
-        <div class="hero__eyebrow">${slide.eyebrow}</div>
-        <h1 class="hero__title">${slide.title}</h1>
-        <p class="hero__text">${slide.text}</p>
-      </div>
-    `;
-    heroTrack.appendChild(slideEl);
-
-    // Crear dot
-    const dot = document.createElement('button');
-    dot.className = `hero__dot ${index === 0 ? 'active' : ''}`;
-    dot.onclick = () => goToSlide(index);
-    dot.setAttribute('aria-label', `Ir al slide ${index + 1}`);
-    heroDots.appendChild(dot);
+function initHeroCarousel() {
+  heroPrevBtn.addEventListener('click', () => {
+    prevSlide();
+    resetHeroAutoplay();
   });
-
+  
+  heroNextBtn.addEventListener('click', () => {
+    nextSlide();
+    resetHeroAutoplay();
+  });
+  
   startHeroAutoplay();
 }
 
-function initHeroCarousel() {
-  heroPrevBtn.onclick = () => previousSlide();
-  heroNextBtn.onclick = () => nextSlide();
+function renderHeroSlides() {
+  heroTrack.innerHTML = '';
+  HERO_SLIDES.forEach((slide, index) => {
+    const slideEl = document.createElement('div');
+    slideEl.className = `hero__slide hero__slide--${slide.variant}`;
+    slideEl.setAttribute('role', 'img');
+    slideEl.setAttribute('aria-label', slide.title);
+    
+    slideEl.innerHTML = `
+      <div class="hero__content">
+        <span class="hero__eyebrow">${slide.icon} ${slide.eyebrow}</span>
+        <h1 class="hero__title">${slide.title}</h1>
+        <p class="hero__text">${slide.text}</p>
+        <button class="hero__cta" onclick="filterByCategory('${slide.filterCategory}'); document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });">
+          Ver catálogo →
+        </button>
+      </div>
+    `;
+    
+    heroTrack.appendChild(slideEl);
+  });
+  
+  updateHeroSlide();
+  renderHeroDots();
 }
 
-function previousSlide() {
-  currentHeroSlide = (currentHeroSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
-  updateHeroSlide();
-  resetHeroAutoplay();
+function renderHeroDots() {
+  heroDots.innerHTML = '';
+  HERO_SLIDES.forEach((_, index) => {
+    const dot = document.createElement('button');
+    dot.className = `hero__dot ${index === 0 ? 'active' : ''}`;
+    dot.setAttribute('aria-label', `Ir al slide ${index + 1}`);
+    dot.addEventListener('click', () => {
+      currentHeroSlide = index;
+      updateHeroSlide();
+      resetHeroAutoplay();
+    });
+    heroDots.appendChild(dot);
+  });
 }
 
 function nextSlide() {
   currentHeroSlide = (currentHeroSlide + 1) % HERO_SLIDES.length;
   updateHeroSlide();
-  resetHeroAutoplay();
 }
 
-function goToSlide(index) {
-  currentHeroSlide = index;
+function prevSlide() {
+  currentHeroSlide = (currentHeroSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length;
   updateHeroSlide();
-  resetHeroAutoplay();
 }
 
 function updateHeroSlide() {
-  const slides = document.querySelectorAll('.hero__slide');
+  const offset = -currentHeroSlide * 100;
+  heroTrack.style.transform = `translateX(${offset}%)`;
+  
   const dots = document.querySelectorAll('.hero__dot');
-
-  slides.forEach((slide, index) => {
-    slide.classList.remove('active', 'prev');
-    if (index === currentHeroSlide) {
-      slide.classList.add('active');
-    } else if (index < currentHeroSlide) {
-      slide.classList.add('prev');
-    }
-  });
-
   dots.forEach((dot, index) => {
     dot.classList.toggle('active', index === currentHeroSlide);
   });
@@ -443,28 +566,17 @@ function renderProducts() {
     return;
   }
 
-  // Reordenar productos para que aparezcan en posiciones variadas
-  const shuffled = shuffleProducts(renderedProducts);
-
-  shuffled.forEach((product, index) => {
+  renderedProducts.forEach((product, index) => {
     const card = createProductCard(product, index);
     grid.appendChild(card);
   });
-}
-
-function shuffleProducts(products) {
-  const copy = [...products];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
 }
 
 function createProductCard(product, index) {
   const card = document.createElement('div');
   card.className = 'product';
   card.style.animationDelay = `${50 + index * 30}ms`;
+  card.style.cursor = 'pointer';
   
   card.innerHTML = `
     <div class="product__image">
@@ -482,13 +594,18 @@ function createProductCard(product, index) {
       </div>
       <div class="product__footer">
         <span class="product__price">L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}</span>
-        <button class="product__addBtn" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+        <button class="product__addBtn" onclick="event.stopPropagation(); addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           Añadir
         </button>
       </div>
     </div>
   `;
+
+  // ✨ Click en la tarjeta para abrir modal
+  card.addEventListener('click', () => {
+    openProductModal(product);
+  });
 
   return card;
 }
@@ -511,13 +628,12 @@ function setupEventListeners() {
     filterAndRenderProducts();
   });
 
-  // Botones de categoría
+  // Botones de categoría en colecciones
   document.querySelectorAll('[data-category-jump]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const category = e.currentTarget.dataset.categoryJump;
       filterByCategory(category);
       
-      // Scroll al catálogo
       const catalogSection = document.getElementById('catalogo');
       setTimeout(() => {
         catalogSection?.scrollIntoView({ behavior: 'smooth' });
@@ -544,8 +660,13 @@ function setupEventListeners() {
 
   // Cerrar carrito con ESC
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && cartModal.classList.contains('active')) {
-      closeCart();
+    if (e.key === 'Escape') {
+      if (cartModal.classList.contains('active')) {
+        closeCart();
+      }
+      if (document.getElementById('productModal')?.classList.contains('active')) {
+        closeProductModal();
+      }
     }
   });
 }
@@ -581,12 +702,10 @@ function animateOnScroll() {
 // UTILIDADES
 // =========================================================
 
-// Prevenir que el script falle si PRODUCTOS no está definido
 if (typeof window.PRODUCTOS === 'undefined') {
   window.PRODUCTOS = [];
 }
 
-// Mezcla un arreglo sin modificar el original (Fisher-Yates)
 function shuffleArray(arr) {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -596,7 +715,6 @@ function shuffleArray(arr) {
   return copy;
 }
 
-// Inicializar productos si existen
 if (Array.isArray(window.PRODUCTOS) && window.PRODUCTOS.length > 0) {
   allProducts = [...window.PRODUCTOS];
   renderedProducts = [...window.PRODUCTOS];
