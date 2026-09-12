@@ -5,10 +5,10 @@
 const WHATSAPP_NUMBER = "50489534880";
 
 const CATEGORY_IMAGES = {
-  envios: ['assets/productos/envios1.jpg', 'assets/productos/envios2.jpg', 'assets/productos/envios3.jpg', 'assets/productos/envios4.jpg', 'assets/productos/envios5.jpg', 'assets/productos/envios6.jpg', 'assets/productos/envios7.jpg', 'assets/productos/envios8.jpg'],
-  mcqueen: ['assets/productos/mc.png', 'assets/productos/mcqueen.png', 'assets/productos/rayo.png', 'assets/productos/cars.png', 'assets/productos/mack.png', 'assets/productos/lightning.png'],
-  toyotas: ['assets/productos/tacoma.png', 'assets/productos/tacoma-negra.png', 'assets/productos/troja.png', 'assets/productos/tverde.png', 'assets/productos/hiluxа.png', 'assets/productos/hiluxn.png', 'assets/productos/hiluxr.png', 'assets/productos/pradob.png', 'assets/productos/pradog.png'],
-  rastras: ['assets/productos/cn.png', 'assets/productos/pipa.png', 'assets/productos/cb.png', 'assets/productos/trans.png', 'assets/productos/tc.png', 'assets/productos/ca.png', 'assets/productos/cab.png', 'assets/productos/cr.png'],
+  envios: ['assets/envios/envios1.jpeg', 'assets/envios/envios2.jpeg', 'assets/envios/envios3.jpeg', 'assets/envios/envios4.jpeg', 'assets/envios/envios5.jpeg', 'assets/envios/envios6.jpeg', 'assets/envios/envios7.jpeg'],
+  mcqueen: ['assets/productos/mcqueenrc.png', 'assets/productos/mack.jpg', 'assets/productos/filmore.jpg', 'assets/productos/chevy.png'],
+  toyotas: ['assets/productos/tacoma.jpg', 'assets/productos/tacoma-negra.jpg', 'assets/productos/troja.jpg', 'assets/productos/tverde.jpg', 'assets/productos/hiluxa.jpg', 'assets/productos/hiluxn.jpg', 'assets/productos/hiluxr.jpg', 'assets/productos/pradob.jpg', 'assets/productos/pradog.jpg'],
+  rastras: ['assets/productos/cn.jpg', 'assets/productos/pipa.jpg', 'assets/productos/cb.jpg', 'assets/productos/trans.jpg', 'assets/productos/tc.jpg', 'assets/productos/ca.jpg', 'assets/productos/cab.jpg', 'assets/productos/cr.jpg'],
   rc: ['assets/productos/rc1.png', 'assets/productos/rc2.png', 'assets/productos/bulrc.png', 'assets/productos/4x4.png', 'assets/productos/landrc.png', 'assets/productos/mariorc.png', 'assets/productos/busrc.png', 'assets/productos/escavador.jpg'],
   ofertas: [],
   novedades: [],
@@ -16,7 +16,7 @@ const CATEGORY_IMAGES = {
 };
 
 const HERO_SLIDES = [
-  {variant: "a", icon: "🚚", eyebrow: "Cobertura nacional", title: "Envíos a todo Honduras", text: "Llega hasta la puerta de tu casa, pagas por depósito o transferencia.", filterCategory: "Todos", imageCategory: "envios"},
+  {variant: "a", icon: "🚚", eyebrow: "Cobertura nacional", title: "Así recibes tus pedidos", text: "Llega hasta la puerta de tu casa en todo Honduras. Pagas por depósito o transferencia.", filterCategory: "Todos", imageCategory: "envios"},
   {variant: "b", icon: "🏎️", eyebrow: "Colección Premium", title: "Cars & McQueen", text: "Toda la colección de personajes de Cars: Rayo McQueen, Mack, Sally y más.", filterCategory: "Autos", imageCategory: "mcqueen"},
   {variant: "c", icon: "🚙", eyebrow: "Colección", title: "Toyota Trucks", text: "Tacoma, Tundra, Hilux, Prado y toda la línea Toyota lista para coleccionar.", filterCategory: "Autos", imageCategory: "toyotas"},
   {variant: "d", icon: "🚛", eyebrow: "Colección", title: "Rastras & Camiones", text: "Cabezales, pipas, rastras y camiones especiales de carga.", filterCategory: "Rastras", imageCategory: "rastras"},
