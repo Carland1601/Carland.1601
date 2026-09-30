@@ -3204,3 +3204,165 @@ button:active, .btn:active{
 .hero__slide .hero__caption{
   display: none;
 }
+
+
+/* ============================================================
+   MODAL DE PRODUCTO v3 — imagen grande y precio siempre visible
+   ============================================================ */
+.product-modal {
+  padding: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-modal__content {
+  display: block;
+  width: min(1040px, 96vw);
+  max-width: 1040px;
+  max-height: 94vh;
+  max-height: 94dvh;
+  padding: 0;
+  gap: 0;
+  overflow-y: auto;
+  border-radius: 18px;
+}
+
+.product-modal__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 1.75rem;
+  padding: 1.5rem;
+  align-items: start;
+}
+
+.product-modal__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: min(72vh, 620px);
+  min-height: 0;
+  aspect-ratio: auto;
+  padding: 12px;
+  background: #f3f5f9;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.product-modal__image img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.product-modal__close {
+  top: .75rem;
+  right: .75rem;
+  background: #fff;
+  color: #222;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .28);
+  z-index: 20;
+}
+
+.product-modal__details {
+  align-self: center;
+  min-width: 0;
+}
+
+.product-modal__name {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  padding-right: 2.5rem;
+}
+
+.product-modal__brand { margin-bottom: 1rem; }
+
+.product-modal__specs {
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.product-modal__price { margin-bottom: 1rem; }
+.price-value { font-size: 2.2rem; line-height: 1; }
+
+.product-modal__buy {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .product-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .product-modal__content {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .product-modal__body {
+    grid-template-columns: 1fr;
+    gap: .9rem;
+    padding: .9rem .9rem 0;
+  }
+
+  .product-modal__image {
+    height: 46vh;
+    height: 46dvh;
+    max-height: 430px;
+    padding: 8px;
+  }
+
+  .product-modal__details { align-self: stretch; }
+  .product-modal__name { font-size: 1.25rem; padding-right: 0; }
+  .product-modal__brand { margin-bottom: .6rem; }
+
+  .product-modal__specs {
+    grid-template-columns: repeat(3, 1fr);
+    gap: .5rem;
+    margin-bottom: .8rem;
+    padding-bottom: .8rem;
+  }
+  .spec-label { font-size: .7rem; margin-bottom: .2rem; }
+  .spec-value { font-size: .9rem; }
+
+  /* Precio y botones siempre visibles, fijos al fondo del modal */
+  .product-modal__buy {
+    margin: 0 -.9rem;
+    padding: .7rem .9rem calc(.7rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid #eee;
+    box-shadow: 0 -6px 16px rgba(0, 0, 0, .08);
+    z-index: 5;
+  }
+  .product-modal__price { margin-bottom: .6rem; align-items: center; }
+  .price-value { font-size: 1.8rem; }
+
+  .product-modal__buttons {
+    flex-direction: row;
+    gap: .6rem;
+  }
+  .product-modal__addBtn,
+  .product-modal__buyBtn {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-modal { padding: 0; }
+  .product-modal__content { padding: 0; }
+  .product-modal__specs { grid-template-columns: repeat(3, 1fr); }
+  .product-modal__addBtn svg,
+  .product-modal__buyBtn svg { display: none; }
+}
