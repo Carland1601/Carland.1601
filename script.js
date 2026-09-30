@@ -5,7 +5,7 @@
 const WHATSAPP_NUMBER = "50489534880";
 
 const CATEGORY_IMAGES = {
-  envios: ['assets/envios/envios1.jpeg', 'assets/envios/envios2.jpeg', 'assets/envios/envios3.jpeg', 'assets/envios/envios4.jpeg', 'assets/envios/envios5.jpeg', 'assets/envios/envios6.jpeg', 'assets/envios/envios7.jpeg'],
+  envios: ['assets/envios/envio1.jpg', 'assets/envios/envio2.jpg', 'assets/envios/envio3.jpg', 'assets/envios/envio4.jpg', 'assets/envios/envio5.jpg', 'assets/envios/envio6.jpg', 'assets/envios/envio7.jpg', 'assets/envios/envio8.jpg'],
   mcqueen: ['assets/productos/mcqueenrc.png', 'assets/productos/mack.jpg', 'assets/productos/filmore.jpg', 'assets/productos/chevy.png'],
   toyotas: ['assets/productos/tacoma.jpg', 'assets/productos/tacoma-negra.jpg', 'assets/productos/troja.jpg', 'assets/productos/tverde.jpg', 'assets/productos/hiluxa.jpg', 'assets/productos/hiluxn.jpg', 'assets/productos/hiluxr.jpg', 'assets/productos/pradob.jpg', 'assets/productos/pradog.jpg'],
   rastras: ['assets/productos/cn.jpg', 'assets/productos/pipa.jpg', 'assets/productos/cb.jpg', 'assets/productos/trans.jpg', 'assets/productos/tc.jpg', 'assets/productos/ca.jpg', 'assets/productos/cab.jpg', 'assets/productos/cr.jpg'],
@@ -78,7 +78,6 @@ function shuffleArray(arr) {
 document.addEventListener('DOMContentLoaded', () => {
   updateCarouselImages();
   initHeroCarousel();
-  renderHeroSlides();
   renderFilterButtons();
   renderProducts();
   updateCartUI();
@@ -97,8 +96,6 @@ function updateCarouselImages() {
 }
 
 function initHeroCarousel() {
-  renderHeroSlides();
-  startHeroAutoplay();
   heroPrevBtn.addEventListener('click', prevSlide);
   heroNextBtn.addEventListener('click', nextSlide);
   heroDots.addEventListener('click', (e) => {
@@ -107,21 +104,51 @@ function initHeroCarousel() {
       updateHeroCarousel();
     }
   });
+  renderHeroSlides().then(() => startHeroAutoplay());
 }
 
-function renderHeroSlides() {
+// Comprueba que una imagen realmente cargue (evita slides con foto rota)
+const imageCheckCache = {};
+function testImage(src) {
+  if (!(src in imageCheckCache)) {
+    imageCheckCache[src] = new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  }
+  return imageCheckCache[src];
+}
+
+// Elige al azar una imagen que sí exista; si ninguna carga, usa una foto de producto
+async function pickWorkingImage(category) {
+  const candidates = CATEGORY_IMAGES[category] || [];
+  const results = await Promise.all(candidates.map(testImage));
+  let working = candidates.filter((_, i) => results[i]);
+  if (working.length === 0 && Array.isArray(window.PRODUCTOS)) {
+    const fallbacks = shuffleArray(window.PRODUCTOS.map(p => p.imagen)).slice(0, 6);
+    const fbResults = await Promise.all(fallbacks.map(testImage));
+    working = fallbacks.filter((_, i) => fbResults[i]);
+  }
+  if (working.length === 0) return null;
+  return working[Math.floor(Math.random() * working.length)];
+}
+
+async function renderHeroSlides() {
+  const images = await Promise.all(HERO_SLIDES.map(slide => pickWorkingImage(slide.imageCategory)));
   heroTrack.innerHTML = '';
   heroDots.innerHTML = '';
   HERO_SLIDES.forEach((slide, index) => {
-    const randomImage = getRandomImage(slide.imageCategory);
+    const image = images[index];
     const slideEl = document.createElement('div');
     slideEl.className = `hero__slide hero__slide--${slide.variant}`;
     slideEl.setAttribute('aria-hidden', index !== currentHeroSlide);
     slideEl.innerHTML = `
-      <div class="hero__bgImage" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%), url('${randomImage}')"></div>
+      ${image ? `<div class="hero__bgImage" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%), url('${image}')"></div>
       <div class="hero__floatingImage">
-        <img src="${randomImage}" alt="${slide.title}">
-      </div>
+        <img src="${image}" alt="${slide.title}">
+      </div>` : ''}
       <div class="hero__content">
         <span class="hero__eyebrow">${slide.eyebrow}</span>
         <h1 class="hero__title">${slide.title}</h1>
@@ -199,6 +226,7 @@ function createProductModal() {
             <div class="spec-item"><span class="spec-label">Escala</span><span class="spec-value" id="productModalScale"></span></div>
             <div class="spec-item"><span class="spec-label">Estado</span><span class="spec-value" id="productModalStatus"></span></div>
           </div>
+          <div class="product-modal__buy">
           <div class="product-modal__price"><span class="price-label">Precio</span><span class="price-value" id="productModalPrice">L. 0</span></div>
           <div class="product-modal__buttons">
             <button class="product-modal__addBtn" id="productModalAddBtn">
@@ -207,6 +235,7 @@ function createProductModal() {
             <button class="product-modal__buyBtn" id="productModalBuyBtn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Comprar por WhatsApp
             </button>
+          </div>
           </div>
         </div>
       </div>
@@ -248,10 +277,14 @@ function openProductModal(product) {
   document.getElementById('productModalScale').textContent = product.escala;
   document.getElementById('productModalStatus').textContent = product.estado;
   document.getElementById('productModalPrice').textContent = `L. ${product.precio.toLocaleString('es-HN', { minimumFractionDigits: 0 })}`;
+  const labelEl = document.getElementById('productModalLabel');
   if (product.etiqueta) {
-    document.getElementById('productModalLabel').textContent = product.etiqueta;
-    document.getElementById('productModalLabel').style.display = 'block';
+    labelEl.textContent = product.etiqueta;
+    labelEl.style.display = 'inline-block';
+  } else {
+    labelEl.style.display = 'none';
   }
+  modal.querySelector('.product-modal__content').scrollTop = 0;
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
@@ -400,7 +433,7 @@ function filterByCategory(category) {
 function filterAndRenderProducts() {
   if (!Array.isArray(window.PRODUCTOS)) return;
   
-  renderedProducts = window.PRODUCTOS.filter(product => {
+  renderedProducts = allProducts.filter(product => {
     let matchesCategory = false;
     
     if (currentCategory === 'Control Remoto') {
@@ -540,6 +573,7 @@ if (typeof window.PRODUCTOS === 'undefined') {
 }
 
 if (Array.isArray(window.PRODUCTOS) && window.PRODUCTOS.length > 0) {
-  allProducts = [...window.PRODUCTOS];
-  renderedProducts = [...window.PRODUCTOS];
+  // Orden aleatorio distinto en cada visita o recarga (precios, fotos y nombres no cambian)
+  allProducts = shuffleArray(window.PRODUCTOS);
+  renderedProducts = [...allProducts];
 }
