@@ -7,7 +7,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:28",
     "precio": 995,
-    "estado": "Agotado",
+    "estado": "Disponible",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/HILUX1.28.jpg"
   },
