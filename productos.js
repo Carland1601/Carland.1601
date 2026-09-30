@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Mistery Box",
+    "marca": "Mattel",
+    "categoria": "Autos",
+    "escala": "1:64",
+    "precio": 695,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/mistery-box-munuxv1z.jpg"
+  },
+  {
     "nombre": "HILUX CLASICA ROJA",
     "marca": "generic",
     "categoria": "Autos",
