@@ -1,10 +1,16 @@
-// ============================================================
 // CATÁLOGO CARLAND 1601 — lista de productos
-// Para agregar: copia un bloque { ... }, pégalo y cambia los datos.
-// Para eliminar: borra el bloque completo (con su coma).
-// Más fácil: usa admin.html y pega aquí el resultado.
-// ============================================================
+// Generado con admin.html
 window.PRODUCTOS = [
+  {
+    "nombre": "HILUX CLASICA ROJA",
+    "marca": "generic",
+    "categoria": "Autos",
+    "escala": "1:28",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/HILUX1.28.jpg"
+  },
   {
     "nombre": "Mcqueen Control remoto Cars",
     "marca": "generic",
