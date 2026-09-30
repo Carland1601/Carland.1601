@@ -5,7 +5,7 @@
 const WHATSAPP_NUMBER = "50489534880";
 
 const CATEGORY_IMAGES = {
-  envios: ['assets/envios/envio1.jpg', 'assets/envios/envio2.jpg', 'assets/envios/envio3.jpg', 'assets/envios/envio4.jpg', 'assets/envios/envio5.jpg', 'assets/envios/envio6.jpg', 'assets/envios/envio7.jpg', 'assets/envios/envio8.jpg'],
+  envios: ['assets/productos/envios1.jpg', 'assets/productos/envios1.jpeg', 'assets/productos/envios2.jpg', 'assets/productos/envios2.jpeg', 'assets/productos/envios3.jpg', 'assets/productos/envios3.jpeg', 'assets/productos/envios4.jpg', 'assets/productos/envios4.jpeg', 'assets/productos/envios5.jpg', 'assets/productos/envios5.jpeg', 'assets/productos/envios6.jpg', 'assets/productos/envios6.jpeg', 'assets/productos/envios7.jpg', 'assets/productos/envios7.jpeg', 'assets/productos/envios8.jpg', 'assets/productos/envios8.jpeg'],
   mcqueen: ['assets/productos/mcqueenrc.png', 'assets/productos/mack.jpg', 'assets/productos/filmore.jpg', 'assets/productos/chevy.png'],
   toyotas: ['assets/productos/tacoma.jpg', 'assets/productos/tacoma-negra.jpg', 'assets/productos/troja.jpg', 'assets/productos/tverde.jpg', 'assets/productos/hiluxa.jpg', 'assets/productos/hiluxn.jpg', 'assets/productos/hiluxr.jpg', 'assets/productos/pradob.jpg', 'assets/productos/pradog.jpg'],
   rastras: ['assets/productos/cn.jpg', 'assets/productos/pipa.jpg', 'assets/productos/cb.jpg', 'assets/productos/trans.jpg', 'assets/productos/tc.jpg', 'assets/productos/ca.jpg', 'assets/productos/cab.jpg', 'assets/productos/cr.jpg'],
