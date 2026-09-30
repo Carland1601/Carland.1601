@@ -1,5 +1,5 @@
 // CATÁLOGO CARLAND 1601 — lista de productos
-// Generado con admin.html
+// Editado con admin.html
 window.PRODUCTOS = [
   {
     "nombre": "HILUX CLASICA ROJA",
@@ -7,7 +7,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:28",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/HILUX1.28.jpg"
   },
