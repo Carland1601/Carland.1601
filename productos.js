@@ -2,6 +2,26 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Set de F1 Mclaren",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:32",
+    "precio": 2995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/set-de-f1-mclaren-muo8smx5.jpg"
+  },
+  {
+    "nombre": "Set de F1 Ferrari",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:32",
+    "precio": 2995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/set-de-f1-ferrari-muo8r2z4.jpg"
+  },
+  {
     "nombre": "Mistery Box",
     "marca": "Mattel",
     "categoria": "Autos",
