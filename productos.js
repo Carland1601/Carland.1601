@@ -167,7 +167,7 @@ window.PRODUCTOS = [
     "categoria": "Autos Rc",
     "escala": "1:24",
     "precio": 395,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/rcdrift.jpg"
   },
@@ -177,7 +177,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:64",
     "precio": 325,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/chiks.jpg"
   },
@@ -187,7 +187,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:64",
     "precio": 325,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/filmore.jpg"
   },
@@ -457,7 +457,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:32",
     "precio": 325,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/hiluxn.jpg"
   },
@@ -607,7 +607,7 @@ window.PRODUCTOS = [
     "categoria": "Rastras",
     "escala": "1:64",
     "precio": 395,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/cab.jpg"
   },
@@ -737,7 +737,7 @@ window.PRODUCTOS = [
     "categoria": "Motocicletas",
     "escala": "1:12",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Ofertas",
     "imagen": "assets/productos/kawa.jpg"
   },
