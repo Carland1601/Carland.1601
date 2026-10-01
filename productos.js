@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "F1 Trailer Ferrari",
+    "marca": "Burago",
+    "categoria": "Rastras",
+    "escala": "1:32",
+    "precio": 1695,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/f1-trailer-ferrari-muowz01k.jpg"
+  },
+  {
     "nombre": "Tacoma Harley Davison Exclusive",
     "marca": "Maisto",
     "categoria": "Autos",
