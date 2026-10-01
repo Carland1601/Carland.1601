@@ -2,6 +2,36 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "MCQUEEN RUZTEZE",
+    "marca": "MATTEL",
+    "categoria": "Autos",
+    "escala": "1:64",
+    "precio": 325,
+    "estado": "Agotado",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/mcqueen-ruzteze-mup6v9d5.jpg"
+  },
+  {
+    "nombre": "MCQUEEN LLANTA BLANCA",
+    "marca": "MATTEL",
+    "categoria": "Autos",
+    "escala": "1:64",
+    "precio": 325,
+    "estado": "Agotado",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/mcqueen-llanta-blanca-mup6unvu.jpg"
+  },
+  {
+    "nombre": "MACK Y MCQUEEN DE METAL",
+    "marca": "MATTEL",
+    "categoria": "Autos",
+    "escala": "1:64",
+    "precio": 1500,
+    "estado": "Agotado",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/mack-y-mcqueen-de-metal-mup6rgc1.jpg"
+  },
+  {
     "nombre": "DELOREAN CON LUZ ORIGINAL DE LA PELICULA CERTIFICADO",
     "marca": "JADA",
     "categoria": "Autos",
