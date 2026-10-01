@@ -2,6 +2,36 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "F1-Hotwells Premium Mclaren",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:64",
+    "precio": 695,
+    "estado": "Disponible",
+    "etiqueta": "Ofertas",
+    "imagen": "assets/productos/f1-hotwells-premium-mclaren-muovt18k.jpg"
+  },
+  {
+    "nombre": "F1-Hotwells Premium Alphine",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:64",
+    "precio": 695,
+    "estado": "Disponible",
+    "etiqueta": "Ofertas",
+    "imagen": "assets/productos/f1-hotwells-premium-alphine-muovrgah.jpg"
+  },
+  {
+    "nombre": "F1-Mclaren",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:32",
+    "precio": 495,
+    "estado": "Disponible",
+    "etiqueta": "Ofertas",
+    "imagen": "assets/productos/f1-mclaren-muovnp5i.jpg"
+  },
+  {
     "nombre": "F1-Redbull",
     "marca": "Burago",
     "categoria": "Autos",
