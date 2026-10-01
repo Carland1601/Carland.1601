@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "F1-Aston Martin",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:32",
+    "precio": 495,
+    "estado": "Disponible",
+    "etiqueta": "Ofertas",
+    "imagen": "assets/productos/f1-aston-martin-muovh00r.jpg"
+  },
+  {
     "nombre": "F1-Redbull",
     "marca": "Burago",
     "categoria": "Autos",
