@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Tacoma Harley Davison Exclusive",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 1150,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/tacoma-harley-davison-exclusive-muoweasl.jpg"
+  },
+  {
     "nombre": "Tacoma 3ra gen Gris",
     "marca": "Maisto",
     "categoria": "Autos",
