@@ -2,6 +2,36 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Tacoma 3ra gen Gris",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:25",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/tacoma-3ra-gen-gris-muow8e24.jpg"
+  },
+  {
+    "nombre": "Tacoma 3ra gen naranja",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/tacoma-3ra-gen-naranja-muow7222.jpg"
+  },
+  {
+    "nombre": "Tacoma 3ra gen negra",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:25",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/tacoma-3ra-gen-negra-muow4nk3.jpg"
+  },
+  {
     "nombre": "F1-Hotwells Premium Mclaren",
     "marca": "Burago",
     "categoria": "Autos",
