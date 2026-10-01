@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "COMBO EMPRENDEDOR DE JUGUETE AMERICANO",
+    "marca": "MIXTOS",
+    "categoria": "Otros",
+    "escala": "VARIABLE",
+    "precio": 95,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/combo-emprendedor-de-juguete-americano-mup7dgeu.jpg"
+  },
+  {
     "nombre": "MCQUEEN RUZTEZE",
     "marca": "MATTEL",
     "categoria": "Autos",
