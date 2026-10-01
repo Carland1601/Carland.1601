@@ -2,6 +2,86 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "F1-Redbull",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 1150,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/f1-redbull-muoveqqx.jpg"
+  },
+  {
+    "nombre": "F1-Ferrari",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 1150,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/f1-ferrari-muovdcq6.jpg"
+  },
+  {
+    "nombre": "F1-Mercedes",
+    "marca": "Burago",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 1150,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/f1-mercedes-muovbbjr.jpg"
+  },
+  {
+    "nombre": "Ford Bronco Azul",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/ford-bronco-azul-muov9by2.jpg"
+  },
+  {
+    "nombre": "Ford Ranger Azul",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:25",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/ford-ranger-azul-muov88ng.jpg"
+  },
+  {
+    "nombre": "Freight Rastra escala de Control remoto",
+    "marca": "Truck super speed",
+    "categoria": "Control Remoto",
+    "escala": "1:32",
+    "precio": 1150,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/freight-rastra-escala-de-control-remoto-muov6h8y.jpg"
+  },
+  {
+    "nombre": "Ford Raptor blanca",
+    "marca": "Maisto",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 1150,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/ford-raptor-blanca-muov2z3v.jpg"
+  },
+  {
+    "nombre": "KTM DUKE 1290",
+    "marca": "CCA",
+    "categoria": "Motocicletas",
+    "escala": "1:18",
+    "precio": 395,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/ktm-duke-1290-muoutrkb.jpg"
+  },
+  {
     "nombre": "Set de F1 Mclaren",
     "marca": "Burago",
     "categoria": "Autos",
