@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "DELOREAN CON LUZ ORIGINAL DE LA PELICULA CERTIFICADO",
+    "marca": "JADA",
+    "categoria": "Autos",
+    "escala": "1/18",
+    "precio": 1595,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/delorean-con-luz-original-de-la-pelicula-mup6o7iv.jpg"
+  },
+  {
     "nombre": "F1 Trailer Ferrari",
     "marca": "Burago",
     "categoria": "Rastras",
