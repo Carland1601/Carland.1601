@@ -737,7 +737,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:32",
     "precio": 295,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/landb.png"
   },
