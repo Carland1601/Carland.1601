@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Bingo Juego de mesa",
+    "marca": "Generic",
+    "categoria": "Otros",
+    "escala": "1:1",
+    "precio": 495,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/bingo-juego-de-mesa-murtz5k5.jpg"
+  },
+  {
     "nombre": "COMBO EMPRENDEDOR DE JUGUETE AMERICANO",
     "marca": "MIXTOS",
     "categoria": "Otros",
