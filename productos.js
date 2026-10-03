@@ -537,7 +537,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:18",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "",
     "imagen": "assets/productos/alfa.jpg"
   },
