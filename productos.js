@@ -947,7 +947,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:24",
     "precio": 1495,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Ofertas",
     "imagen": "assets/productos/escavador.jpg"
   },
