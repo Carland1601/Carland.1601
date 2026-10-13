@@ -1027,7 +1027,7 @@ window.PRODUCTOS = [
     "categoria": "Motocicletas",
     "escala": "1:12",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Ofertas",
     "imagen": "assets/productos/ktmcroos.jpg"
   },
