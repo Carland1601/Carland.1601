@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Harry poter auto Escala Peliculas y fantasia",
+    "marca": "MAISTO",
+    "categoria": "Autos",
+    "escala": "1:24",
+    "precio": 1595,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/harry-poter-auto-escala-peliculas-y-fant-mvbaywe1.jpg"
+  },
+  {
     "nombre": "Bingo Juego de mesa",
     "marca": "Generic",
     "categoria": "Otros",
