@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "H2r 1/12 CCA motocicleta",
+    "marca": "CCA",
+    "categoria": "Motocicletas",
+    "escala": "1:12",
+    "precio": 995,
+    "estado": "Disponible",
+    "etiqueta": "Novedades",
+    "imagen": "assets/productos/h2r-1-12-cca-motocicleta-mvfs53f7.jpg"
+  },
+  {
     "nombre": "Harry poter auto Escala Peliculas y fantasia",
     "marca": "MAISTO",
     "categoria": "Autos",
