@@ -327,7 +327,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:36",
     "precio": 195,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/mackcabesalplastico.jpg"
   },
