@@ -2,6 +2,16 @@
 // Editado con admin.html
 window.PRODUCTOS = [
   {
+    "nombre": "Pista Automática De dos niveles",
+    "marca": "CONTEST DREAM OF TRACK",
+    "categoria": "Autos",
+    "escala": "-",
+    "precio": 295,
+    "estado": "Disponible",
+    "etiqueta": "Nuevo",
+    "imagen": "assets/productos/pista-automatica-de-dos-niveles-mwvnae0k.jpg"
+  },
+  {
     "nombre": "H2r 1/12 CCA motocicleta",
     "marca": "CCA",
     "categoria": "Motocicletas",
