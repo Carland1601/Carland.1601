@@ -107,7 +107,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:24",
     "precio": 1150,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/tacoma-harley-davison-exclusive-muoweasl.jpg"
   },
@@ -307,7 +307,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:64",
     "precio": 695,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/mistery-box-munuxv1z.jpg"
   },
@@ -437,7 +437,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:24",
     "precio": 1550,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/roll.jpg"
   },
@@ -507,7 +507,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:32",
     "precio": 1595,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Oferta",
     "imagen": "assets/productos/trans.jpg"
   },
@@ -627,7 +627,7 @@ window.PRODUCTOS = [
     "categoria": "autos",
     "escala": "1:24",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Oferta",
     "imagen": "assets/productos/pradob.jpg"
   },
@@ -667,7 +667,7 @@ window.PRODUCTOS = [
     "categoria": "autos",
     "escala": "1:24",
     "precio": 1250,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/lcn.jpg"
   },
@@ -687,7 +687,7 @@ window.PRODUCTOS = [
     "categoria": "Rastras",
     "escala": "1:32",
     "precio": 1250,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/cb.jpg"
   },
@@ -767,7 +767,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:32",
     "precio": 325,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/hiluxa.jpg"
   },
@@ -827,7 +827,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:32",
     "precio": 325,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Oferta",
     "imagen": "assets/productos/22rg.png"
   },
@@ -907,7 +907,7 @@ window.PRODUCTOS = [
     "categoria": "Rastras",
     "escala": "1:64",
     "precio": 395,
-    "estado": "Agotado",
+    "estado": "Disponible",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/cab.jpg"
   },
@@ -917,7 +917,7 @@ window.PRODUCTOS = [
     "categoria": "Rastras",
     "escala": "1:64",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/pipa.jpg"
   },
@@ -927,7 +927,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:24",
     "precio": 795,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/rc1.png"
   },
@@ -937,7 +937,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:24",
     "precio": 1595,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/4x4.png"
   },
@@ -967,7 +967,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "1:24",
     "precio": 795,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Novedades",
     "imagen": "assets/productos/busrc.png"
   },
@@ -1047,7 +1047,7 @@ window.PRODUCTOS = [
     "categoria": "Motocicletas",
     "escala": "1:12",
     "precio": 395,
-    "estado": "Agotado",
+    "estado": "Disponible",
     "etiqueta": "Ofertas",
     "imagen": "assets/productos/h2rmini.jpg"
   },
@@ -1087,7 +1087,7 @@ window.PRODUCTOS = [
     "categoria": "Motos",
     "escala": "1:12",
     "precio": 995,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/bmws100rr.jpg"
   }
