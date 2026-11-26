@@ -7,7 +7,7 @@ window.PRODUCTOS = [
     "categoria": "Autos",
     "escala": "-",
     "precio": 295,
-    "estado": "Disponible",
+    "estado": "Agotado",
     "etiqueta": "Nuevo",
     "imagen": "assets/productos/pista-automatica-de-dos-niveles-mwvnae0k.jpg"
   },
